@@ -1,0 +1,29 @@
+# SDD Kit — Runtime Adapter: Claude Code
+# Usado pelo compilador v3.0 para gerar agentes no formato Claude Code.
+#
+# O compilador lê cada agents/*.md, injeta este frontmatter e filtra
+# as seções @claude + @all. O resultado vai para dist/claude/.
+
+target: claude
+output_filename: "{name}.md"
+install_path: "~/.claude/agents/"
+
+# Frontmatter injetado em cada agente gerado
+frontmatter:
+  name: "{name}"
+  description: "{description}"
+
+# Seções condicionais incluídas neste runtime
+include_sections:
+  - "@all"
+  - "@claude"
+
+# Seções excluídas neste runtime
+exclude_sections:
+  - "@copilot"
+
+# Notas de comportamento para este runtime
+notes:
+  - "Claude Code tem Agent tool — tests + review podem rodar como subagents paralelos"
+  - "Bootstrap global em ~/.claude/agents/sdd-bootstrap.md (não precisa ser copiado por projeto)"
+  - "Bash tool disponível para execução de terminal — G3 sempre validado com build real"

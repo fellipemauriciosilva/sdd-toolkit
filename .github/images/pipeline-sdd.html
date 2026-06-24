@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SDD Toolkit — Pipeline de Agentes</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Courier New', Consolas, monospace;
+  font-size: 11px;
+  line-height: 1.4;
+  background: #0f1117;
+  color: #e2e8f0;
+  padding: 16px;
+}
+.root {
+  background: #0f1117;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.boot-bar {
+  background: #3b0764;
+  color: #e9d5ff;
+  text-align: center;
+  padding: 8px 12px;
+  font-weight: bold;
+  font-size: 12px;
+  border-bottom: 2px solid #7c3aed;
+}
+.pipe-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 960px;
+}
+.pipe-table thead th {
+  background: #16181f;
+  color: #c4b5fd;
+  padding: 8px 6px;
+  text-align: center;
+  border: 1px solid #2d2f3e;
+  font-size: 11px;
+}
+.pipe-table thead th .num { font-size: 16px; display: block; }
+.pipe-table thead th .sub { font-size: 9px; color: #6b7280; font-weight: normal; display: block; margin-top: 1px; }
+.hdr-phase { width: 72px; background: #0d0f14 !important; color: #4b5563 !important; font-size: 10px; }
+.prof { display: inline-block; background: #1e293b; color: #64748b; border-radius: 3px; padding: 1px 5px; font-size: 8.5px; margin-top: 3px; border: 1px solid #334155; }
+.phase-row td {
+  padding: 8px 6px;
+  border: 1px solid #2d2f3e;
+  background: #13151c;
+  vertical-align: middle;
+  text-align: center;
+}
+.lbl {
+  background: #0d0f14 !important;
+  color: #6b7280;
+  font-weight: bold;
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  text-align: right !important;
+  padding-right: 8px !important;
+  white-space: nowrap;
+  border-right: 2px solid #2d2f3e !important;
+}
+.pill {
+  display: inline-block;
+  padding: 3px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: bold;
+  white-space: nowrap;
+  margin: 2px 0;
+}
+.p-setup   { background: #431407; color: #fed7aa; border: 1px solid #9a3412; }
+.p-core    { background: #1e3a5f; color: #bfdbfe; border: 1px solid #2563eb; }
+.p-toggle  { background: #0c2e2b; color: #99f6e4; border: 1px solid #0d9488; }
+.p-special { background: #2e1065; color: #e9d5ff; border: 1px solid #7c3aed; }
+.p-none    { color: #374151; font-style: italic; font-size: 10px; }
+.note { color: #4b5563; font-size: 9px; font-style: italic; display: block; margin-top: 2px; }
+.dis-cell {
+  background: #0a0a0c !important;
+  border: 1px dashed #2d2f3e !important;
+}
+.dis-label { color: #374151; font-size: 10px; font-weight: bold; }
+.g-row td {
+  font-size: 9px;
+  padding: 4px 10px;
+  line-height: 1.6;
+}
+.g-auto    { background: #0c131b; border-left: 3px solid #334155; color: #475569; }
+.g-confirm { background: #1a0800; border-left: 3px solid #92400e; color: #a16207; }
+.g-badge {
+  display: inline-block;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 9px;
+  font-weight: bold;
+  margin-right: 6px;
+}
+.gb-a { background: #1e293b; color: #64748b; }
+.gb-c { background: #7c2d12; color: #fde68a; }
+.gb-s { background: #111827; color: #4b5563; }
+.par-row td {
+  background: #0c1628;
+  color: #3b82f6;
+  text-align: center;
+  padding: 3px 8px;
+  font-size: 9px;
+  letter-spacing: 0.5px;
+  border-top: 2px dashed #1d4ed8;
+  border-bottom: 2px dashed #1d4ed8;
+  border-left: none;
+  border-right: none;
+}
+.sync-row td {
+  background: #150d2e;
+  color: #a78bfa;
+  text-align: center;
+  padding: 8px;
+  border-top: 2px solid #4c1d95;
+  font-size: 11px;
+}
+.legend {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  font-size: 10px;
+  color: #4b5563;
+  padding: 4px 2px;
+}
+.legi { display: flex; align-items: center; gap: 4px; }
+</style>
+</head>
+<body>
+<div class="root">
+  <div class="boot-bar">⚙ sdd-bootstrap --run &nbsp;·&nbsp; session-state.md &nbsp;·&nbsp; 6 Quality Gates &nbsp;·&nbsp; 3 Checkpoints Humanos</div>
+
+  <table class="pipe-table">
+    <thead>
+      <tr>
+        <th class="hdr-phase">FASE</th>
+        <th>
+          <span class="num">①</span>
+          Atividade
+          <span class="sub">projeto existente</span>
+          <span class="prof">profile: safe</span>
+        </th>
+        <th>
+          <span class="num">②</span>
+          Migração
+          <span class="sub">legado → novo</span>
+          <span class="prof">profile: paranoid</span>
+        </th>
+        <th>
+          <span class="num">③</span>
+          Do Zero
+          <span class="sub">greenfield</span>
+          <span class="prof">profile: safe</span>
+        </th>
+        <th>
+          <span class="num">④</span>
+          Bug + Fix
+          <span class="sub">análise + correção</span>
+          <span class="prof">--disable=docs</span>
+        </th>
+        <th>
+          <span class="num">⑤</span>
+          Automação
+          <span class="sub">testes standalone</span>
+          <span class="prof">--disable=tests</span>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- PREP -->
+      <tr class="phase-row">
+        <td class="lbl">PREP</td>
+        <td>
+          <span class="p-none">— já configurado</span>
+          <span class="note">sdd-setup-project se 1ª vez</span>
+        </td>
+        <td>
+          <div><span class="pill p-setup">sdd-setup-project</span></div>
+          <div><span class="pill p-setup">sdd-architect</span></div>
+          <div><span class="pill p-setup">sdd-inspect-infra</span></div>
+          <div><span class="pill p-setup">sdd-migrate-kustomize-to-helm</span></div>
+        </td>
+        <td>
+          <div><span class="pill p-setup">sdd-install-sdd-kit</span></div>
+          <div><span class="pill p-setup">sdd-architect</span></div>
+        </td>
+        <td>
+          <div><span class="pill p-special">sdd-investigate-bug</span></div>
+          <span class="note">gera bug report p/ contexto</span>
+        </td>
+        <td>
+          <div><span class="pill p-special">sdd-read-document</span></div>
+          <span class="note">extrai specs Word/PDF</span>
+        </td>
+      </tr>
+
+      <!-- G1 -->
+      <tr class="g-row g-auto">
+        <td colspan="6">
+          <span class="g-badge gb-a">G1 spec-complete · auto</span>
+          task.md tem Demand Summary + Expected Behavior preenchidos (não-TODO)
+        </td>
+      </tr>
+
+      <!-- ANALYZE -->
+      <tr class="phase-row">
+        <td class="lbl">ANALYZE</td>
+        <td><span class="pill p-core">sdd-analyze-demand</span></td>
+        <td><span class="pill p-core">sdd-analyze-demand</span></td>
+        <td><span class="pill p-core">sdd-analyze-demand</span></td>
+        <td>
+          <span class="pill p-core">sdd-analyze-demand</span>
+          <span class="note">injeta bug report no contexto</span>
+        </td>
+        <td>
+          <span class="pill p-core">sdd-analyze-demand</span>
+          <span class="note">usa specs já extraídas</span>
+        </td>
+      </tr>
+
+      <!-- G2 + G3 -->
+      <tr class="g-row g-confirm">
+        <td colspan="6">
+          <span class="g-badge gb-c">🔒 G2 plan-approved · confirm — CHECKPOINT 1</span>
+          aprovar Implementation Plan + Affected Files antes de codar
+          &nbsp;&nbsp;
+          <span class="g-badge gb-a">G3 build-green · auto</span>
+          build + testes unitários passam
+        </td>
+      </tr>
+
+      <!-- IMPLEMENT -->
+      <tr class="phase-row">
+        <td class="lbl">IMPLEMENT</td>
+        <td><span class="pill p-core">sdd-implement-spec</span></td>
+        <td><span class="pill p-core">sdd-implement-spec</span></td>
+        <td><span class="pill p-core">sdd-implement-spec</span></td>
+        <td>
+          <span class="pill p-core">sdd-implement-spec</span>
+          <span class="note">TDD focado no bug fix</span>
+        </td>
+        <td>
+          <span class="pill p-special">sdd-test-integration-generator</span>
+          <span class="note">substitui sdd-implement-spec</span>
+        </td>
+      </tr>
+
+      <!-- Parallel banner -->
+      <tr class="par-row">
+        <td colspan="6">⬡ PARALELO (Claude Code) — tests e review rodam como subagents simultâneos ⬡</td>
+      </tr>
+
+      <!-- TESTS -->
+      <tr class="phase-row">
+        <td class="lbl">TESTS</td>
+        <td><span class="pill p-toggle">sdd-generate-integration-tests</span></td>
+        <td><span class="pill p-toggle">sdd-generate-integration-tests</span></td>
+        <td><span class="pill p-toggle">sdd-generate-integration-tests</span></td>
+        <td>
+          <span class="pill p-toggle">sdd-generate-integration-tests</span>
+          <span class="note">foco em regressão</span>
+        </td>
+        <td class="dis-cell">
+          <span class="dis-label">⊘ DISABLED</span>
+          <span class="note">produto já são os testes</span>
+        </td>
+      </tr>
+
+      <!-- G4 -->
+      <tr class="g-row g-auto">
+        <td colspan="6">
+          <span class="g-badge gb-a">G4 tests-present · auto</span>
+          testes de integração gerados ou skip justificado
+          &nbsp;&nbsp;&nbsp;
+          <span class="g-badge gb-s">G4 ⊘ skipped · step disabled (cenário ⑤)</span>
+        </td>
+      </tr>
+
+      <!-- REVIEW -->
+      <tr class="phase-row">
+        <td class="lbl">REVIEW</td>
+        <td><span class="pill p-toggle">sdd-review-code</span></td>
+        <td><span class="pill p-toggle">sdd-review-code</span></td>
+        <td><span class="pill p-toggle">sdd-review-code</span></td>
+        <td><span class="pill p-toggle">sdd-review-code</span></td>
+        <td><span class="pill p-toggle">sdd-review-code</span></td>
+      </tr>
+
+      <!-- G5 -->
+      <tr class="g-row g-confirm">
+        <td colspan="6">
+          <span class="g-badge gb-c">🔒 G5 review-clean · confirm (se 🔴) — CHECKPOINT 2</span>
+          sem achado Crítico em aberto → avança; se 🔴 → [C corrigir / I ignorar c/ justificativa / N abortar]
+        </td>
+      </tr>
+
+      <!-- DOCS -->
+      <tr class="phase-row">
+        <td class="lbl">DOCS</td>
+        <td><span class="pill p-toggle">sdd-update-documentation</span></td>
+        <td><span class="pill p-toggle">sdd-update-documentation</span></td>
+        <td><span class="pill p-toggle">sdd-update-documentation</span></td>
+        <td class="dis-cell">
+          <span class="dis-label">⊘ DISABLED</span>
+          <span class="note">--disable=docs · hotfix</span>
+        </td>
+        <td><span class="pill p-toggle">sdd-update-documentation</span></td>
+      </tr>
+
+      <!-- G6 -->
+      <tr class="g-row g-confirm">
+        <td colspan="6">
+          <span class="g-badge gb-c">🔒 G6 pr-approved · confirm — CHECKPOINT 3</span>
+          resumo de validação completo · [S abrir PR / N depois]
+        </td>
+      </tr>
+
+      <!-- workspace-sync -->
+      <tr class="sync-row">
+        <td colspan="6">
+          📊 sdd-workspace-sync — agrega todos os session-state.md → PIPELINE-STATUS.md · dashboard de sprint
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="legend">
+    <span class="legi"><span class="pill p-setup" style="padding:1px 6px;font-size:9px;">■</span> Setup / Prep</span>
+    <span class="legi"><span class="pill p-core" style="padding:1px 6px;font-size:9px;">■</span> Core (não desabilitável)</span>
+    <span class="legi"><span class="pill p-toggle" style="padding:1px 6px;font-size:9px;">■</span> Toggleable</span>
+    <span class="legi"><span class="pill p-special" style="padding:1px 6px;font-size:9px;">■</span> Especializado (substituto)</span>
+    <span class="legi" style="color:#374151;">⊘ Disabled</span>
+    <span class="legi"><span class="g-badge gb-c" style="font-size:8px;">🔒 confirm</span> Checkpoint humano</span>
+    <span class="legi"><span class="g-badge gb-a" style="font-size:8px;">auto</span> Avaliação automática</span>
+  </div>
+</div>
+</body>
+</html>
