@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "runtimes": {
+    "claude": {
+      "rules": [{"min_version": "0.0.0", "capabilities": ["agents", "skills", "user-install", "version-detection"], "evidence": "declared-baseline"}]
+    },
+    "copilot": {
+      "rules": [{"min_version": "0.0.0", "capabilities": ["agents", "skills", "user-install", "version-detection"], "evidence": "declared-baseline"}]
+    },
+    "codex": {
+      "rules": [{"min_version": "0.0.0", "capabilities": ["agents", "skills", "user-install", "version-detection", "toml-agents"], "evidence": "declared-baseline"}]
+    },
+    "cursor": {
+      "rules": [{"min_version": "0.0.0", "capabilities": ["agents", "skills", "user-install", "version-detection", "markdown-agents"], "evidence": "declared-baseline"}]
+    }
+  }
+}

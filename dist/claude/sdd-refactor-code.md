@@ -1,7 +1,10 @@
-﻿---
+---
 name: "sdd-refactor-code"
 description: "Refatora código selecionado sem alterar comportamento. Não muda contratos públicos, regras de negócio, contratos de banco/mensagem ou dependências. Preserva testes e adiciona testes se o comportamento não estiver protegido."
+capabilities: "read,write,terminal"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # Refactor Code
 

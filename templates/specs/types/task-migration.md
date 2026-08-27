@@ -33,6 +33,34 @@ Include: class names, DB tables, message topics, external integrations.
 TODO — describe what the migrated component should look like.
 Include: new class names, new DB tables/Flyway migrations, new topics, hexagonal boundaries.
 
+## Delivery Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| delivery_contract_version | 1.0 |
+| delivery_kind | migration |
+| verification | [integration] |
+| rationale | Migration delivery requires integration and data-integrity evidence. |
+| owner | `sdd-analyze-demand` |
+| expected_evidence | [DELIVERY_RESULT, INTEGRATION_RESULT] |
+
+## Architecture Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| architecture_contract_version | 1.0 |
+| architecture_impact | high |
+| architecture_status | pending |
+| architecture_agent | `sdd-architect` |
+| architecture_mode | design |
+| architecture_artifact | `technical-design.md` |
+| full_design_required | true |
+| rationale | TODO — consolidar a arquitetura alvo e a estratégia de coexistência |
+| decisions | none |
+| required_evidence | ARCHITECTURE_RESULT |
+
 ## Affected Files
 
 | File | Layer | Change |
@@ -76,7 +104,7 @@ TODO — how to roll back if the migration fails in production.
 
 ## ADRs Referenced
 
-- [ ] TODO — list relevant ADRs from `.github/docs/migration/adrs/`
+- [ ] TODO — list relevant ADRs or architecture records resolved for this project
 
 ## Risks
 

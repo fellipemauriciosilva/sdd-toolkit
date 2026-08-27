@@ -5,8 +5,23 @@
 # as seções @claude + @all. O resultado vai para dist/claude/.
 
 target: claude
+adapter_schema_version: 1
+min_version: "unknown"
 output_filename: "{name}.md"
+output_dir: "dist/claude"
+renderer: "markdown"
+section: "@claude"
+user_agent_dir: ".claude/agents"
+skill_dir: ".claude/skills"
 install_path: "~/.claude/agents/"
+capabilities: [agents, skills, user-install, version-detection]
+
+# Detecção e escopo user usados por `sdd doctor --scope user`.
+detection:
+  commands: ["claude"]
+  version_args: ["--version"]
+  user_profile: ".claude"
+  scopes: ["user"]
 
 # Frontmatter injetado em cada agente gerado
 frontmatter:

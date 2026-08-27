@@ -2,24 +2,35 @@
 name: sdd-implement-spec
 description: "Analisa o código e implementa a demanda definida no spec em um projeto específico do workspace"
 version: "3.1.0"
+capabilities: "read,write,terminal"
+author: "Felipe Maurício da Silva"
+author_email: "fellipemauriciosilva@gmail.com"
+author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 ---
 
 <!-- @all -->
 # Implement Spec
 
-The user invoked this prompt passing the project folder name and optionally the ticket as arguments (e.g. `/implement-spec gcb-hr-hub-corporate-email JT-1234`). Extract those values and use them as `PROJECT` and `TICKET`.
+## Política de efeitos externos
+
+O agente pode analisar, editar arquivos do escopo e executar validações locais.
+Commit, push, criação de branch, abertura de PR, publicação, chamadas de rede e
+alterações fora do projeto não são automáticos. Só execute uma ação externa após
+autorização nominal do usuário na mesma sessão, confirmando arquivos, comando e
+escopo. Sem autorização, mostre os comandos como sugestão e finalize com o diff
+e os resultados dos testes.
+
+The user invokes this prompt from the target project and may provide a ticket
+(for example `/sdd-implement-spec JT-1234`). Resolve the workspace through the
+CLI; do not require a project-folder argument.
 
 Analyze the demand, fill the spec documents and implement exactly what was defined — nothing more, nothing less.
 
-## Passo 0 — Resolver caminho do workspace (v2.5)
+## Passo 0 — Resolver contexto pelo CLI (v3.2)
 
-1. Verifique se `PROJECT/.github/sdd.config.md` existe.
-2. **Se existir:** leia `sdd_kit:`, `project:` e `sdd_workspace:`. Compute:
-   - Se `sdd_workspace:` definido: `SPEC_PATH = {sdd_workspace}/{project}/specs/TICKET/`
-   - Caso contrário: `SPEC_PATH = {sdd_kit}/workspace/{project}/specs/TICKET/`
-3. **Se não existir:** `SPEC_PATH = PROJECT/.github/docs/specs/TICKET/` (legado pré-v2.5).
+Antes de analisar a demanda, receba somente o ticket no projeto aberto e execute `sdd context resolve --ticket TICKET --runtime auto --json`. Consuma `workspace`, `spec_path`, `scope`, `profile` e `runtime`.
 
-Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda.
+Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda e não duplique a resolução no agente. Se `sdd` não estiver no PATH, use o `scripts/sdd.py` apontado por `sdd doctor --scope user --json`.
 
 ---
 
@@ -48,11 +59,17 @@ Before touching any code or spec file, read:
 - `PROJECT/.github/AGENTS.md`
 - `PROJECT/.github/docs/project-context/project-overview.md`
 - `PROJECT/.github/docs/project-context/current-architecture.md`
+- `{SPEC_PATH}technical-design.md` — Technical Design aprovado pelo `sdd-architect`
 - `PROJECT/.github/docs/project-context/module-map.md`
 - `PROJECT/.github/docs/project-context/decisions-log.md` (se existir) — leia as decisões anteriores para evitar conflitos. Se houver decisão que contradiz o plano atual, sinalize antes de implementar.
 - Any relevant spec already in the folder (e.g. `spec.md`, `acceptance-criteria.md`)
 
-## Step 3 — Analyze the codebase
+## Step 3 — Consume the architectural design and analyze the codebase
+
+Leia o `{SPEC_PATH}technical-design.md` e valide o contrato arquitetural antes
+de analisar o código. Use o design como limite de escopo: se a implementação
+exigir nova decisão estrutural, contrato, dependência, boundary ou NFR não
+previsto, pare, registre o desvio e solicite reabertura do `sdd-architect`/G2.
 
 Based on the demand description in `task.md → Identification` and any notes the user provided:
 - Identify the entry point (Kafka consumer, REST endpoint, scheduler, etc.)
@@ -62,7 +79,7 @@ Based on the demand description in `task.md → Identification` and any notes th
 
 ## Step 3.5 — Multi-projeto (se `affected_projects` preenchido)
 
-Se `session-state.md` tiver `affected_projects` com um ou mais projetos (ex.: `gcb-project-a, gcb-project-b`):
+Se `session-state.md` tiver `affected_projects` com um ou mais projetos (ex.: `example-project-a, example-project-b`):
 
 1. Leia o contexto de cada projeto adicional (passos 2–3 repetidos para cada um).
 2. Adicione ao `task.md` uma seção **Multi-projeto** abaixo de **Affected Files**:
@@ -72,19 +89,19 @@ Se `session-state.md` tiver `affected_projects` com um ou mais projetos (ex.: `g
 
 Esta demanda afeta múltiplos projetos. Sub-plano por projeto:
 
-### Projeto: gcb-project-a
+### Projeto: example-project-a
 | File | Layer | Change |
 |------|-------|--------|
 | `path/to/File.java` | application | modify |
 
-### Projeto: gcb-project-b
+### Projeto: example-project-b
 | File | Layer | Change |
 |------|-------|--------|
 | `path/to/Other.java` | domain | create |
 ```
 
 3. Durante o **Step 6 (Implement)**, execute os sub-passos para cada projeto na ordem declarada.
-4. Faça commits separados por projeto: `feat(TICKET): <desc> [gcb-project-a]`.
+4. Faça commits separados por projeto: `feat(TICKET): <desc> [example-project-a]`.
 5. Se um projeto falhar (G3), não avance para o próximo — pare e escale ao humano.
 
 Se `affected_projects` estiver vazio ou `—`, ignore este step.
@@ -159,8 +176,7 @@ Use a ferramenta bash em cada fase do ciclo:
 # Red / Green — rodar apenas a classe do passo atual
 ./mvnw test -Dtest=NomeDaClasse --no-transfer-progress 2>&1 | tail -20
 
-# Validação final após todos os passos (G3 — prefira sdd-verify se existir)
-bash sdd-verify.sh
+# Validação final após todos os passos (G3)
 # fallback: ./mvnw clean test --no-transfer-progress
 
 # Commit atômico
@@ -173,7 +189,7 @@ Use `execute/runInTerminal` para rodar e `execute/getTerminalOutput` para ler a 
 | Fase | Comando |
 |------|---------|
 | Red / Green | `mvnw.cmd test -Dtest=NomeDaClasse` (Windows) ou `./mvnw test -Dtest=NomeDaClasse` |
-| Validação G3 | `powershell sdd-verify.ps1` (Windows) ou `bash sdd-verify.sh` |
+| Validação G3 | Comando de build/teste declarado no `task.md` ou nativo do projeto |
 | Commit | `git add <arquivos>` → `git commit -m "feat(TICKET): <desc> — TDD Green"` |
 
 Verifique `BUILD SUCCESS` ou `TESTS FAILED` na saída antes de avançar para a próxima fase.

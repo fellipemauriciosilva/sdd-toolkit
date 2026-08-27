@@ -5,7 +5,7 @@ description: "Zephyr Scale (Jira) — Gestão de casos de teste, ciclos, planos,
 
 # Zephyr Scale — Gestão de Testes Enterprise (Padrão QAOps)
 
-Padrões e boas práticas para **gestão de testes** com Zephyr Scale no contexto do Grupo Casas Bahia, incluindo padronização de campos, geração de CSV e governança de qualidade.
+Padrões e boas práticas para **gestão de testes** com Zephyr Scale no contexto do Grupo Example Organization, incluindo padronização de campos, geração de CSV e governança de qualidade.
 
 ---
 
@@ -90,8 +90,8 @@ Rótulos: @login, @smoke, LOG_IA
 ### 4️⃣ Bandeira
 
 **Valores Permitidos:**
-- `Casas Bahia`
-- `Ponto Frio`
+- `Example Organization`
+- `Example Brand A`
 - `Extra`
 - `Corp`
 
@@ -100,11 +100,11 @@ Rótulos: @login, @smoke, LOG_IA
 1. Ir em **Configuration** → **Custom Fields** → **Test Cases**
 2. Nome: `Bandeira`
 3. Tipo: `Select List (Multi Choice)`
-4. Adicionar opções: Casas Bahia, Ponto Frio, Extra, Corp
+4. Adicionar opções: Example Organization, Example Brand A, Extra, Corp
 
 **Uso:**
 ```yaml
-Bandeira: Casas Bahia, Ponto Frio
+Bandeira: Example Organization, Example Brand A
 ```
 
 ---
@@ -274,8 +274,8 @@ Framework: Cypress
 
 ```csv
 Nome,Objetivo,Precondição,Status,Prioridade,Rótulos,Bandeira,Canal,Script de Teste (BDD)
-Validar login com usuário válido,Verificar que usuário consegue fazer login,Usuário cadastrado,Manual,Normal,@login @smoke,Casas Bahia,Web,Given que o usuário está na página de login When preenche email e senha válidos And clica em Entrar Then deve ser redirecionado para o dashboard
-Validar login com senha inválida,Verificar mensagem de erro com credenciais inválidas,Usuário cadastrado,Manual,Normal,@login @negative,Casas Bahia,Web,Given que o usuário está na página de login When preenche email válido e senha inválida And clica em Entrar Then deve exibir mensagem Senha inválida
+Validar login com usuário válido,Verificar que usuário consegue fazer login,Usuário cadastrado,Manual,Normal,@login @smoke,Example Organization,Web,Given que o usuário está na página de login When preenche email e senha válidos And clica em Entrar Then deve ser redirecionado para o dashboard
+Validar login com senha inválida,Verificar mensagem de erro com credenciais inválidas,Usuário cadastrado,Manual,Normal,@login @negative,Example Organization,Web,Given que o usuário está na página de login When preenche email válido e senha inválida And clica em Entrar Then deve exibir mensagem Senha inválida
 ```
 
 ---
@@ -290,7 +290,7 @@ Validar login com senha inválida,Verificar mensagem de erro com credenciais inv
 | **Status** | Lista | ✅ | `Manual` ou `Automatizado` |
 | **Prioridade** | Lista | ✅ | `High`, `Normal`, `Low` |
 | **Rótulos** | Texto | ✅ | `@login @smoke` (separado por espaço) |
-| **Bandeira** | Lista | ✅ | `Casas Bahia` |
+| **Bandeira** | Lista | ✅ | `Example Organization` |
 | **Canal** | Lista | ✅ | `Web` |
 | **Script de Teste (BDD)** | Texto | ✅ | BDD com `Given/When/Then` |
 
@@ -313,7 +313,7 @@ Precondição:
 Status: Manual
 Prioridade: High, Normal ou Low
 Rótulos: LOG_IA
-Bandeira: Casas Bahia, Ponto Frio, Extra ou Corp
+Bandeira: Example Organization, Example Brand A, Extra ou Corp
 Canal: Web, MSite, App iOS, App Android, API ou Legado
 Script de Teste (BDD)
 
@@ -337,9 +337,9 @@ Gere APENAS um arquivo .csv para importação no Zephyr Scale:
 
 ```csv
 Nome,Objetivo,Precondição,Status,Prioridade,Rótulos,Bandeira,Canal,Script de Teste (BDD)
-Validar cadastro de endereço válido,Verificar que o sistema permite cadastro de endereço completo,Usuário logado,Manual,Normal,LOG_IA @endereco @smoke,Casas Bahia,Web,Given que o usuário está na página de endereços When preenche todos os campos obrigatórios And clica em Salvar Then o endereço deve ser cadastrado com sucesso
-Validar cadastro com CEP inválido,Verificar mensagem de erro com CEP inexistente,Usuário logado,Manual,High,LOG_IA @endereco @negative,Casas Bahia,Web,Given que o usuário está na página de endereços When preenche um CEP inválido And clica em Buscar Then deve exibir mensagem CEP não encontrado
-Validar edição de endereço existente,Verificar que usuário pode editar endereço salvo,Usuário com endereço cadastrado,Manual,Low,LOG_IA @endereco,Casas Bahia,Web,Given que o usuário está na lista de endereços When clica em Editar And altera campos And clica em Salvar Then as alterações devem ser persistidas
+Validar cadastro de endereço válido,Verificar que o sistema permite cadastro de endereço completo,Usuário logado,Manual,Normal,LOG_IA @endereco @smoke,Example Organization,Web,Given que o usuário está na página de endereços When preenche todos os campos obrigatórios And clica em Salvar Then o endereço deve ser cadastrado com sucesso
+Validar cadastro com CEP inválido,Verificar mensagem de erro com CEP inexistente,Usuário logado,Manual,High,LOG_IA @endereco @negative,Example Organization,Web,Given que o usuário está na página de endereços When preenche um CEP inválido And clica em Buscar Then deve exibir mensagem CEP não encontrado
+Validar edição de endereço existente,Verificar que usuário pode editar endereço salvo,Usuário com endereço cadastrado,Manual,Low,LOG_IA @endereco,Example Organization,Web,Given que o usuário está na lista de endereços When clica em Editar And altera campos And clica em Salvar Then as alterações devem ser persistidas
 ```
 
 ---
@@ -417,13 +417,13 @@ Precondição: Usuário cadastrado no sistema
 Status: Manual
 Prioridade: High
 Rótulos: @login, @smoke
-Bandeira: Casas Bahia
+Bandeira: Example Organization
 Canal: Web
 Automação: Candidato à automação
 
 Script de Teste (BDD):
 Given que o usuário está na página de login
-When preenche email "teste@casasbahia.com.br" e senha válida
+When preenche email "teste@example.com" e senha válida
 And clica no botão "Entrar"
 Then deve ser redirecionado para a página inicial
 And deve exibir mensagem "Bem-vindo(a)"
@@ -440,7 +440,7 @@ Precondição: API disponível, token de autenticação válido
 Status: Automatizado
 Prioridade: Normal
 Rótulos: @api, @pedido, @regression
-Bandeira: Casas Bahia, Ponto Frio
+Bandeira: Example Organization, Example Brand A
 Canal: API
 Automação: Automatizado
 
@@ -458,9 +458,9 @@ And o pedido deve ser persistido no banco de dados
 
 ```csv
 Nome,Objetivo,Precondição,Status,Prioridade,Rótulos,Bandeira,Canal,Script de Teste (BDD)
-Validar busca de produto por nome,Verificar que busca retorna produtos corretos,Produtos cadastrados,Manual,Normal,@busca @smoke,Casas Bahia,Web,Given que o usuário está na página inicial When digita Geladeira na busca And clica em Buscar Then deve exibir lista de geladeiras
-Validar filtro por preço,Verificar que filtro de preço funciona corretamente,Lista de produtos exibida,Manual,Low,@busca @filtro,Casas Bahia,Web,Given que o usuário está na página de resultados When aplica filtro de preço entre R$1000 e R$2000 Then deve exibir apenas produtos nessa faixa
-Validar ordenação por preço crescente,Verificar que ordenação funciona,Lista de produtos exibida,Manual,Low,@busca @ordenacao,Casas Bahia,Web,Given que o usuário está na página de resultados When seleciona ordenação Menor Preço Then produtos devem aparecer do mais barato ao mais caro
+Validar busca de produto por nome,Verificar que busca retorna produtos corretos,Produtos cadastrados,Manual,Normal,@busca @smoke,Example Organization,Web,Given que o usuário está na página inicial When digita Geladeira na busca And clica em Buscar Then deve exibir lista de geladeiras
+Validar filtro por preço,Verificar que filtro de preço funciona corretamente,Lista de produtos exibida,Manual,Low,@busca @filtro,Example Organization,Web,Given que o usuário está na página de resultados When aplica filtro de preço entre R$1000 e R$2000 Then deve exibir apenas produtos nessa faixa
+Validar ordenação por preço crescente,Verificar que ordenação funciona,Lista de produtos exibida,Manual,Low,@busca @ordenacao,Example Organization,Web,Given que o usuário está na página de resultados When seleciona ordenação Menor Preço Then produtos devem aparecer do mais barato ao mais caro
 ```
 
 ---

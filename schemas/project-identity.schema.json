@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/project-identity.schema.json",
+  "title": "SDD Toolkit canonical public identity",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "project", "maintainer", "public_contact_confirmed"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "project": {"type": "string", "minLength": 1},
+    "public_contact_confirmed": {"type": "boolean"},
+    "maintainer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name", "email", "linkedin"],
+      "properties": {
+        "name": {"type": "string", "minLength": 1},
+        "email": {"type": "string", "format": "email"},
+        "linkedin": {"type": "string", "format": "uri", "pattern": "^https://www\\.linkedin\\.com/"}
+      }
+    }
+  }
+}

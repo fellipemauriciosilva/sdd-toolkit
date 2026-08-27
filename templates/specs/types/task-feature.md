@@ -24,6 +24,34 @@ TODO — how the system works today without this feature.
 TODO — how the system should behave after this feature is implemented.
 Include acceptance criteria when available.
 
+## Delivery Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| delivery_contract_version | 1.0 |
+| delivery_kind | application |
+| verification | [unit] |
+| rationale | Application behavior is implemented by `sdd-implement-spec`; verification is defined by `sdd-analyze-demand`. |
+| owner | `sdd-analyze-demand` |
+| expected_evidence | [DELIVERY_RESULT, UNIT_RESULT] |
+
+## Architecture Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| architecture_contract_version | 1.0 |
+| architecture_impact | medium |
+| architecture_status | pending |
+| architecture_agent | `sdd-architect` |
+| architecture_mode | design |
+| architecture_artifact | `technical-design.md` |
+| full_design_required | true |
+| rationale | TODO — classificar impacto após discovery técnico |
+| decisions | none |
+| required_evidence | ARCHITECTURE_RESULT |
+
 ## Affected Files
 
 | File | Layer | Change |

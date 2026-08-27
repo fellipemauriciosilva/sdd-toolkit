@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.example.com/schemas/installations.schema.json",
+  "title": "SDD Toolkit user installation registry",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "installations"],
+  "properties": {
+    "schema_version": { "type": "integer", "const": 2 },
+    "installations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "project_name", "project_path", "kit_root", "manifest_path", "toolkit_version", "runtimes", "installed_at", "updated_at", "last_check"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+          "project_name": { "type": "string", "minLength": 1 },
+          "project_path": { "type": "string", "minLength": 1 },
+          "kit_root": { "type": "string", "minLength": 1 },
+          "manifest_path": { "type": "string", "minLength": 1 },
+          "toolkit_version": { "type": "string", "minLength": 1 },
+          "runtimes": {
+            "type": "array",
+            "items": { "enum": ["copilot", "claude", "codex", "cursor"] },
+            "uniqueItems": true
+          },
+          "installed_at": { "type": "string", "format": "date-time" },
+          "updated_at": { "type": "string", "format": "date-time" },
+          "last_check": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["status", "checked_at"],
+            "properties": {
+              "status": { "enum": ["healthy", "warning", "broken", "unknown"] },
+              "checked_at": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    }
+  }
+}

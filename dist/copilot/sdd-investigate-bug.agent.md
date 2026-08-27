@@ -1,18 +1,16 @@
-﻿---
+---
 mode: agent
-author: "Felipe Mauricio da Silva"
+author: "Felipe Maurício da Silva"
 description: "Investiga um bug sem alterar código: inspeciona logs, stack traces, classes e testes relacionados. Identifica causa raiz, fluxos afetados, correção mínima, risco de regressão e testes para prevenir recorrência."
 model: "Claude Sonnet 4.6"
+capabilities: "read"
 tools:
   - search/fileSearch
   - search/textSearch
-  - edit/editFiles
-  - edit/createFile
-  - execute/runInTerminal
-  - execute/getTerminalOutput
-  - vscode/askQuestions
 version: "2.3.0"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # Investigate Bug
 

@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/runtime-adapter.schema.json",
+  "title": "SDD Toolkit runtime adapter metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["target", "aliases", "output_filename", "output_dir", "renderer", "section", "project_agent_dir", "user_agent_dir", "skill_dir", "detection"],
+  "properties": {
+    "target": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"},
+    "adapter_schema_version": {"type": "integer", "minimum": 1},
+    "min_version": {"type": "string", "minLength": 1},
+    "aliases": {"type": "array", "items": {"type": "string", "pattern": "^[a-z][a-z0-9-]*$"}, "uniqueItems": true},
+    "output_filename": {"type": "string", "minLength": 1, "pattern": "^[^\\\\/]+$"},
+    "output_dir": {"type": "string", "pattern": "^(?!/)(?![A-Za-z]:)(?!.*(?:^|/)\\.\\.(?:/|$))[^\\\\]+$"},
+    "renderer": {"enum": ["markdown", "codex-toml", "cursor-markdown"]},
+    "section": {"type": "string", "pattern": "^@[a-z0-9-]+$"},
+    "project_agent_dir": {"type": "string", "minLength": 1},
+    "user_agent_dir": {"type": "string", "minLength": 1},
+    "skill_dir": {"type": "string", "minLength": 1},
+    "capabilities": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "detection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["commands", "version_args", "user_profile", "scopes"],
+      "properties": {
+        "commands": {"type": "array", "items": {"type": "string", "minLength": 1}, "minItems": 1, "uniqueItems": true},
+        "version_args": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+        "user_profile": {"type": "string", "minLength": 1},
+        "scopes": {"type": "array", "items": {"enum": ["user", "project", "organization"]}, "minItems": 1, "uniqueItems": true}
+      }
+    }
+  }
+}

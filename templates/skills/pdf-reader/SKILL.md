@@ -26,7 +26,7 @@ documento original e respeitando as regras gerais definidas em
 Use esta skill sempre que:
 - O usuário pedir para "ler", "resumir", "analisar", "extrair" ou "interpretar"
   um arquivo `.pdf`.
-- Houver um PDF como anexo, em `.github/docs/`, `.github/docs/specs/**` ou em qualquer pasta do
+- Houver um PDF como anexo, no workspace da demanda ou em qualquer pasta do
   workspace que precise ser convertido em contexto textual.
 - For necessário derivar regras de negócio, requisitos, critérios de aceitação,
   contratos de API ou modelos de dados a partir de um PDF.
@@ -105,7 +105,7 @@ Esta skill complementa os prompts em `.github/prompts/`:
 - Manter fidelidade ao texto original; paráfrase apenas quando necessário e
   sempre com citação da página.
 - Para PDFs longos, processar em seções e consolidar ao final.
-- Preferir saída em Markdown válido, pronto para colar em `.github/docs/specs/<ID>/`.
+- Preferir saída em Markdown válido, pronto para salvar em `SPEC_PATH`.
 
 ## Checklist final antes de entregar
 - [ ] Origem (arquivo + páginas) citada em cada item relevante.

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/transaction-plan.schema.json",
+  "title": "SDD Toolkit user transaction plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plan_id", "operation", "scope", "profile_root", "created_at", "allowed_roots", "actions", "smoke_checks", "metadata"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "plan_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "operation": {"enum": ["install", "update", "uninstall", "repair", "source"]},
+    "scope": {"const": "user"},
+    "profile_root": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "format": "date-time"},
+    "allowed_roots": {"type": "array", "minItems": 1, "uniqueItems": true, "items": {"type": "string", "minLength": 1}},
+    "actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "kind", "operation", "target", "before_sha256", "after_sha256", "owner"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[A-Za-z0-9._-]{1,128}$"},
+          "kind": {"enum": ["asset", "shim", "path", "manifest", "source"]},
+          "operation": {"enum": ["create", "update", "remove", "preserve"]},
+          "target": {"type": "string", "minLength": 1},
+          "before_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "after_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "owner": {"const": "sdd-toolkit"},
+          "strategy": {"enum": ["windows-user-env", "unix-profile-block"]},
+          "entry": {"type": "string", "minLength": 1},
+          "before_present": {"type": "boolean"},
+          "after_present": {"type": "boolean"}
+        }
+      }
+    },
+    "smoke_checks": {"type": "array", "items": {"type": "string", "minLength": 1}},
+    "metadata": {"type": "object"}
+  }
+}

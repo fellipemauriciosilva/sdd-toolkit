@@ -1,7 +1,10 @@
-﻿---
+---
 name: "sdd-review-code"
 description: "Revisão de código estruturada e multi-perspectiva: alinhamento com spec, arquitetura, corretude, qualidade, segurança e testes. Classifica achados em Crítico / Melhoria / Sugestão / OK."
+capabilities: "read"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # sdd-review-code — Revisão de Código Estruturada
 
@@ -11,15 +14,11 @@ Analise as mudanças atuais com base nas instructions do projeto, `AGENTS.md`, s
 
 ---
 
-## Passo 0 — Resolver caminho do workspace (v2.5)
+## Passo 0 — Resolver contexto pelo CLI (v3.2)
 
-1. Verifique se `PROJECT/.github/sdd.config.md` existe.
-2. **Se existir:** leia `sdd_kit:`, `project:` e `sdd_workspace:`. Compute:
-   - Se `sdd_workspace:` definido: `SPEC_PATH = {sdd_workspace}/{project}/specs/TICKET/`
-   - Caso contrário: `SPEC_PATH = {sdd_kit}/workspace/{project}/specs/TICKET/`
-3. **Se não existir:** `SPEC_PATH = PROJECT/.github/docs/specs/TICKET/` (legado pré-v2.5).
+Receba somente o ticket no projeto aberto e execute `sdd context resolve --ticket TICKET --runtime auto --json`. Consuma `workspace`, `spec_path`, `scope`, `profile` e `runtime`.
 
-Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda.
+Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda. A resolução centralizada cobre a ativação user. Se `sdd` não estiver no PATH, use o `scripts/sdd.py` indicado por `sdd doctor --scope user --json`.
 
 ---
 
@@ -28,6 +27,9 @@ Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arq
 1. Leia `{SPEC_PATH}task.md` para entender o escopo da demanda.
 2. Leia `PROJECT/.github/copilot-instructions.md` e `PROJECT/.github/AGENTS.md` para as regras do projeto.
 3. Leia `PROJECT/.github/docs/project-context/current-architecture.md` (se existir) para entender os padrões de arquitetura.
+4. Leia `{SPEC_PATH}technical-design.md` e o resultado de
+   `sdd-architect review-task` quando existirem. Não trate o review
+   arquitetural como substituto das checagens de corretude, segurança ou testes.
 4. Identifique o diff das mudanças (arquivos novos, modificados ou excluídos).
 5. Leia os arquivos alterados — tanto os arquivos de produção quanto os de teste.
 

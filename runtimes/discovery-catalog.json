@@ -1,0 +1,32 @@
+{
+  "schema_version": 1,
+  "sources": [
+    "https://code.visualstudio.com/docs/configure/command-line",
+    "https://docs.github.com/en/copilot/how-tos/copilot-cli/set-up-copilot-cli/install-copilot-cli",
+    "https://code.claude.com/docs/en/installation",
+    "https://github.com/openai/codex/blob/main/README.md",
+    "https://docs.cursor.com/en/cli/installation"
+  ],
+  "runtimes": {
+    "copilot": {
+      "extension_ids": ["github.copilot", "github.copilot-chat"],
+      "packages": {"npm": ["@github/copilot"], "winget": ["GitHub.Copilot"], "brew": ["copilot-cli"]},
+      "desktop_names": ["GitHub Copilot"]
+    },
+    "claude": {
+      "extension_ids": ["anthropic.claude-code"],
+      "packages": {"npm": ["@anthropic-ai/claude-code"], "winget": ["Anthropic.ClaudeCode"], "brew": ["claude-code", "claude-code@latest"], "linux": ["claude-code"]},
+      "desktop_names": ["Claude"]
+    },
+    "codex": {
+      "extension_ids": ["openai.chatgpt"],
+      "packages": {"npm": ["@openai/codex"], "brew": ["codex"]},
+      "desktop_names": ["Codex", "ChatGPT"]
+    },
+    "cursor": {
+      "extension_ids": [],
+      "packages": {},
+      "desktop_names": ["Cursor"]
+    }
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/user-source.schema.json",
+  "title": "SDD Toolkit user source",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scope", "source_type", "repository_url", "channel", "requested_ref", "resolved_ref", "commit", "source_root", "updated_at"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "scope": {"const": "user"},
+    "source_type": {"enum": ["git", "archive"]},
+    "repository_url": {"type": "string", "minLength": 1},
+    "channel": {"enum": ["stable", "beta", "main", "explicit"]},
+    "requested_ref": {"type": "string"},
+    "resolved_ref": {"type": "string", "minLength": 1},
+    "commit": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"},
+    "source_root": {"type": "string", "minLength": 1},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "cache_path": {"type": "string", "minLength": 1}
+  }
+}

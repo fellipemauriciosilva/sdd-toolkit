@@ -1,7 +1,10 @@
-﻿---
+---
 name: "sdd-setup-project"
 description: "Analisa e documenta um projeto no workspace: faz discovery completo (arquitetura, fluxos, dependências), preenche todos os docs de contexto SDD e gera um índice de navegação DeepWiki com diagramas Mermaid."
+capabilities: "read,write,terminal,questions"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # sdd-setup-project — Discovery e Documentação do Projeto
 
@@ -9,7 +12,7 @@ Analisa um projeto do workspace, preenche toda a estrutura de docs do kit SDD e 
 
 O usuário invoca este agente com o nome do projeto como argumento:
 ```
-/sdd-setup-project gcb-hr-jt-work-journey-back
+/sdd-setup-project example-service-back
 ```
 
 Extraia o nome do projeto como `PROJECT`.
@@ -21,7 +24,7 @@ Extraia o nome do projeto como `PROJECT`.
 1. Verifique se o kit SDD está instalado no projeto:
    - `PROJECT/.github/copilot-instructions.md` existe?
    - `PROJECT/.github/AGENTS.md` existe?
-2. Se **não instalado**: informe ao usuário e sugira executar `/sdd-install-sdd-kit PROJECT` antes de prosseguir.
+2. Se o SDD Kit não estiver disponível: informe ao usuário e sugira executar `sdd install --scope user` fora do projeto antes de prosseguir.
 3. Se **instalado**: leia ambos os arquivos e prossiga.
 
 ---
@@ -249,13 +252,18 @@ Documente a stack completa extraída do `pom.xml` e configurações.
 {inferida dos arquivos de teste encontrados}
 ```
 
-### 4.2 — Perguntar sobre testes de integração
+### 4.2 — Perguntar sobre estratégia de testes adicionais
 
 Ao finalizar as etapas anteriores, pergunte:
 
-> Os docs de contexto foram gerados. Deseja gerar testes de integração E2E agora?
-> - **S** — executar `/sdd-generate-integration-tests` para criar testes Cypress
-> - **N** — encerrar aqui (pode executar `/sdd-generate-integration-tests` depois)
+> Os docs de contexto foram gerados. Deseja iniciar uma estratégia de testes agora?
+> - **I** — executar `/sdd-generate-integration-tests` para fluxos de integração BDD/Cypress
+> - **E** — executar `/sdd-generate-e2e-tests TICKET --plan` para jornadas web Playwright
+> - **N** — encerrar aqui; o bootstrap poderá usar `e2e:auto` durante uma demanda
+
+Não trate integração backend e automação de navegador como o mesmo fluxo. Se o
+projeto já adota Cypress ou outro framework E2E, a opção **E** deve primeiro
+executar discovery e relatar o conflito, sem instalar Playwright automaticamente.
 
 ---
 
@@ -306,10 +314,11 @@ Gere o arquivo `PROJECT/.github/docs/index.md` como ponto de entrada único do c
 ## Fluxo de Trabalho SDD
 
 \`\`\`
-/sdd-create-spec PROJECT TICKET     → scaffold da demanda
-/sdd-analyze-demand PROJECT TICKET  → análise de documentos
-/sdd-implement-spec PROJECT TICKET  → implementação com TDD
+/sdd-create-spec TICKET             → scaffold da demanda
+/sdd-analyze-demand TICKET          → análise de documentos
+/sdd-implement-spec TICKET          → implementação com TDD
 /sdd-generate-integration-tests     → testes E2E Cypress
+/sdd-generate-e2e-tests             → jornadas web Playwright no projeto consumidor
 /sdd-review-code                    → revisão estruturada
 /sdd-update-documentation           → atualização dos docs
 \`\`\`
@@ -337,7 +346,7 @@ Arquivos gerados:
   .github/docs/index.md
 
 Próximo passo sugerido:
-  /sdd-create-spec PROJECT <TICKET>  — iniciar uma demanda
+  /sdd-create-spec <TICKET>  — iniciar uma demanda
 ```
 
 ---

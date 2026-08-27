@@ -1,7 +1,10 @@
-﻿---
+---
 name: "sdd-investigate-bug"
 description: "Investiga um bug sem alterar código: inspeciona logs, stack traces, classes e testes relacionados. Identifica causa raiz, fluxos afetados, correção mínima, risco de regressão e testes para prevenir recorrência."
+capabilities: "read"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # Investigate Bug
 

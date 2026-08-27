@@ -1,7 +1,10 @@
-﻿---
+---
 name: "sdd-generate-tests"
 description: "Gera ou atualiza testes para o código/comportamento selecionado. Segue as instruções em .github/copilot-instructions.md e testes existentes. Cobre happy path, entrada inválida, falhas externas, exceções, condições de contorno e regressões."
+capabilities: "read,write,terminal"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # Generate Tests
 

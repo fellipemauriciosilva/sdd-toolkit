@@ -1,94 +1,45 @@
-﻿---
+---
 name: "sdd-install-sdd-kit"
-description: "Instala o SDD Kit em um projeto. Wrapper do script install.sh/install.ps1 — detecta o OS e executa o instalador CLI. Uso: /sdd-install-sdd-kit [PROJECT_DIR] [--runtime=copilot|claude|all]"
+description: "Orienta a instalação global user-scoped do SDD Toolkit e valida os runtimes disponíveis. Uso: sdd-install-sdd-kit [runtime opcional]."
+capabilities: "read,terminal,questions"
 ---
 
-# sdd-install-sdd-kit — Instalador do SDD Kit (v2.5)
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
-Este agente é um **thin wrapper** em torno dos scripts CLI `install.sh` (Linux/Mac/Git Bash) e `install.ps1` (Windows/PowerShell). Toda a lógica de instalação vive nos scripts — o agente apenas detecta o ambiente e os executa.
+# Instalar o SDD Toolkit
 
----
+Este agente orienta somente a instalação no perfil do usuário. Nunca copia
+agentes, skills, manifestos ou configurações para o projeto consumidor.
 
-## Passo 1 — Coletar argumentos
+## Fluxo
 
-Se o usuário não forneceu o projeto e o runtime, pergunte:
+1. Verifique se `sdd doctor --scope user --json` já encontra uma instalação
+   saudável. Se encontrar, informe os runtimes disponíveis e siga para ativação.
+2. Se o toolkit ainda não estiver instalado, peça somente a localização do
+   pacote/release quando ela não estiver disponível no contexto atual.
+3. Execute primeiro o preview do wrapper adequado ao sistema operacional:
 
-> **Qual projeto você quer instalar o SDD Kit?**
-> Informe o caminho relativo ou absoluto para o diretório do projeto.
-> (ex: `../gcb-hr-api-gestao-meta` ou `C:\Users\...\workspace-gcb\gcb-hr-api-gestao-meta`)
+```powershell
+.\install.ps1 -DryRun
+```
 
-> **Para qual runtime?** `[copilot / claude / all]`
-> - `copilot` — copia agentes para `.github/agents/` do projeto
-> - `claude` — instala bootstrap em `~/.claude/agents/`
-> - `all` — ambos (recomendado)
-
----
-
-## Passo 2 — Identificar o diretório do kit
-
-Se `{PROJECT_DIR}/.github/sdd.config.md` existir, leia o campo `sdd_kit:` e resolva como caminho relativo à raiz do projeto para obter `KIT_ROOT` absoluto.
-
-Se não existir (primeira instalação), o usuário deve informar o caminho do kit, ou infira como o diretório-pai que contém `install.ps1` / `install.sh`.
-
-Identifique `KIT_ROOT` de forma absoluta antes de executar o script.
-
----
-
-## Passo 3 — Executar o instalador CLI
-
-Detecte o OS (verifique se `WINDIR` ou `C:\` existe, ou use `uname`). Execute via bash:
-
-**Linux / Mac:**
 ```bash
-bash "{KIT_ROOT}/install.sh" "{PROJECT_DIR}" --runtime={runtime}
+bash install.sh --dry-run
 ```
 
-**Windows (Git Bash / WSL):**
-```bash
-powershell -File "{KIT_ROOT}/install.ps1" "{PROJECT_DIR}" -Runtime {runtime}
-```
-
-Use a ferramenta bash para executar. Leia a saída completa — o script reporta cada passo com `[OK]`, `[--]` ou `[WARN]`.
-
----
-
-## Passo 4 — Pós-instalação
-
-Após o script concluir com sucesso:
-
-1. Verifique se `.github/copilot-instructions.md` já existe no projeto.
-   - Se não existir, oriente: "Execute `/sdd-setup-project {PROJECT}` para gerar o contexto do projeto (copilot-instructions, AGENTS.md, project-context/)."
-
-2. Atualize `.github/sdd-kit-status.md` no kit:
-
-```markdown
-# SDD Kit Status
-
-| Project | Status | Installed at | Runtime | Version |
-|---------|--------|--------------|---------|---------|
-| {project} | ✅ installed | {today} | {runtime} | v3.1 |
-```
-
-3. Exiba um resumo:
-```
-╔══════════════════════════════════════════════╗
-  SDD Kit instalado em {project}
-╚══════════════════════════════════════════════╝
-  Kit:      {KIT_ROOT}
-  sdd_kit:  {relative path calculado pelo script}
-  Runtime:  {runtime}
-  Workspace: {sdd_workspace}/{project}/specs/
-
-  Próximos passos:
-  ▸ /sdd-setup-project {project}   — gera contexto do projeto
-  ▸ /sdd-bootstrap {project} <TICKET> --run   — inicia primeira demanda
-```
-
----
+4. Mostre os destinos, conflitos e runtimes detectados. Só depois da aprovação
+   explícita do usuário, execute o mesmo wrapper sem `-DryRun`/`--dry-run`.
+5. Valide com `sdd --version`, `sdd doctor --scope user --json` e
+   `sdd context resolve --json` quando o projeto atual já estiver ativado.
+6. Oriente o usuário a abrir o projeto desejado e executar `sdd activate`.
 
 ## Regras
 
-- Nunca edite código de produção ou testes.
-- Se o script falhar (exit != 0), exiba a saída do erro e oriente o usuário a corrigir antes de continuar.
-- Se `install.sh`/`install.ps1` não existir, oriente o usuário a atualizar o kit: o script está em `{KIT_ROOT}/install.sh`.
-- Não recriar arquivos que o script já criou — verifique o output antes de qualquer ação manual.
+- Runtime é opcional: o instalador detecta os harnesses disponíveis; solicite
+  seleção apenas quando o usuário quiser limitar a instalação.
+- Use `--profile-root`, `--install-root`, `--no-path`, JSON e source Git somente
+  quando o usuário declarar ambiente isolado, gerenciado ou automatizado.
+- Não peça `PROJECT_DIR` nem escreva arquivos de configuração no projeto,
+  `.claude`, `.codex` ou `.cursor` no projeto.
+- Se não houver runtime detectado, explique que o CLI pode ser instalado agora e
+  o runtime poderá ser detectado/reinstalado depois.

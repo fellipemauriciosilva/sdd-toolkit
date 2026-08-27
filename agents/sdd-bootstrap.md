@@ -1,7 +1,11 @@
----
+﻿---
 name: sdd-bootstrap
-description: "Orquestrador do SDD Kit. Conduz uma demanda com etapas toggleable (tests/review/docs), quality gates configuráveis (auto/confirm/skip) e 3 checkpoints humanos. Modos --step e --run. Uso: /sdd-bootstrap <PROJECT> <TICKET> [--run] [--profile=X] [--enable/--disable=...] [--pause-at/--auto/--skip=Gn]"
-version: "2.5.0"
+description: "Orquestrador do SDD Kit. Conduz uma demanda com etapas toggleable (tests/e2e/review/docs), quality gates configuráveis e 3 checkpoints humanos. O E2E Playwright é gerado e executado somente no projeto consumidor."
+version: "2.6.0"
+capabilities: "read,write,terminal"
+author: "Felipe Maurício da Silva"
+author_email: "fellipemauriciosilva@gmail.com"
+author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 ---
 
 <!-- @all -->
@@ -12,17 +16,16 @@ Lê o estado da demanda, decide o próximo agente segundo as etapas habilitadas,
 - `--step` (padrão): um agente, painel, devolve controle.
 - `--run`: pipeline contínuo, para só em gates `confirm`/🔒 e falhas persistentes.
 
-## Passo 0 — Resolver caminhos (v2.5)
+## Passo 0 — Resolver contexto pelo CLI
 
-Antes de qualquer leitura de estado, resolva o caminho base da demanda:
+Receba somente o ticket no diretório do projeto aberto. Antes de qualquer leitura
+de estado, execute `sdd context resolve --ticket <TICKET> --runtime auto --json`.
 
-1. Verifique se `<PROJECT>/.github/sdd.config.md` existe.
-2. **Se existir:** leia `sdd_kit:`, `project:` e `sdd_workspace:`. Resolva `sdd_kit` como caminho relativo à raiz do projeto.
-   - Se `sdd_workspace:` definido: `SPEC_PATH = {sdd_workspace}/{project}/specs/<TICKET>/`
-   - Caso contrário: `SPEC_PATH = {sdd_kit}/workspace/{project}/specs/<TICKET>/`
-   - Gates config fallback (após `<PROJECT>/.github/sdd-gates.config.md`): `{sdd_kit}/templates/sdd-gates.config.md`
-3. **Se não existir** (instalação pré-v2.5):
-   - `SPEC_PATH = <PROJECT>/.github/docs/specs/<TICKET>/`
+Consuma o JSON retornado e use exclusivamente `workspace`, `spec_path`, `scope`,
+`profile` e `runtime` para resolver a demanda. O agente não deve abrir ou
+interpretar configurações de caminho fora desse contrato.
+
+Se o comando `sdd` não estiver no PATH, execute o mesmo subcomando pelo `scripts/sdd.py` da instalação detectada pelo `sdd doctor --scope user --json`. Nunca replique a lógica de resolução dentro do agente.
 
 Use `SPEC_PATH` em **todos** os acessos a `session-state.md`, `task.md` e demais arquivos da demanda nesta execução.
 
@@ -30,12 +33,12 @@ Use `SPEC_PATH` em **todos** os acessos a `session-state.md`, `task.md` e demais
 
 ## Passo 1 — Argumentos e configuração
 ```
-/sdd-bootstrap <PROJECT> <TICKET> [--run] [--profile=safe|fast|paranoid|yolo]
-   [--enable=tests,review,docs] [--disable=tests,review,docs]
+/sdd-bootstrap <TICKET> [--run] [--profile=safe|fast|paranoid|yolo]
+   [--enable=tests,e2e,review,docs] [--disable=tests,e2e,review,docs]
    [--pause-at=Gn] [--auto=Gn] [--skip=Gn] [--force-skip=G6]
 ```
-Precedência: flags > estado no session-state > `<PROJECT>/.github/sdd-gates.config.md` > `{sdd_kit}/templates/sdd-gates.config.md` (kit default) > default (`safe`, tudo enabled).
-- Etapas core (`analyze`, `implement`) não podem ser desabilitadas.
+Precedência: flags > estado em `session-state.md` > default (`safe`, tudo enabled).
+- Etapas core (`analyze`, `architecture`, `delivery`) não podem ser desabilitadas.
 - Gates 🔒 (G2/G5/G6) só vão a `auto`/`skip` com flag nominal ou `--profile=yolo`. `skip` em G6 exige `--force-skip=G6`. `yolo` exibe aviso.
 
 ## Passo 2 — Estado
@@ -57,64 +60,94 @@ GitHub Copilot → `github-copilot` · Claude Code → `claude-code`. Detecte pe
 
 <!-- @all -->
 ## Passo 4 — Roteamento dinâmico + modo
-Sequência: `analyze → implement → [tests] → [review] → [docs] → done`.
-`next_agent` = primeira etapa `enabled` a partir da posição atual; pula `disabled`; sem mais enabled → avalia G6 → `done`.
+Sequência base: `analyze → architecture → delivery → [tests] → [e2e-verification] → [review] → [docs] → done`.
+`next_agent` = primeira etapa `enabled` ou `auto` a partir da posição atual; pula
+`disabled`; sem mais etapas → avalia G6 → `done`. Depois de `analyze`, leia e
+valide a seção `Delivery Strategy` de `task.md` com o contrato versionado:
+`sdd delivery validate --task "${SPEC_PATH}task.md" --json`.
+
+Após G1, execute `sdd architecture validate --task "${SPEC_PATH}task.md" --json`.
+Se não houver contrato arquitetural, roteie para `sdd-architect design TICKET`
+antes do G2. A etapa `architecture` é obrigatória e proporcional ao
+impacto (`low`, `medium`, `high`); ela produz `technical-design.md` e
+`ARCHITECTURE_RESULT`, mas nunca código de produção.
+
+O delivery router usa exclusivamente `delivery_kind`:
+
+| `delivery_kind` | Agente de entrega | G3 |
+|---|---|---|
+| `application` | `sdd-implement-spec` | build/teste da aplicação |
+| `refactor` | `sdd-refactor-code` | build/teste da aplicação |
+| `unit-tests` | `sdd-generate-tests` | lint/testes unitários |
+| `integration-tests` | `sdd-generate-integration-tests` | validação do projeto de testes |
+| `e2e-tests` | `sdd-generate-e2e-tests --generate` | discovery/configuração/validação estática |
+| `migration` | análise de migração e entrega aprovada | critérios declarados na spec |
+
+Para `delivery_kind: e2e-tests`, a etapa de entrega substitui `implement`;
+`sdd-implement-spec` não deve ser chamado como fallback. A etapa posterior
+`e2e-verification` pode executar `sdd-generate-e2e-tests --run`, mas geração e
+execução têm estados e evidências diferentes. Agente ausente, capability
+incompatível, contrato inválido ou estratégia ambígua preenche `blocked_on` e
+interrompe o pipeline.
 
 **--step:** painel → `[S/N/A]` → executa um → avalia gate → persiste → painel.
 **--run (loop):**
 ```
 ENQUANTO status != done E awaiting_checkpoint vazio:
   next = roteamento dinâmico
-  se next == implement E G2.policy != auto E G2 pending → CHECKPOINT 1, pare
+  se next == architecture E G2.policy != auto E G2 pending → CHECKPOINT 1, pare
   executa next → avalia gate conforme policy → persiste → painel
 ao fim: avalia G6 → done
 ```
 <!-- @end -->
 
-<!-- @claude -->
-### Paralelização de tests + review (Claude Code)
-
-Após `implement` (G3 passed), se **ambos** `tests` e `review` estiverem `enabled`:
-
-1. Marque `tests:running` e `review:running` no session-state.md.
-2. Use o **Agent tool** para disparar dois subagents em paralelo:
-   - Subagent A: `sdd-generate-integration-tests PROJECT TICKET`
-   - Subagent B: `sdd-review-code PROJECT TICKET`
-3. Aguarde ambos completarem (os resultados chegam de volta ao bootstrap).
-4. Avalie G4 com saída do subagent A; avalie G5 com saída do subagent B.
-5. Se G5 `confirm` e houver achados 🔴 → CHECKPOINT 2 antes de avançar.
-6. Marque `tests:done` e `review:done` no session-state.md; avance para `docs`.
-
-Se apenas **um** dos dois estiver `enabled`, execute sequencialmente. Se **nenhum**, pule direto para `docs`.
-
-Estados intermediários válidos: `running` (exibido como `▶` no painel).
-<!-- @end -->
-
-<!-- @copilot -->
-### Sequência de tests + review (Copilot)
-
-Copilot não tem Agent tool — execute `tests` e `review` em sequência:
-1. Execute `sdd-generate-integration-tests PROJECT TICKET` (se `tests` enabled).
-2. Execute `sdd-review-code PROJECT TICKET` (se `review` enabled).
-3. Avalie G4 e G5 sequencialmente.
-<!-- @end -->
-
 <!-- @all -->
+### Sequência de testes e review
+
+Após `delivery` com G3 aprovado:
+
+1. Execute `sdd-generate-integration-tests TICKET` se `tests` estiver
+   `enabled`.
+2. Execute `sdd-generate-e2e-tests TICKET --run` se `e2e` estiver
+   `enabled` ou `auto`.
+3. Para uma demanda `test-e2e`, `--generate` ocorre na etapa de delivery e
+   `--run` só ocorre nesta etapa de verificação quando estiver habilitada.
+4. Consolide o G4 somente depois de todas as etapas de teste habilitadas.
+5. Execute `sdd-architect review-task TICKET` depois dos testes para
+   verificar drift entre entrega e Technical Design.
+6. Execute `sdd-review-code TICKET` depois dos testes e do review
+   arquitetural, para que o review
+   também cubra configurações, fixtures e specs recém-geradas.
+7. Execute `docs` após G4 e G5.
+
+`tests` e `e2e` só podem rodar em paralelo quando o runtime oferecer subagentes,
+os diretórios de escrita forem comprovadamente disjuntos e nenhuma delas puder
+alterar package manifest, lockfile ou configuração compartilhada. Na ausência
+dessa prova, execute sequencialmente. Review nunca começa antes de ambas.
+
+Estados intermediários válidos: `running` (exibido como `▶`).
+
 ## Passo 5 — Policy do gate
 - `auto`: avalia **com evidência real**; passed→avança; failed→Recuperação (≤2 retry com erro no contexto; >2 escala ao humano).
 - `confirm`: avalia mas SEMPRE pausa p/ confirmação humana.
 - `skip`: marca `skipped`, avança (G6 bloqueado sem `--force-skip`).
-Se a etapa do gate está `disabled` → gate `skipped`.
+Se todas as etapas associadas ao gate estão `disabled` → gate `skipped`.
 
-**G3 (build-green) exige execução real — sem exceção:**
-`--disable=tests` desliga só o G4 (integração), NUNCA o G3. Para marcar G3 `passed` você DEVE rodar o build de fato no terminal e ver sucesso.
+**G4 consolida `verification`:** cada estratégia declarada no contrato precisa
+retornar evidência real. Para E2E, `delivery_status: generated` comprova apenas
+a entrega; somente `e2e_delivery_status: passed` comprova execução. Aceite
+`not-applicable` apenas para verificação de uma entrega que não seja
+`e2e-tests`, sempre com justificativa verificável. `failed`, `flaky`, `blocked`
+ou `not-run` impedem G4 `passed`.
 
-Prefira o script padronizado (quando existir na raiz do projeto):
-```bash
-bash sdd-verify.sh          # Linux/Mac
-pwsh sdd-verify.ps1         # Windows — leia a linha SDD-VERIFY | RESULT=
-```
-Se não existir `sdd-verify`, use `./mvnw clean test` / `npm test` conforme o projeto.
+**G3 exige validação real da entrega — sem exceção:**
+`--disable=tests,e2e` desliga só as verificações adicionais do G4, NUNCA o G3.
+Para `application`/`refactor`, rode o build de fato. Para `e2e-tests`, rode
+discovery, validação de configuração e typecheck/lint disponível; isso não
+substitui a execução E2E exigida pelo G4.
+
+Use os comandos nativos definidos em `task.md` ou descobertos no projeto, como
+`./mvnw clean test`, `npm test` ou o comando documentado pelo consumidor.
 Antes de rodar qualquer build, garanta `JAVA_HOME` na versão do `pom.xml`. Se o build falhar → G3 `failed` → Recuperação. **Proibido** marcar G3 `passed` por suposição, herança de outro runtime ou ausência de terminal.
 
 ## Passo 6 — Checkpoints
@@ -128,12 +161,12 @@ Antes de rodar qualquer build, garanta `JAVA_HOME` na versão do `pom.xml`. Se o
 Gate <Gn>: <status> [<policy>] · Runtime: <runtime>
 
 Pipeline Steps:
-  ✓ analyze  ▸ implement  ◯ tests(DISABLED)  ● review[G5:confirm]  ● docs[G6:confirm]
+  ✓ analyze  ✓ architecture  ✓ delivery  ◯ tests(DISABLED)  ▸ e2e(AUTO)  ● review  ● docs
 Quality Gates:
   G1[auto]✓  G2[confirm]✓  G3[auto]✓  G4[—]⊘disabled  G5[confirm]pending  G6[confirm]pending
 Próximo: <next_agent> (<motivo>)
 ```
-Símbolos: `✓`concluído `▸`atual `▶`running(paralelo) `●`enabled `◯`disabled.
+Símbolos: `✓`concluído `▸`atual `▶`running(paralelo) `●`enabled/auto `◯`disabled.
 
 ## Passo 8 — Persistir
 Campos do estado + Pipeline Steps + Quality Gates (Policy/Status) + Checkpoint + Agent History (append-only):
@@ -152,8 +185,10 @@ Campos do estado + Pipeline Steps + Quality Gates (Policy/Status) + Checkpoint +
 | Etapa | Agente | Gate | Toggleable |
 |-------|--------|------|------------|
 | analyze   | sdd-analyze-demand             | G1 | não |
-| implement | sdd-implement-spec             | G2 → G3 | não |
+| architecture | sdd-architect               | G2 | não |
+| delivery  | delivery router                 | G2 → G3 | não |
 | tests     | sdd-generate-integration-tests | G4 | sim |
+| e2e       | sdd-generate-e2e-tests         | G4 agregado | sim (`auto` por padrão) |
 | review    | sdd-review-code                | G5 | sim |
 | docs      | sdd-update-documentation       | G6 (fim) | sim |
 

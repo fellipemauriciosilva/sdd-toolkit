@@ -29,6 +29,34 @@ TODO — what behavior must remain identical after the refactor? (public contrac
 TODO — describe the target state after refactor.
 Include patterns to apply (e.g.: Extract Service, Replace Inheritance with Composition, Introduce Port/Adapter).
 
+## Delivery Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| delivery_contract_version | 1.0 |
+| delivery_kind | refactor |
+| verification | [unit] |
+| rationale | The requested outcome preserves behavior while changing implementation structure. |
+| owner | `sdd-analyze-demand` |
+| expected_evidence | [DELIVERY_RESULT, UNIT_RESULT] |
+
+## Architecture Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| architecture_contract_version | 1.0 |
+| architecture_impact | medium |
+| architecture_status | pending |
+| architecture_agent | `sdd-architect` |
+| architecture_mode | design |
+| architecture_artifact | `technical-design.md` |
+| full_design_required | true |
+| rationale | TODO — confirmar boundaries e compatibilidade preservados |
+| decisions | none |
+| required_evidence | ARCHITECTURE_RESULT |
+
 ## Affected Files
 
 | File | Layer | Change |

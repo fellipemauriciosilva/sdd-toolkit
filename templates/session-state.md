@@ -21,9 +21,24 @@ project: "<nome-do-projeto>"
 | blocked_on          | —                                   |
 | retries             | 0                                   |
 | affected_projects   | —                                   |
+| schema_version      | 1                                   |
+| delivery_contract_version | 1.0                            |
+| delivery_kind       | application                         |
+| verification        | [unit]                              |
+| delivery_agent      | sdd-implement-spec                  |
+| delivery_mode       | —                                   |
+| delivery_status     | pending                             |
+| e2e_delivery_status | not-applicable                      |
+| architecture_contract_version | 1.0                       |
+| architecture_impact | pending                            |
+| architecture_status | pending                            |
+| architecture_agent  | sdd-architect                      |
+| architecture_mode   | design                             |
+| architecture_artifact | technical-design.md              |
+| architecture_review_status | not-run                     |
 
 > `run_mode`: `step` (um agente por vez) ou `autonomous` (pipeline contínuo).
-> `affected_projects`: lista de projetos adicionais afetados por esta demanda (ex.: `gcb-project-a, gcb-project-b`). Quando preenchido, `sdd-implement-spec` cria um sub-step de implementação por projeto na seção "Multi-projeto" do task.md.
+> `affected_projects`: lista de projetos adicionais afetados por esta demanda (ex.: `example-project-a, example-project-b`). Quando preenchido, `sdd-implement-spec` cria um sub-step de implementação por projeto na seção "Multi-projeto" do task.md.
 > `profile`: conjunto de políticas aplicado (`safe` · `fast` · `paranoid` · `yolo`). Flags individuais sobrescrevem o profile.
 > `awaiting_checkpoint`: quando preenchido, o pipeline está PAUSADO aguardando decisão humana.
 
@@ -33,14 +48,20 @@ Etapas obrigatórias (core) sempre rodam. Etapas toggleable podem ser ligadas/de
 
 | Ordem | Etapa | Agente | Tipo | Estado |
 |-------|-------|--------|------|--------|
-| 1 | analyze   | sdd-analyze-demand             | core      | enabled |
-| 2 | implement | sdd-implement-spec             | core      | enabled |
-| 3 | tests     | sdd-generate-integration-tests | toggleable | enabled |
-| 4 | review    | sdd-review-code                | toggleable | enabled |
-| 5 | docs      | sdd-update-documentation       | toggleable | enabled |
+| 1 | analyze      | sdd-analyze-demand             | core       | enabled |
+| 2 | architecture | sdd-architect                  | core       | enabled |
+| 3 | delivery     | delivery router                 | core       | enabled |
+| 4 | tests        | sdd-generate-integration-tests | toggleable | enabled |
+| 5 | e2e          | sdd-generate-e2e-tests         | toggleable | auto |
+| 6 | review       | sdd-review-code                | toggleable | enabled |
+| 7 | docs         | sdd-update-documentation       | toggleable | enabled |
 
-> Estado: `enabled` · `disabled`. Etapas `core` não podem ser desabilitadas.
-> Aliases p/ flags: `tests` · `review` · `docs`.
+> Estado: `auto` · `enabled` · `disabled`. `auto` é válido para E2E e exige
+> discovery antes de decidir se a etapa é aplicável. Etapas `core` não podem ser desabilitadas.
+> Aliases p/ flags: `tests` · `e2e` · `review` · `docs`.
+
+> Architecture is a core pipeline stage before delivery. G2 requires the
+> Technical Design and implementation plan to be confirmed.
 
 ## Quality Gates
 
@@ -49,12 +70,14 @@ Avaliados após cada agente. `Policy` define o comportamento; `Tipo` é a nature
 | Gate | Após a etapa | Critério | Tipo | Policy | Status |
 |------|--------------|----------|------|--------|--------|
 | G1 spec-complete   | analyze   | task.md com Demand Summary + Expected Behavior | auto | auto    | pending |
-| G2 plan-approved   | implement (pré-código) | Implementation Plan confirmado     | 🔒   | confirm | pending |
-| G3 build-green     | implement | compila + testes unitários passam              | auto | auto    | pending |
-| G4 tests-present   | tests     | testes gerados ou skip justificado             | auto | auto    | pending |
+| G2 technical-plan-approved | implement (pré-código) | Technical Design, affected files, delivery e verification confirmados | 🔒 | confirm | pending |
+| G3 build-green     | delivery  | valida a entrega conforme `delivery_kind`      | auto | auto    | pending |
+| G4 tests-evidenced | tests + e2e | etapas habilitadas executadas ou E2E não aplicável com justificativa | auto | auto | pending |
 | G5 review-clean    | review    | nenhum achado 🔴 Crítico em aberto             | 🔒¹  | confirm | pending |
 | G6 pr-approved     | fim do pipeline | PR revisado e aprovado para merge        | 🔒   | confirm | pending |
 
+> `delivery_status`: `pending` · `generating` · `generated` · `validating` · `passed` · `failed` · `flaky` · `blocked`.
+> `e2e_delivery_status` separa a suíte gerada da suíte executada; `generated` não aprova G4.
 > `Policy`: `auto` (avalia e avança) · `confirm` (sempre pausa) · `skip` (não avalia, avança).
 > `Status`: `pending` · `passed` · `failed` · `waiting-human` · `skipped`.
 > ¹ G5 só pausa se houver achado 🔴 Crítico.

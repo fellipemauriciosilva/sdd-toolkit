@@ -1,0 +1,17 @@
+# SDD Toolkit runtime adapter: Cursor Agent/CLI.
+target: cursor
+adapter_schema_version: 1
+min_version: "unknown"
+aliases: [cursor-agent]
+output_filename: "{name}.md"
+output_dir: "dist/cursor"
+renderer: cursor-markdown
+section: "@cursor"
+capabilities: [agents, skills, user-install, version-detection, markdown-agents]
+user_agent_dir: ".cursor/agents"
+skill_dir: ".agents/skills"
+detection:
+  commands: ["cursor-agent"]
+  version_args: ["--version"]
+  user_profile: ".cursor"
+  scopes: ["user"]

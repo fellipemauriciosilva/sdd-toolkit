@@ -1,0 +1,63 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/build-manifest.schema.json",
+  "title": "SDD Toolkit deterministic build inventory",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "toolkit_version", "provenance", "runtimes", "shared_skills"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "toolkit_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"},
+    "provenance": {
+      "type": "object", "additionalProperties": false,
+      "required": ["origin", "license", "maintainer", "review_status"],
+      "properties": {
+        "origin": {"const": "repository-maintained"},
+        "license": {"const": "MIT"},
+        "review_status": {"enum": ["pending-release-review", "reviewed"]},
+        "maintainer": {
+          "type": "object", "additionalProperties": false,
+          "required": ["name", "email", "linkedin"],
+          "properties": {
+            "name": {"type": "string", "minLength": 1},
+            "email": {"type": "string", "format": "email"},
+            "linkedin": {"type": "string", "format": "uri"}
+          }
+        }
+      }
+    },
+    "runtimes": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["renderer", "count", "files"],
+        "properties": {
+          "renderer": {"type": "string", "minLength": 1},
+          "count": {"type": "integer", "minimum": 0},
+          "files": {"$ref": "#/$defs/files"}
+        }
+      }
+    },
+    "shared_skills": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["count", "files"],
+      "properties": {"count": {"type": "integer", "minimum": 0}, "files": {"$ref": "#/$defs/files"}}
+    }
+  },
+  "$defs": {
+    "files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256"],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+        }
+      }
+    }
+  }
+}

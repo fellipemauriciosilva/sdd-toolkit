@@ -2,14 +2,21 @@
 name: sdd-create-spec
 description: "Cria a pasta de demanda e scaffolda os arquivos de análise em um projeto específico do workspace"
 version: "2.5.0"
+capabilities: "read,write,questions"
+author: "Felipe Maurício da Silva"
+author_email: "fellipemauriciosilva@gmail.com"
+author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 ---
 
 <!-- @all -->
 # Create Spec
 
-The user invoked this prompt passing the project folder name as an argument (e.g. `/create-spec gcb-hr-hub-corporate-email`). Extract that name and use it as `PROJECT`.
+The user invokes this prompt from the target project, optionally passing a ticket.
+Use the current workspace resolved by the CLI; do not require a project-folder
+argument.
 
-Create the demand folder and scaffold the analysis files inside `PROJECT/`. No code analysis, no implementation.
+Create the demand folder and scaffold the analysis files in the resolved
+workspace. No code analysis, no implementation.
 
 ## Template de Contexto (opcional)
 
@@ -30,28 +37,24 @@ Antes de criar a pasta, se o usuário não forneceu uma descrição além do nú
 > _(Ex: "Não pode quebrar contrato do evento — consumidores existentes não devem ser afetados")_
 >
 > **5. Recursos disponíveis** _(opcional)_
-> _(Ex: "Spec em .github/docs/specs/JT-1234/spec.md", "Critérios de aceite no Jira")_
+> _(Ex: "Spec anexada à demanda", "Critérios de aceite no Jira")_
 
 Use as respostas para pré-preencher `spec.md` e complementar a seção Identification do `task.md`. Se o usuário não responder, crie os arquivos com `TODO` nas seções correspondentes.
 
 ---
 
-## Passo 0 — Resolver caminho do workspace (v2.5)
+## Passo 0 — Resolver contexto pelo CLI (v3.2)
 
-1. Verifique se `PROJECT/.github/sdd.config.md` existe.
-2. **Se existir:** leia `sdd_kit:`, `project:` e `sdd_workspace:`. Compute:
-   - Se `sdd_workspace:` definido: `SPEC_PATH = {sdd_workspace}/{project}/specs/TICKET/`
-   - Caso contrário: `SPEC_PATH = {sdd_kit}/workspace/{project}/specs/TICKET/`
-3. **Se não existir:** `SPEC_PATH = PROJECT/.github/docs/specs/TICKET/` (legado pré-v2.5).
+Antes de criar arquivos, receba o ticket no projeto aberto e execute `sdd context resolve --ticket TICKET --runtime auto --json`. Consuma `workspace`, `spec_path`, `scope`, `profile` e `runtime` do JSON.
 
-Use `SPEC_PATH` para criar a pasta da demanda e todos os seus arquivos.
+Use `SPEC_PATH` para criar a pasta da demanda e todos os seus arquivos. A ativação e a resolução são responsabilidade do CLI. Se `sdd` não estiver no PATH, use o `scripts/sdd.py` indicado por `sdd doctor --scope user --json`.
 
 ---
 
 ## What to do
 
 1. Ask the user for the ticket identifier if not provided (e.g. `JT-1234`, `BUG-5678`, `GDAS-999`).
-2. **Se o tipo não foi informado**, pergunte: "Qual o tipo da demanda? `[feature / bugfix / refactor / migration]`". Aguarde a resposta antes de criar qualquer arquivo. Se o usuário não souber, use `feature` como padrão e informe.
+2. **Se o tipo não foi informado**, pergunte: "Qual o tipo da demanda? `[feature / bugfix / refactor / migration / test-e2e]`". Aguarde a resposta antes de criar qualquer arquivo. Se o usuário não souber, use `feature` como padrão e informe. Os aliases `e2e` e `playwright` devem ser confirmados e normalizados para `test-e2e`.
 3. Create the folder `{SPEC_PATH}` (resolvido no Passo 0).
 4. Create the subfolder `{SPEC_PATH}test-case/`.
 5. Crie os arquivos de scaffold no demand folder:
@@ -62,14 +65,15 @@ Use `SPEC_PATH` para criar a pasta da demanda e todos os seus arquivos.
      | bugfix | `{sdd_kit}/templates/specs/types/task-bugfix.md` |
      | refactor | `{sdd_kit}/templates/specs/types/task-refactor.md` |
      | migration | `{sdd_kit}/templates/specs/types/task-migration.md` |
-     Se `sdd_kit` não disponível (legado): use `.github/docs/specs/_template/types/` no projeto.
+     | test-e2e | `{sdd_kit}/templates/specs/types/task-test-e2e.md` |
+     Se o kit não estiver disponível, interrompa e solicite a instalação user-scoped; não use templates dentro do projeto.
      Preencha apenas a tabela **Identification** (Ticket, Type, Status = `analysis`). Deixe as demais seções como TODO.
    - `status-task.md` — fill: Ticket = `[TICKET]`, Status = `analysis`, Last Agent = `sdd-create-spec`, Last Run = today's date, Next Suggested Agent = `sdd-analyze-demand`. Add first row to Agent History.
-   - `session-state.md` — fill: ticket = `[TICKET]`, project = `[PROJECT]`, status = `analysis`, next_agent = `sdd-analyze-demand`, next_instruction = `Executar análise inicial da demanda`. Checkpoint: `Scaffold criado. Nenhum agente executado ainda.`.
+   - `session-state.md` — fill: ticket = `[TICKET]`, project = the resolved workspace name, status = `analysis`, next_agent = `sdd-analyze-demand`, next_instruction = `Executar análise inicial da demanda`. Checkpoint: `Scaffold criado. Nenhum agente executado ainda.`.
    - `spec.md` (optional — create only if the user provides a description beyond the ticket number)
    - `acceptance-criteria.md` (optional)
 6. Confirm the folder was created and list the files (including `test-case/`).
-7. Inform the user: run `/sdd-bootstrap PROJECT [TICKET]` to start or resume the demand from any runtime (GitHub Copilot or Claude Code).
+7. Inform the user: run `/sdd-bootstrap [TICKET]` from this project to start or resume the demand in any installed runtime.
 
 ## Rules
 - Do not read the codebase.

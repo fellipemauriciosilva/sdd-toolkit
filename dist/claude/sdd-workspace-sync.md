@@ -1,7 +1,10 @@
-﻿---
+---
 name: "sdd-workspace-sync"
 description: "Sincroniza o workspace: lista todos os repositórios presentes, gera/atualiza WORKSPACE.md na raiz e, opcionalmente, clona novos repositórios informados pelo usuário. Faz parte do kit SDD."
+capabilities: "read,write,terminal,questions"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # sdd-workspace-sync — Sincronização do Workspace
 
@@ -80,8 +83,8 @@ Gere ou sobrescreva o arquivo `WORKSPACE.md` na raiz `WORKSPACE_ROOT` com o segu
 
 | Projeto | Tech Stack | SDD Kit | Remote |
 |---------|-----------|---------|--------|
-| gcb-hr-hub-example | Java / Spring Boot | ✅ instalado | https://github.com/casas-bahia/gcb-hr-hub-example |
-| gcb-hr-hub-other   | Node.js / TypeScript | ❌ não instalado | https://github.com/casas-bahia/gcb-hr-hub-other |
+| example-example | Java / Spring Boot | ✅ instalado | https://github.com/example-org/example-example |
+| example-other   | Node.js / TypeScript | ❌ não instalado | https://github.com/example-org/example-other |
 
 ## Estatísticas
 
@@ -110,8 +113,8 @@ Após apresentar o catálogo, pergunte ao usuário:
 > Use o formato `nome-do-repo` ou `org/nome-do-repo`. Exemplos:
 >
 > ```
-> gcb-hr-hub-example
-> casas-bahia/gcb-hr-hub-other
+> example-example
+> example-org/example-other
 > ```
 >
 > Deixe em branco para encerrar.
@@ -124,7 +127,7 @@ Se o usuário **informar repositórios**, execute as sub-etapas abaixo.
 
 Para cada item da lista:
 - Se estiver no formato `org/repo`, use como está.
-- Se estiver apenas como `nome-do-repo`, prefixe com `casas-bahia/` → `casas-bahia/nome-do-repo`.
+- Se estiver apenas como `nome-do-repo`, prefixe com `example-org/` → `example-org/nome-do-repo`.
 
 ### 3.2 — Verificar se já existe localmente
 
@@ -153,9 +156,9 @@ Após tentar clonar todos os repositórios solicitados, exiba um resumo:
 
 | Repositório | Status |
 |-------------|--------|
-| gcb-hr-hub-example | ✅ clonado com sucesso |
-| gcb-hr-hub-other   | ⚠️ já presente no workspace |
-| gcb-hr-hub-missing | ❌ falha — sem acesso ou não encontrado |
+| example-example | ✅ clonado com sucesso |
+| example-other   | ⚠️ já presente no workspace |
+| example-missing | ❌ falha — sem acesso ou não encontrado |
 ```
 
 ### 3.5 — Re-escanear e atualizar WORKSPACE.md
@@ -166,20 +169,13 @@ Após a clonagem, volte à **Etapa 1** e repita o scan completo para incluir os 
 
 ## Etapa 4 — Painel de Demandas em Progresso (SDD)
 
-Para cada repositório com SDD Kit instalado, varra os session-states em **dois locais** (v2.5 e legado):
+Para cada repositório ativado, resolva o workspace exclusivamente pelo CLI:
 
 ```
-# v3.1+ — sdd_workspace externo (preferencial, quando definido no sdd.config.md)
-{sdd_workspace}/<projeto>/specs/*/session-state.md
-
-# v2.5 fallback — workspace no kit (sem sdd_workspace)
-{sdd_kit_root}/workspace/<projeto>/specs/*/session-state.md
-
-# legado (pré-v2.5) — dentro do projeto
-<projeto>/.github/docs/specs/*/session-state.md
+sdd context resolve --project-path <projeto> --ticket <ticket> --json
 ```
 
-> Para descobrir os caminhos: leia `<projeto>/.github/sdd.config.md`; resolva `sdd_workspace:` (preferencial) ou `sdd_kit:` (fallback). Se o arquivo não existir, use somente o caminho legado.
+Use `workspace`/`spec_path` retornados; não faça scan de layouts alternativos.
 
 Para cada `session-state.md` encontrado, extraia os campos:
 - `ticket`
@@ -199,14 +195,14 @@ Adicione ao `WORKSPACE.md` a seção:
 
 | Projeto | Ticket | Status | Último Agente | Último Runtime | Próximo Agente | Bloqueio |
 |---------|--------|--------|--------------|----------------|----------------|---------|
-| gcb-hr-hub-example | JT-1234 | implementing | sdd-implement-spec | github-copilot | sdd-review-code | — |
-| gcb-hr-hub-other | JT-5678 | reviewed | sdd-review-code | claude-code | sdd-update-documentation | — |
+| example-example | JT-1234 | implementing | sdd-implement-spec | github-copilot | sdd-review-code | — |
+| example-other | JT-5678 | reviewed | sdd-review-code | claude-code | sdd-update-documentation | — |
 
 ### Demandas Concluídas (últimas 5)
 
 | Projeto | Ticket | Concluído em |
 |---------|--------|-------------|
-| gcb-hr-hub-example | JT-1100 | 2026-06-15 |
+| example-example | JT-1100 | 2026-06-15 |
 ```
 
 Regras:
@@ -223,7 +219,7 @@ Regras:
 > ```
 > /metricas-sprint <PROJETO> <SPRINT_ID>
 > ```
-> Exemplo: `/metricas-sprint gcb-hr-jt-work-journey-back sprint-42`
+> Exemplo: `/metricas-sprint example-service-back sprint-42`
 >
 > Não execute automaticamente durante a sincronização padrão.
 
@@ -289,12 +285,8 @@ Adicione (ou substitua) a seção `## Últimas Métricas de Sprint` no `WORKSPAC
 
 ### 6.1 — Coletar dados de gates de todos os projetos
 
-Para cada repositório com SDD Kit instalado, varre em todos os locais (v3.1+, v2.5 e legado — ver Etapa 4):
-```
-{sdd_workspace}/<projeto>/specs/*/session-state.md           # v3.1+ (sdd_workspace no sdd.config.md)
-{sdd_kit_root}/workspace/<projeto>/specs/*/session-state.md  # v2.5 fallback
-<projeto>/.github/docs/specs/*/session-state.md              # legado
-```
+Para cada repositório ativado, use somente o `workspace` retornado por
+`sdd context resolve` e leia `{workspace}/*/session-state.md`.
 
 Para cada `session-state.md`, extraia a tabela **Quality Gates** completa:
 - `ticket`, `project`
@@ -348,14 +340,14 @@ Gere ou sobrescreva `.github/PIPELINE-STATUS.md` na raiz do workspace SDD Kit co
 
 | Projeto | Ticket | Bloqueio | Desde |
 |---------|--------|----------|-------|
-| gcb-example | JT-123 | ⚠️ build-failed G3 — JAVA_HOME errado | 2026-06-21 |
+| example-project | JT-123 | ⚠️ build-failed G3 — JAVA_HOME errado | 2026-06-21 |
 
 ## Histórico de Gates por Demanda
 
 | Projeto | Ticket | G1 | G2 | G3 | G4 | G5 | G6 | Status |
 |---------|--------|----|----|----|----|----|----|--------|
-| gcb-example | JT-789 | ✓ | ✓ | ✓ | ⊘ | ⊘ | ✓ | done |
-| gcb-other | JT-101 | ✓ | ✓ | ✗ | — | — | — | in-progress |
+| example-project | JT-789 | ✓ | ✓ | ✓ | ⊘ | ⊘ | ✓ | done |
+| example-other | JT-101 | ✓ | ✓ | ✗ | — | — | — | in-progress |
 
 Legenda: `✓` passed · `✗` failed · `⊘` skipped · `⸺` pending
 ```
@@ -374,4 +366,4 @@ Regras:
 - Não clone repositórios sem confirmação explícita do usuário.
 - Se `WORKSPACE.md` já existir, **sempre sobrescreva** — não concatene.
 - Ao clonar, use sempre HTTPS (`https://github.com/...`), nunca SSH, para compatibilidade com ambientes corporativos.
-- Não assuma a organização padrão em nenhum outro contexto além de `casas-bahia/` — se o usuário informar uma org diferente, use a informada.
+- Não assuma a organização padrão em nenhum outro contexto além de `example-org/` — se o usuário informar uma org diferente, use a informada.

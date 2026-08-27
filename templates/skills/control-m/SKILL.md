@@ -67,7 +67,7 @@ OUTCOND        CALCFOLH-DONE          ODAT   ADD
 
 ON NOTOK DO
    SHOUT TO OPER    URGENCY U  MSG "CALCFOLH FALHOU - ACIONAR SUPORTE RH"
-   SHOUT TO MAIL    URGENCY U  DEST rh-suporte@empresa.com  MSG "Job CALCFOLH falhou"
+   SHOUT TO MAIL    URGENCY U  DEST support@example.com  MSG "Job CALCFOLH falhou"
    RERUN
 ENDON
 
@@ -120,7 +120,7 @@ CYCLIC          N
     "When_Notok": {
       "Shout": [
         {"To": "OPER", "Urgency": "U", "Message": "CALCFOLH FALHOU - ACIONAR SUPORTE RH"},
-        {"To": "MAIL", "Urgency": "U", "Destination": "rh-suporte@empresa.com", "Message": "Job CALCFOLH falhou"}
+        {"To": "MAIL", "Urgency": "U", "Destination": "support@example.com", "Message": "Job CALCFOLH falhou"}
       ],
       "Rerun": true
     }
@@ -512,7 +512,7 @@ wait_for_extract = ExternalTaskSensor(
 
 ```
 SHOUT TO OPER     URGENCY U   MSG "CALCFOLH FALHOU - ACIONAR SUPORTE RH"
-SHOUT TO MAIL     URGENCY U   DEST rh-suporte@empresa.com   MSG "Job CALCFOLH falhou"
+SHOUT TO MAIL     URGENCY U   DEST support@example.com   MSG "Job CALCFOLH falhou"
 SHOUT TO SNMP     URGENCY V   DEST monitoring-server        MSG "Job CALCFOLH failed"
 SHOUT TO PROGRAM  URGENCY R   PGM /opt/scripts/alert.sh     ARGS "CALCFOLH NOTOK"
 ```
@@ -541,7 +541,7 @@ SHOUTs podem ser condicionais — definidos dentro de blocos ON:
 
 ```
 ON NOTOK DO
-   SHOUT TO MAIL  URGENCY U  DEST suporte@empresa.com  MSG "Job falhou"
+   SHOUT TO MAIL  URGENCY U  DEST support@example.com  MSG "Job falhou"
 ENDON
 
 ON LATE/SUB DO
@@ -569,7 +569,7 @@ def on_failure_callback(context):
     """Equivalente a ON NOTOK → SHOUT TO MAIL"""
     task_instance = context['task_instance']
     send_email(
-        to="suporte@empresa.com",
+        to="support@example.com",
         subject=f"Job {task_instance.task_id} FALHOU",
         body=f"Erro em {task_instance.dag_id}/{task_instance.task_id}"
     )
@@ -609,7 +609,7 @@ def on_sla_miss_callback(dag, task_list, blocking_task_list, slas, blocking_tis)
 ```
 ON NOTOK DO
    SHOUT TO OPER    URGENCY U   MSG "Job falhou"
-   SHOUT TO MAIL    URGENCY U   DEST suporte@empresa.com  MSG "Job falhou"
+   SHOUT TO MAIL    URGENCY U   DEST support@example.com  MSG "Job falhou"
    RERUN
 ENDON
 ```
@@ -685,7 +685,7 @@ ENDON
 
 ```
 ON NOTOK DO
-   SHOUT TO MAIL  URGENCY U  DEST suporte@empresa.com  MSG "Job falhou - continuando fluxo"
+   SHOUT TO MAIL  URGENCY U  DEST support@example.com  MSG "Job falhou - continuando fluxo"
    DOCOND CALCFOLH-OK ODAT ADD
    FORCEOK
 ENDON
@@ -851,7 +851,7 @@ from airflow.sensors.external_task import ExternalTaskSensor
 default_args = {
     "owner": "USRPROD1",           # OWNER
     "depends_on_past": False,
-    "email": ["rh-suporte@empresa.com"],
+    "email": ["support@example.com"],
     "email_on_failure": True,      # SHOUT TO MAIL
     "email_on_retry": False,
 }

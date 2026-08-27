@@ -1,0 +1,18 @@
+# Workspace legado — specs/session-states migrados para ~/sdd-history-implementations/
+workspace/
+
+# Python test artifacts
+__pycache__/
+*.py[cod]
+
+# Resíduos de ferramentas locais (o toolkit não possui projeto Node/Playwright)
+node_modules/
+playwright-report/
+test-results/
+.nyc_output/
+
+# Extensões locais de modernização geradas pelo ambiente do mantenedor
+.github/modernize/
+
+# Planejamento local; não faz parte do repositório público nem dos pacotes de release.
+docs/ROADMAP.local.md

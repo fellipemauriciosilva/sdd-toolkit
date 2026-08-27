@@ -1,19 +1,18 @@
-﻿---
+---
 mode: agent
-author: "Felipe Mauricio da Silva"
+author: "Felipe Maurício da Silva"
 description: "Lê e extrai conteúdo de documentos Word (.doc, .docx) e PDF (.pdf). Detecta automaticamente o tipo de arquivo, usa a skill correspondente e apresenta o conteúdo estruturado. Opcionalmente salva o conteúdo extraído como Markdown na pasta da spec."
 model: "Claude Sonnet 4.6"
+capabilities: "read,write"
 tools:
   - search/fileSearch
   - search/textSearch
   - edit/editFiles
   - edit/createFile
-  - execute/runInTerminal
-  - execute/getTerminalOutput
-  - vscode/askQuestions
 version: "2.3.0"
 ---
 
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # sdd-read-document — Leitura de Documentos (Word e PDF)
 
@@ -21,15 +20,17 @@ Lê e extrai conteúdo de documentos Word ou PDF, apresenta o conteúdo estrutur
 
 O usuário invoca este agente informando o caminho do arquivo:
 ```
-/sdd-read-document PROJECT/.github/docs/specs/JT-1234/spec.docx
-/sdd-read-document PROJECT/.github/docs/specs/JT-1234/requisitos.pdf
+/sdd-read-document /caminho/para/spec.docx
+/sdd-read-document /caminho/para/requisitos.pdf
 ```
 
 ---
 
-## Passo 0 — Resolver kit
+## Passo 0 — Resolver contexto pelo CLI (v3.2)
 
-Se o `FILE_PATH` fornecido permite inferir um `PROJECT` (ex: `PROJECT/.github/docs/specs/TICKET/arquivo.docx`), leia `PROJECT/.github/sdd.config.md` e extraia `sdd_kit:`. Resolva como caminho relativo ao projeto. Use `{sdd_kit}` nas referências abaixo. Se `sdd.config.md` não existir, use o diretório pai do projeto onde o kit estiver instalado.
+Se o `FILE_PATH` permite inferir `PROJECT` e `TICKET`, execute `sdd context resolve --project-path PROJECT --ticket TICKET --runtime RUNTIME --json` e use `workspace`, `spec_path`, `scope`, `profile` e `runtime` do resultado. Para localizar o kit, use `sdd doctor --scope user --json` e o campo `kit_root`.
+
+Se `sdd` não estiver no PATH, execute os mesmos subcomandos pelo `scripts/sdd.py` da instalação detectada. Use `{KIT_ROOT}` e `{SPEC_PATH}` nas referências abaixo.
 
 ---
 
@@ -116,7 +117,7 @@ Mostre o conteúdo extraído completo e pergunte:
 > - **N** — apenas visualizar, sem salvar
 
 **Caminho padrão de salvamento** (se aplicável):
-- Se o arquivo está em `PROJECT/.github/docs/specs/TICKET/` → salvar como `{nome-do-arquivo}.md` na mesma pasta
+- Se o arquivo está em `SPEC_PATH` → salvar como `{nome-do-arquivo}.md` na mesma pasta
 - Caso contrário → salvar na mesma pasta do arquivo original com extensão `.md`
 
 ---
@@ -131,7 +132,7 @@ Se o usuário confirmar o salvamento:
 
 > Arquivo salvo em: `{caminho}`
 >
-> Próximo passo sugerido: `/sdd-analyze-demand PROJECT TICKET` para usar este documento na análise da demanda.
+> Próximo passo sugerido: no projeto consumidor, execute `/sdd-analyze-demand TICKET` para usar este documento na análise da demanda.
 
 ---
 
@@ -141,4 +142,4 @@ Se o usuário confirmar o salvamento:
 - Se parte do documento não for legível (página escaneada, imagem, etc.), informe explicitamente: `[Conteúdo não extraível — possível imagem ou página escaneada]`.
 - Não invente conteúdo para seções que não puderam ser lidas.
 - Não modifique arquivos existentes — apenas crie novos arquivos `.md`.
-- Se a skill correspondente não existir no workspace, informe ao usuário e encerre com a mensagem: `Skill {doc-reader/pdf-reader} não encontrada em {sdd_kit}/templates/skills/. Verifique se o caminho do kit está correto em sdd.config.md.`
+- Se a skill correspondente não existir no workspace, informe ao usuário e encerre com a mensagem: `Skill {doc-reader/pdf-reader} não encontrada em {KIT_ROOT}/templates/skills/. Verifique a instalação user com sdd doctor --scope user.`

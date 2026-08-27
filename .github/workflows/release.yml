@@ -1,0 +1,57 @@
+name: Release SDD Toolkit
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing signed tag to publish
+        required: true
+        type: string
+      prerelease:
+        description: Mark the GitHub release as prerelease
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+  attestations: write
+  id-token: write
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    environment: release
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+        with:
+          fetch-depth: 0
+          ref: ${{ inputs.tag || github.ref }}
+      - name: Require a signed tag
+        shell: bash
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          git verify-tag "$tag"
+      - name: Run release gates
+        run: |
+          python -m pip install -r requirements-dev.txt
+          python -m unittest discover -s tests -v
+          bash scripts/validate-public-content.sh
+          python scripts/sdd_compile.py --runtime all
+      - name: Build deterministic artifacts
+        shell: bash
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          python scripts/sdd_release.py --out-dir release --version "${tag#v}"
+      - name: Verify checksums
+        shell: bash
+        run: cd release && sha256sum --check SHA256SUMS
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          tag="${{ inputs.tag || github.ref_name }}"
+          prerelease=""
+          if [ "${{ inputs.prerelease || false }}" = "true" ]; then prerelease="--prerelease"; fi
+          gh release create "$tag" release/sdd-toolkit-*.zip release/sdd-toolkit-*.tar.gz release/SHA256SUMS release/sbom.cdx.json release/provenance.json --verify-tag --generate-notes $prerelease

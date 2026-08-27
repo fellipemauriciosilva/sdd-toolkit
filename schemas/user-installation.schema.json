@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/user-installation.schema.json",
+  "title": "SDD Toolkit user installation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "scope", "profile_root", "kit_root", "toolkit_version", "updated_at", "managed_files"],
+  "properties": {
+    "schema_version": {"enum": [1, 2]},
+    "scope": {"const": "user"},
+    "profile_root": {"type": "string", "minLength": 1},
+    "kit_root": {"type": "string", "minLength": 1},
+    "toolkit_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:[-+][0-9A-Za-z.-]+)?$"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source_type", "repository_url", "channel", "requested_ref", "resolved_ref", "commit"],
+      "properties": {
+        "source_type": {"enum": ["local", "git", "archive"]},
+        "repository_url": {"type": "string", "minLength": 1},
+        "channel": {"enum": ["stable", "beta", "main", "explicit"]},
+        "requested_ref": {"type": "string", "minLength": 1},
+        "resolved_ref": {"type": "string", "minLength": 1},
+        "commit": {"type": "string", "pattern": "^[0-9a-f]{7,64}$"}
+      }
+    },
+    "cli": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["path", "sha256", "owner", "registered_at"],
+      "properties": {
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "owner": {"const": "sdd-toolkit"},
+        "registered_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "path_integration": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["strategy", "entry", "target", "marker", "updated_at"],
+      "properties": {
+        "strategy": {"enum": ["windows-user-env", "unix-profile-block", "none"]},
+        "entry": {"type": "string", "minLength": 1},
+        "target": {"type": "string", "minLength": 1},
+        "marker": {"const": "sdd-toolkit"},
+        "updated_at": {"type": "string", "format": "date-time"}
+      }
+    },
+    "managed_files": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["path", "sha256", "owner"],
+        "anyOf": [
+          {"required": ["runtime"]},
+          {"required": ["runtimes"]}
+        ],
+        "properties": {
+          "path": {"type": "string", "minLength": 1},
+          "runtime": {"enum": ["copilot", "claude", "codex", "cursor"]},
+          "runtimes": {
+            "type": "array",
+            "minItems": 1,
+            "uniqueItems": true,
+            "items": {"enum": ["copilot", "claude", "codex", "cursor"]}
+          },
+          "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "owner": {"const": "sdd-toolkit"}
+        }
+      }
+    }
+  }
+}

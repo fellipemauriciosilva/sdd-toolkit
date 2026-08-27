@@ -1,32 +1,34 @@
-﻿---
+---
 mode: agent
-author: "Felipe Mauricio da Silva"
+author: "Felipe Maurício da Silva"
 description: "Lê os documentos de demanda e complementa task.md em um projeto específico do workspace"
 model: "Claude Sonnet 4.6"
+capabilities: "read,write"
 tools:
   - search/fileSearch
   - search/textSearch
   - edit/editFiles
   - edit/createFile
-  - execute/runInTerminal
-  - execute/getTerminalOutput
-  - vscode/askQuestions
 version: "2.5.0"
 ---
 
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
+
 # Analyze Demand
 
-The user invoked this prompt passing the project folder name and optionally the ticket as arguments (e.g. `/analyze-demand gcb-hr-hub-corporate-email JT-1234`). Extract those values and use them as `PROJECT` and `TICKET`.
+The user invokes this prompt from the target project and may provide a ticket
+(for example `/sdd-analyze-demand JT-1234`). Resolve the workspace through the
+CLI; do not require a project-folder argument.
 
 Read all documents in the demand folder and complement `task.md` based exclusively on what is documented — no code analysis, no implementation.
 
-## Passo 0 — Resolver caminho do workspace (v2.5)
+## Passo 0 — Resolver contexto pelo CLI (v3.2)
 
-1. Verifique se `PROJECT/.github/sdd.config.md` existe.
-2. **Se existir:** leia `sdd_kit:`, `project:` e `sdd_workspace:`. Compute:
-   - Se `sdd_workspace:` definido: `SPEC_PATH = {sdd_workspace}/{project}/specs/TICKET/`
-   - Caso contrário: `SPEC_PATH = {sdd_kit}/workspace/{project}/specs/TICKET/`
-3. **Se não existir:** `SPEC_PATH = PROJECT/.github/docs/specs/TICKET/` (legado pré-v2.5).
+Receba somente o ticket no projeto aberto e execute `sdd context resolve --ticket TICKET --runtime auto --json`.
+
+Use exclusivamente `workspace`, `spec_path`, `scope`, `profile` e `runtime` do resultado. Não replique a resolução de caminhos no agente.
+
+Se `sdd` não estiver no PATH, use o `scripts/sdd.py` da instalação indicada por `sdd doctor --scope user --json`.
 
 Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda.
 
@@ -48,7 +50,72 @@ Read all files present in the demand folder:
 - `test-case/` — all files inside this folder (if any)
 - Any other `.md`, `.doc`, `.docx` or `.pdf` file found in the folder
 
-Also read `PROJECT/.github/docs/project-context/project-overview.md` for domain vocabulary only.
+When available, read the project's existing context documentation for domain
+vocabulary only. Do not depend on a fixed documentation path.
+
+### Step 2B — Detecção de Tipo: Migração
+
+Após ler o `task.md`, verifique o campo **Type** na tabela de Identification:
+
+```markdown
+| Type | migration | ← este campo
+```
+
+**Se `Type: migration`:** antes de prosseguir para o Step 3, invoque o agente especialista `sdd-analyze-migration` para analisar o sistema legado e produzir `migration-analysis.md`.
+
+Execute:
+```
+@sdd-analyze-migration TICKET
+```
+
+Aguarde o agente concluir e produzir `{SPEC_PATH}migration-analysis.md` antes de continuar.
+
+Após o `sdd-analyze-migration` retornar:
+1. Leia o `{SPEC_PATH}migration-analysis.md` gerado
+2. Use seus achados no Step 3 para enriquecer as seções do `task.md`:
+   - **Demand Summary** → inclua a estratégia de migração e o padrão escolhido (Strangler Fig, etc.)
+   - **Expected Behavior** → derive do plano de ondas e dos bounded contexts identificados
+   - **Risks and Assumptions** → inclua os Gaps, Bloqueadores e Riscos do `migration-analysis.md`
+   - **Open Questions** → adicione as Questões Arquiteturais Abertas (Q#) do relatório
+
+> Se `Type` não for `migration`, ignore este step e prossiga normalmente para o Step 3.
+
+---
+
+### Step 2C — Estratégia de entrega e verificação
+
+Depois de ler os documentos, resolva o contrato de delivery antes de preencher o
+plano. Use o comando determinístico quando disponível:
+
+```bash
+sdd delivery propose --type <TYPE> --description "<resumo seguro>" --json
+```
+
+Registre em `task.md` a seção `Delivery Strategy` com:
+
+| Campo | Regra |
+|---|---|
+| `delivery_contract_version` | `1.0` |
+| `delivery_kind` | `application`, `refactor`, `unit-tests`, `integration-tests`, `e2e-tests` ou `migration` |
+| `verification` | lista sem duplicatas de `none`, `unit`, `integration`, `e2e` |
+| `rationale` | justificativa baseada nos documentos, sem inferir requisito ausente |
+| `owner` | `sdd-analyze-demand` |
+| `expected_evidence` | evidências exigidas pelo gate correspondente |
+
+Defaults por tipo: `feature`/`bugfix` → `application`; `refactor` → `refactor`;
+`migration` → `migration`; `test-e2e` → `e2e-tests` com `verification: [e2e]`.
+Uma feature web pode manter `application` e adicionar `e2e` apenas como
+verificação. Não confunda a entrega de uma suíte com a execução de uma suíte.
+
+Para `test-e2e`, não encaminhe para `sdd-implement-spec`: a entrega será
+`sdd-generate-e2e-tests --generate` depois do G2. Se houver conflito de
+framework, ausência de base URL/start/auth ou ambiguidade entre entrega e
+verificação, registre `blocked_on`/Open Question e aguarde decisão humana.
+
+Valide a proposta com `python scripts/sdd_delivery.py propose --type <TYPE>` ou
+`sdd delivery validate` quando o JSON do contrato estiver disponível.
+
+---
 
 ### Step 3 — Complement `task.md` from the documents
 
@@ -132,7 +199,7 @@ Show a summary table:
 | Implementation Plan | 🔜 pending code analysis |
 
 Then inform the user:
-> `task.md` updated with document-based analysis. Review the filled sections and run `/implement-spec PROJECT [TICKET]` to start the code analysis and implementation.
+> `task.md` updated with document-based analysis. Review the filled sections and run `/sdd-implement-spec [TICKET]` from this project to start the code analysis and implementation.
 
 ## Rules
 - Do not read or analyze the codebase.
@@ -154,8 +221,8 @@ Atualize `{SPEC_PATH}session-state.md` (caminho resolvido no Passo 0) com os seg
 | last_agent        | sdd-analyze-demand                                          |
 | last_runtime      | github-copilot _ou_ claude-code (detecte pelo contexto)     |
 | last_run          | \<timestamp ISO 8601\>                                      |
-| next_agent        | sdd-implement-spec                                          |
-| next_instruction  | Analisar código e implementar conforme task.md preenchido   |
+| next_agent        | sdd-architect                                           |
+| next_instruction  | Classificar impacto e produzir Technical Design antes do G2; delivery ocorre depois da aprovação |
 | blocked_on        | — (ou descreva perguntas em aberto que bloqueiam a análise) |
 
 Escreva um **Checkpoint** descrevendo:

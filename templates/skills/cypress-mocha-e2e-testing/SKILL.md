@@ -3,7 +3,7 @@ name: "cypress-mocha-e2e-testing"
 description: "Cypress 13+ com Mocha para testes E2E de Front-End Web — Custom Commands, fixtures por domínio, multi-ambiente, cy.visit(), cy.intercept(). USE quando: criar testes de interface web, validar jornadas de usuário, testar fluxos completos UI, configurar ambientes QA/DEV/PROD, ou gerar specs E2E Web."
 ---
 
-# Cypress Mocha E2E Testing — Casas Bahia
+# Cypress Mocha E2E Testing — Example Organization
 
 Padrões e boas práticas para automação de testes **E2E de Front-End Web** com Cypress 13+ e Mocha.
 
@@ -68,8 +68,8 @@ Suporte a múltiplos ambientes (QA, DEV, PROD) via arquivos de configuração se
 ### `config/qa.js`
 ```javascript
 module.exports = {
-  baseUrl: "https://qa.casasbahia.com.br",
-  baseApi: "https://api-qa.casasbahia.com.br",
+  baseUrl: "https://qa.example.com",
+  baseApi: "https://api-qa.example.com",
   viewportHeight: 768,
   viewportWidth: 1440,
   defaultCommandTimeout: 10000,
@@ -80,8 +80,8 @@ module.exports = {
 ### `config/dev.js`
 ```javascript
 module.exports = {
-  baseUrl: "https://dev.casasbahia.com.br",
-  baseApi: "https://api-dev.casasbahia.com.br",
+  baseUrl: "https://dev.example.com",
+  baseApi: "https://api-dev.example.com",
   viewportHeight: 768,
   viewportWidth: 1440
 }
@@ -90,8 +90,8 @@ module.exports = {
 ### `config/prod.js`
 ```javascript
 module.exports = {
-  baseUrl: "https://www.casasbahia.com.br",
-  baseApi: "https://api.casasbahia.com.br",
+  baseUrl: "https://www.example.com",
+  baseApi: "https://api.example.com",
   viewportHeight: 768,
   viewportWidth: 1440
 }
@@ -534,7 +534,7 @@ cy.get('.dropdown').should('have.class', 'active');
 ### Validações de URL
 ```javascript
 cy.url().should('include', '/dashboard');
-cy.url().should('eq', 'https://qa.casasbahia.com.br/login');
+cy.url().should('eq', 'https://qa.example.com/login');
 ```
 
 ### Validações de Requisições
@@ -637,4 +637,4 @@ describe('Login @smoke @critical', () => {
 - [Cypress Docs](https://docs.cypress.io)
 - [Cypress Best Practices](https://docs.cypress.io/guides/references/best-practices)
 - [Mocha Documentation](https://mochajs.org/)
-- Padrões Casas Bahia Tech (este documento)
+- Padrões Example Organization Tech (este documento)

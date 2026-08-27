@@ -32,6 +32,34 @@ TODO — exactly what happens when the bug is triggered.
 
 TODO — exactly what should happen instead.
 
+## Delivery Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| delivery_contract_version | 1.0 |
+| delivery_kind | application |
+| verification | [unit] |
+| rationale | The regression fix is application delivery; verification is defined by `sdd-analyze-demand`. |
+| owner | `sdd-analyze-demand` |
+| expected_evidence | [DELIVERY_RESULT, UNIT_RESULT] |
+
+## Architecture Strategy
+
+| Field | Value |
+|-------|-------|
+| schema_version | 1 |
+| architecture_contract_version | 1.0 |
+| architecture_impact | low |
+| architecture_status | pending |
+| architecture_agent | `sdd-architect` |
+| architecture_mode | design |
+| architecture_artifact | `technical-design.md` |
+| full_design_required | false |
+| rationale | TODO — confirmar se a correção permanece isolada |
+| decisions | none |
+| required_evidence | ARCHITECTURE_RESULT |
+
 ## Root Cause Analysis
 
 TODO — fill after analyzing the code. Identify the exact class, method and line where the bug originates.

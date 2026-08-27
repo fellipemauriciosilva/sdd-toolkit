@@ -1,25 +1,24 @@
-﻿---
-name: "sdd-update-documentation"
-description: "Atualiza a documentação do projeto após implementação: project-context/, architecture/ e specs/. Uso: /sdd-update-documentation <PROJECT> <TICKET>"
 ---
+name: "sdd-update-documentation"
+description: "Atualiza a documentação do projeto após implementação. Uso: sdd-update-documentation <TICKET>."
+capabilities: "read,write"
+---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # Update Documentation
 
-O usuário invocou este agente com o projeto e o ticket (ex: `/sdd-update-documentation gcb-hr-hub-corporate-email JT-1234`). Extraia esses valores como `PROJECT` e `TICKET`.
+O usuário invocou este agente com o projeto e o ticket (ex: `/sdd-update-documentation example-corporate-email JT-1234`). Extraia esses valores como `PROJECT` e `TICKET`.
 
 Atualize a documentação do projeto para refletir as mudanças implementadas no ticket.
 
 ---
 
-## Passo 0 — Resolver caminho do workspace (v2.5)
+## Passo 0 — Resolver contexto pelo CLI (v3.2)
 
-1. Verifique se `PROJECT/.github/sdd.config.md` existe.
-2. **Se existir:** leia `sdd_kit:`, `project:` e `sdd_workspace:`. Compute:
-   - Se `sdd_workspace:` definido: `SPEC_PATH = {sdd_workspace}/{project}/specs/TICKET/`
-   - Caso contrário: `SPEC_PATH = {sdd_kit}/workspace/{project}/specs/TICKET/`
-3. **Se não existir:** `SPEC_PATH = PROJECT/.github/docs/specs/TICKET/` (legado pré-v2.5).
+Receba somente o ticket no projeto aberto e execute `sdd context resolve --ticket TICKET --runtime auto --json`. Consuma `workspace`, `spec_path`, `scope`, `profile` e `runtime`.
 
-Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda.
+Use `SPEC_PATH` em todos os acessos a `session-state.md`, `task.md` e demais arquivos da demanda. A resolução centralizada cobre a ativação user. Se `sdd` não estiver no PATH, use o `scripts/sdd.py` indicado por `sdd doctor --scope user --json`.
 
 ---
 

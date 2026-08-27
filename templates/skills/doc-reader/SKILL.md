@@ -32,7 +32,7 @@ respeitando as regras gerais definidas em `.github/copilot-instructions.md`.
 Use esta skill sempre que:
 - O usuário pedir para "ler", "resumir", "analisar", "extrair" ou "interpretar"
   um arquivo `.doc` ou `.docx`.
-- Houver um documento Word como anexo, em `.github/docs/`, `.github/docs/specs/**` ou em
+- Houver um documento Word como anexo, no workspace da demanda ou em
   qualquer pasta do workspace que precise ser convertido em contexto textual.
 - For necessário derivar regras de negócio, requisitos, critérios de aceitação,
   contratos de API ou modelos de dados a partir de um documento Word.
@@ -142,7 +142,7 @@ Esta skill complementa os prompts em `.github/prompts/`:
   sempre com citação da seção.
 - Preservar tabelas e listas estruturadas (Markdown).
 - Para documentos longos, processar em seções e consolidar ao final.
-- Preferir saída em Markdown válido, pronto para colar em `.github/docs/specs/<ID>/`.
+- Preferir saída em Markdown válido, pronto para salvar em `SPEC_PATH`.
 
 ## Checklist final antes de entregar
 - [ ] Origem (arquivo + seção/heading) citada em cada item relevante.

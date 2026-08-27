@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/transaction-journal.schema.json",
+  "title": "SDD Toolkit user transaction journal",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "plan_id", "status", "phase", "created_at", "updated_at", "plan", "backups", "events", "conflicts", "journal_hash"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "plan_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "status": {"enum": ["active", "recovery-blocked", "committed", "rolled_back"]},
+    "phase": {"enum": ["planned", "staged", "assets", "shim", "path", "manifest", "verified", "committed"]},
+    "created_at": {"type": "string", "format": "date-time"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "plan": {"$ref": "transaction-plan.schema.json"},
+    "backups": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["record_type", "action_id", "target", "existed", "before_sha256", "after_sha256", "backup"],
+        "properties": {
+          "record_type": {"enum": ["file", "windows-path"]},
+          "action_id": {"type": "string", "minLength": 1},
+          "target": {"type": "string", "minLength": 1},
+          "existed": {"type": "boolean"},
+          "before_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "after_sha256": {"type": ["string", "null"], "pattern": "^[0-9a-f]{64}$"},
+          "backup": {"type": ["string", "null"]}
+        }
+      }
+    },
+    "events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["phase", "at"],
+        "properties": {"phase": {"type": "string", "minLength": 1}, "at": {"type": "string", "format": "date-time"}}
+      }
+    },
+    "conflicts": {"type": "array", "items": {"type": "string"}},
+    "journal_hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+  }
+}

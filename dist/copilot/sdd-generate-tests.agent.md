@@ -1,8 +1,9 @@
-﻿---
+---
 mode: agent
-author: "Felipe Mauricio da Silva"
+author: "Felipe Maurício da Silva"
 description: "Gera ou atualiza testes para o código/comportamento selecionado. Segue as instruções em .github/copilot-instructions.md e testes existentes. Cobre happy path, entrada inválida, falhas externas, exceções, condições de contorno e regressões."
 model: "Claude Sonnet 4.6"
+capabilities: "read,write,terminal"
 tools:
   - search/fileSearch
   - search/textSearch
@@ -10,9 +11,10 @@ tools:
   - edit/createFile
   - execute/runInTerminal
   - execute/getTerminalOutput
-  - vscode/askQuestions
 version: "2.3.0"
 ---
+
+> **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
 
 # Generate Tests
 

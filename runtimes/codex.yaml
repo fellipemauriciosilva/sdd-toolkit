@@ -1,0 +1,17 @@
+# SDD Toolkit runtime adapter: Codex.
+target: codex
+adapter_schema_version: 1
+min_version: "unknown"
+aliases: [openai-codex]
+output_filename: "{name}.toml"
+output_dir: "dist/codex"
+renderer: codex-toml
+section: "@codex"
+capabilities: [agents, skills, user-install, version-detection, toml-agents]
+user_agent_dir: ".codex/agents"
+skill_dir: ".agents/skills"
+detection:
+  commands: ["codex"]
+  version_args: ["--version"]
+  user_profile: ".codex"
+  scopes: ["user"]

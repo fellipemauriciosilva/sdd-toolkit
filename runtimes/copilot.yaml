@@ -5,13 +5,29 @@
 # as seções @copilot + @all. O resultado vai para dist/copilot/.
 
 target: copilot
+adapter_schema_version: 1
+min_version: "unknown"
 output_filename: "{name}.agent.md"
-install_path: "{project}/.github/agents/"
+output_dir: "dist/copilot"
+renderer: "markdown"
+section: "@copilot"
+user_agent_dir: ".copilot/agents"
+skill_dir: ".copilot/skills"
+capabilities: [agents, skills, user-install, version-detection]
 
-# Frontmatter injetado em cada agente gerado
+# Detecção e escopo user usados por `sdd doctor --scope user`.
+detection:
+  commands: ["copilot"]
+  version_args: ["--version"]
+  user_profile: ".copilot"
+  scopes: ["user"]
+
+# Frontmatter injetado em cada agente gerado. A lista efetiva de tools é
+# derivada da declaração `capabilities` do frontmatter fonte; capabilities
+# ausentes fazem o build falhar.
 frontmatter:
   mode: agent
-  author: "Felipe Mauricio da Silva"
+  author: "{author}"
   description: "{description}"
   model: "Claude Sonnet 4.6"
   tools:
@@ -36,4 +52,4 @@ exclude_sections:
 notes:
   - "Copilot não tem Agent tool — paralelismo não disponível; tests + review rodam em sequência"
   - "Terminal disponível via execute/runInTerminal — G3 pode ser validado com execução real"
-  - "Agentes devem ser copiados para {project}/.github/agents/ (Copilot não lê de diretórios externos)"
+  - "Assets SDD são instalados no perfil user; a ativação não escreve no projeto consumidor"

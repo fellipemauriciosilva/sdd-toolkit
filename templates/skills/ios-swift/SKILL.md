@@ -33,7 +33,7 @@ Feature/
 
 ## Múltiplos Targets (3 marcas)
 
-Base de código única gera 3 apps: **CasasBahia**, **Extra**, **PontoFrio**.
+Base de código única gera 3 apps: **ExampleAppA**, **Extra**, **ExampleAppC**.
 Cada um com variantes: Dev, Homolog, Staging, Release.
 Configurações de marca ficam em diretórios dedicados e plists do Salesforce.
 
@@ -55,7 +55,7 @@ Configurações de marca ficam em diretórios dedicados e plists do Salesforce.
 ## Testes
 
 - **XCTest** com padrão **Spy** para objetos de teste.
-- Espelham a estrutura de `ViaVarejo/` em `ViaVarejoTests/`.
+- Espelham a estrutura de `LegacyPortfolio/` em `LegacyPortfolioTests/`.
 - Nomear dublês de teste com sufixo `*Spy`.
 - Testar Coordinator, Presenter, Repository e ViewController separadamente.
 
@@ -107,7 +107,7 @@ Crie um `README.md` na raiz do projeto com, no mínimo:
 - Como instalar dependências (`pod install`)
 - Como rodar o projeto no simulador/device
 - Como rodar os testes (`xcodebuild test`)
-- Targets e variantes disponíveis (CasasBahia, Extra, PontoFrio × Dev/Homolog/Staging/Release)
+- Targets e variantes disponíveis (ExampleAppA, Extra, ExampleAppC × Dev/Homolog/Staging/Release)
 - Variáveis de ambiente necessárias (sem valores reais)
 
 ## Lista de Verificação ao Criar Feature
