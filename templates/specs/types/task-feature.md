@@ -1,10 +1,10 @@
-# Task: [JT-XXXX — Feature Name]
+# Task: [ABC-123 — Feature Name]
 
 ## Identification
 
 | Field | Value |
 |-------|-------|
-| Ticket | JT-XXXX |
+| Ticket | ABC-123 |
 | Type | feature |
 | Priority | TODO |
 | Status | analysis |
@@ -34,7 +34,7 @@ Include acceptance criteria when available.
 | verification | [unit] |
 | rationale | Application behavior is implemented by `sdd-implement-spec`; verification is defined by `sdd-analyze-demand`. |
 | owner | `sdd-analyze-demand` |
-| expected_evidence | [DELIVERY_RESULT, UNIT_RESULT] |
+| expected_evidence | [payload.delivery, payload.unit] |
 
 ## Architecture Strategy
 
@@ -50,17 +50,17 @@ Include acceptance criteria when available.
 | full_design_required | true |
 | rationale | TODO — classificar impacto após discovery técnico |
 | decisions | none |
-| required_evidence | ARCHITECTURE_RESULT |
+| required_evidence | payload.architecture |
 
 ## Affected Files
 
 | File | Layer | Change |
 |------|-------|--------|
-| `path/to/Class.java` | application | create / modify |
+| `path/to/affected-component` | application | create / modify |
 
 ## Entry Point
 
-TODO — where does this feature start? (REST endpoint, Kafka topic, scheduler, UI action, etc.)
+TODO — where does this feature start? (API, message, scheduler, UI action, CLI, etc.)
 
 ## Flow Analysis
 

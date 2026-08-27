@@ -3,13 +3,13 @@
 
 ## Invocação
 ```
-/sdd-bootstrap example-project JT-1234 --run
+/sdd-bootstrap example-project ABC-1234 --run
 ```
 
 ## Estado do session-state.md
 ```yaml
 status: in-progress
-last_runtime: claude-code
+last_runtime: claude
 retries: 2
 blocked_on: —
 ```

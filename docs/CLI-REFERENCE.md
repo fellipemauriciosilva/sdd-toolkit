@@ -22,9 +22,18 @@ Todos os comandos mutáveis usam preview por padrão; `--apply` confirma a açã
 | Resolver contexto | `sdd context resolve --ticket ABC-123 --json` |
 | Validar delivery | `sdd delivery validate --task /caminho/task.md --json` |
 | Validar arquitetura | `sdd architecture validate --task /caminho/task.md --json` |
+| Validar resultado de agente | `sdd result validate --file /caminho/result.json --json` |
+| Lint dos contratos de agente | `sdd lint --json` |
 
 Use `sdd <comando> --help` para parâmetros completos. Consulte
-[USER-SCOPE.md](USER-SCOPE.md) para ownership, source, cache offline e conflitos.
+[USER-SCOPE.md](USER-SCOPE.md) para ownership, source, cache offline e conflitos
+e [AGENT-CONTRACT.md](AGENT-CONTRACT.md) para o envelope `AGENT_RESULT` validado
+por `sdd result validate`.
+
+`sdd lint` roda sobre uma árvore-fonte do toolkit e verifica contexto canônico,
+capabilities versus efeitos, política comum injetada, equivalência entre os
+quatro runtimes, ausência de artefatos legados e cobertura de evals. Sai com
+código 1 quando encontra qualquer finding.
 
 ## Descoberta de runtimes
 

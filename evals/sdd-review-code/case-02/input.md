@@ -1,5 +1,5 @@
 # Eval Input — sdd-review-code case-02
-# Cenário: Código limpo com apenas achado 🟡 → G5 passed sem checkpoint
+# Cenário: Código limpo com apenas achado `major` → G5 passed sem checkpoint
 
 ## Código para revisar
 ```java
@@ -14,5 +14,5 @@ public void execute(UUID metaId) {
 ```
 
 ## Achados observados
-- Método não loga a operação (apenas 🟡 Melhoria)
-- Sem verificação de estado duplo antes de aprovar (apenas 🟡 Melhoria)
+- Método não loga a operação (apenas `major`)
+- Sem verificação de estado duplo antes de aprovar (apenas `major`)

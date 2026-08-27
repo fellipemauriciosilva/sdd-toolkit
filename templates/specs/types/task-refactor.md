@@ -1,10 +1,10 @@
-# Task: [JT-XXXX — Refactor Description]
+# Task: [ABC-123 — Refactor Description]
 
 ## Identification
 
 | Field | Value |
 |-------|-------|
-| Ticket | JT-XXXX |
+| Ticket | ABC-123 |
 | Type | refactor |
 | Priority | TODO |
 | Status | analysis |
@@ -39,7 +39,7 @@ Include patterns to apply (e.g.: Extract Service, Replace Inheritance with Compo
 | verification | [unit] |
 | rationale | The requested outcome preserves behavior while changing implementation structure. |
 | owner | `sdd-analyze-demand` |
-| expected_evidence | [DELIVERY_RESULT, UNIT_RESULT] |
+| expected_evidence | [payload.delivery, payload.unit] |
 
 ## Architecture Strategy
 
@@ -55,13 +55,13 @@ Include patterns to apply (e.g.: Extract Service, Replace Inheritance with Compo
 | full_design_required | true |
 | rationale | TODO — confirmar boundaries e compatibilidade preservados |
 | decisions | none |
-| required_evidence | ARCHITECTURE_RESULT |
+| required_evidence | payload.architecture |
 
 ## Affected Files
 
 | File | Layer | Change |
 |------|-------|--------|
-| `path/to/Class.java` | application | refactor |
+| `path/to/affected-component` | application | refactor |
 
 ## Implementation Plan
 
@@ -78,7 +78,7 @@ Include patterns to apply (e.g.: Extract Service, Replace Inheritance with Compo
 TODO — what must NOT change:
 - Public API contracts: TODO
 - Database schema: TODO
-- Kafka message format: TODO
+- Message or event format: TODO
 - External service calls: TODO
 
 ## Rollback Strategy

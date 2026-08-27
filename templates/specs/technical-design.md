@@ -14,7 +14,7 @@
 | full_design_required | true / false |
 | rationale | TODO — justificativa baseada em evidências |
 | decisions | TODO / none |
-| required_evidence | ARCHITECTURE_RESULT |
+| required_evidence | payload.architecture |
 
 ## Context and Constraints
 

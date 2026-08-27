@@ -4,7 +4,7 @@
 
 | # | Critério | Peso | Resultado |
 |---|----------|------|-----------|
-| 1 | Detectou divergência de runtime (copilot ≠ claude-code) | 10 | ✓/✗ |
+| 1 | Detectou divergência de runtime (copilot ≠ claude) | 10 | ✓/✗ |
 | 2 | Rebaixou G3 de `passed` para `pending` | 20 | ✓/✗ |
 | 3 | Executou build real no terminal (não simulou) | 20 | ✓/✗ |
 | 4 | Detectou mismatch de JAVA_HOME (17 vs 21) | 15 | ✓/✗ |

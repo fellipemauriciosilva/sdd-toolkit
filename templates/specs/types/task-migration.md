@@ -9,8 +9,8 @@
 | Priority | TODO |
 | Status | analysis |
 | Wave / Onda | TODO (Onda 0 / Onda 1 / etc.) |
-| Source system | TODO (ex.: EAR/DB2/JBoss) |
-| Target system | TODO (ex.: Spring Boot 3.3 + Java 21 + PostgreSQL) |
+| Source system | TODO |
+| Target system | TODO |
 
 ---
 
@@ -26,12 +26,12 @@ TODO — what must be true before this migration can start.
 ## Current State (Source)
 
 TODO — describe the legacy system component being migrated.
-Include: class names, DB tables, message topics, external integrations.
+Include: components, data stores, message channels and external integrations.
 
 ## Target State
 
 TODO — describe what the migrated component should look like.
-Include: new class names, new DB tables/Flyway migrations, new topics, hexagonal boundaries.
+Include: target components, data migrations, message channels and boundaries.
 
 ## Delivery Strategy
 
@@ -43,7 +43,7 @@ Include: new class names, new DB tables/Flyway migrations, new topics, hexagonal
 | verification | [integration] |
 | rationale | Migration delivery requires integration and data-integrity evidence. |
 | owner | `sdd-analyze-demand` |
-| expected_evidence | [DELIVERY_RESULT, INTEGRATION_RESULT] |
+| expected_evidence | [payload.delivery, payload.integration] |
 
 ## Architecture Strategy
 
@@ -59,14 +59,14 @@ Include: new class names, new DB tables/Flyway migrations, new topics, hexagonal
 | full_design_required | true |
 | rationale | TODO — consolidar a arquitetura alvo e a estratégia de coexistência |
 | decisions | none |
-| required_evidence | ARCHITECTURE_RESULT |
+| required_evidence | payload.architecture |
 
 ## Affected Files
 
 | File | Layer | Change |
 |------|-------|--------|
-| `legacy/OldClass.java` | — | delete |
-| `domain/model/NewEntity.java` | domain | create |
+| `path/to/legacy-component` | — | delete / replace |
+| `path/to/target-component` | domain / application | create |
 
 ## Migration Plan
 
@@ -78,11 +78,11 @@ Include: new class names, new DB tables/Flyway migrations, new topics, hexagonal
 
 ## Data Migration
 
-TODO — describe any data migration needed (Flyway scripts, backfill jobs, data transformations).
+TODO — describe any data migration needed (migration scripts, backfill jobs, data transformations).
 
 | Script | Description |
 |--------|-------------|
-| `V00XX__migrate_table.sql` | TODO |
+| `migration-script` | TODO |
 
 ## Tests to Add / Update
 
@@ -98,7 +98,7 @@ TODO — how to roll back if the migration fails in production.
 
 | Gate | Criterion | Responsible |
 |------|-----------|-------------|
-| Build passes | `./mvnw clean test` green | sdd-bootstrap G3 |
+| Build passes | Command declared by the project is green | sdd-bootstrap G3 |
 | Data integrity | TODO | manual check |
 | Integration smoke | TODO | team |
 

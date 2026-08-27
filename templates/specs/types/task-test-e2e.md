@@ -23,7 +23,7 @@ TODO — descreva a jornada de navegador que precisa ser entregue como suíte E2
 | verification | e2e |
 | owner | sdd-analyze-demand |
 | rationale | TODO — por que a suíte E2E é a entrega desta demanda? |
-| expected_evidence | DELIVERY_RESULT, E2E_RESULT |
+| expected_evidence | payload.delivery, payload.e2e |
 
 ## Architecture Strategy
 
@@ -39,7 +39,7 @@ TODO — descreva a jornada de navegador que precisa ser entregue como suíte E2
 | full_design_required | true |
 | rationale | TODO — confirmar boundaries, ambiente, auth e dados da jornada |
 | decisions | none |
-| required_evidence | ARCHITECTURE_RESULT |
+| required_evidence | payload.architecture |
 
 ## User Journeys
 

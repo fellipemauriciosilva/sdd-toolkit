@@ -8,7 +8,7 @@ e o vínculo com um projeto é registrado no estado local.
 |---|---|---|
 | Perfil do runtime | agentes e skills compilados | somente itens com owner e hash SDD são alterados |
 | Estado local do SDD Toolkit | activation, source, instalação e journal | escrita atômica e recovery antes de nova operação |
-| Workspace user | specs e `session-state.md` | fora do repositório consumidor |
+| Workspace user | specs, `task.md` e `session-state.md` | fora do repositório consumidor; apenas o `sdd-bootstrap` escreve o estado |
 | Shim e PATH | comando `sdd`, quando solicitado | removidos apenas se comprovadamente owned |
 
 `install`, `update` e `uninstall` usam preview por padrão. Arquivos modificados,
@@ -37,3 +37,9 @@ sdd uninstall --scope user --apply --json
 
 Para associar uma demanda a um projeto, use `sdd activate --scope user` e
 `sdd context resolve`; essas operações não escrevem no projeto.
+
+`task.md` e `session-state.md` são os únicos arquivos canônicos de uma demanda.
+Os agentes derivam `PROJECT_PATH`, `SDD_WORKSPACE`, `SPEC_PATH` e `RUNTIME` do
+JSON de `sdd context resolve` e confirmam que todo destino de escrita está
+contido em `PROJECT_PATH` ou `SPEC_PATH`. Veja
+[AGENT-CONTRACT.md](AGENT-CONTRACT.md).

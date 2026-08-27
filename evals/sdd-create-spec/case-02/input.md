@@ -3,7 +3,7 @@
 
 ## Invocação
 ```
-/sdd-create-spec example-api-gestao-meta JT-3456
+/sdd-create-spec example-api-gestao-meta ABC-3456
 ```
 
 ## Contexto

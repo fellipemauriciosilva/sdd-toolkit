@@ -55,7 +55,7 @@ def propose(type_name: str, description: str = "") -> Dict[str, Any]:
         "verification": verification,
         "rationale": rationale,
         "owner": "sdd-analyze-demand",
-        "expected_evidence": ["DELIVERY_RESULT", *[f"{item.upper()}_RESULT" for item in verification if item != "none"]],
+        "expected_evidence": ["payload.delivery", *[f"payload.{item}" for item in verification if item != "none"]],
         "commands": [],
     }
 

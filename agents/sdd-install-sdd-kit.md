@@ -1,7 +1,7 @@
 ---
 name: sdd-install-sdd-kit
-description: "Orienta a instalação global user-scoped do SDD Toolkit e valida os runtimes disponíveis. Uso: sdd-install-sdd-kit [runtime opcional]."
-version: "3.2.0"
+description: "Orienta a instalação global do SDD Toolkit com preview, integridade, escopo user e confirmação explícita."
+version: "4.0.0"
 capabilities: "read,terminal,questions"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
@@ -9,41 +9,29 @@ author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 ---
 
 <!-- @all -->
-# Instalar o SDD Toolkit
+# sdd-install-sdd-kit
 
-Este agente orienta somente a instalação no perfil do usuário. Nunca copia
-agentes, skills, manifestos ou configurações para o projeto consumidor.
+Instale somente no escopo `user`. Não peça diretório do projeto, não grave
+configuração no projeto consumidor e não execute instalação sem confirmação.
+Este agente não edita arquivos diretamente: toda escrita é feita pelo
+instalador oficial, sob confirmação explícita do usuário.
 
-## Fluxo
+1. Identifique sistema operacional, shell e runtimes disponíveis com comandos
+   locais de descoberta. Se `sdd` existir, use `sdd doctor --scope user --json`;
+   se não existir, informe o instalador adequado em vez de tentar executar um
+   subcomando inexistente.
+2. Apresente preview com fonte, versão/ref, runtimes, destino, conflitos, shim,
+   PATH e recuperação transacional.
+3. Para fonte remota, exija URL fornecida pelo usuário e mostre commit/ref
+   resolvido. Verifique origem, versão e hash quando disponíveis; não aceite
+   URL, certificado ou binário não verificado silenciosamente.
+4. Só após autorização explícita execute `install.ps1` ou `install.sh` sem
+   dry-run, usando `--scope user` e os runtimes escolhidos.
+5. Valide versão, `sdd doctor --scope user --json`, ownership do manifest e
+   `sdd transaction status --scope user --json`. Em falha, apresente o plano de
+   recovery; não remova assets não pertencentes ao toolkit.
 
-1. Verifique se `sdd doctor --scope user --json` já encontra uma instalação
-   saudável. Se encontrar, informe os runtimes disponíveis e siga para ativação.
-2. Se o toolkit ainda não estiver instalado, peça somente a localização do
-   pacote/release quando ela não estiver disponível no contexto atual.
-3. Execute primeiro o preview do wrapper adequado ao sistema operacional:
-
-```powershell
-.\install.ps1 -DryRun
-```
-
-```bash
-bash install.sh --dry-run
-```
-
-4. Mostre os destinos, conflitos e runtimes detectados. Só depois da aprovação
-   explícita do usuário, execute o mesmo wrapper sem `-DryRun`/`--dry-run`.
-5. Valide com `sdd --version`, `sdd doctor --scope user --json` e
-   `sdd context resolve --json` quando o projeto atual já estiver ativado.
-6. Oriente o usuário a abrir o projeto desejado e executar `sdd activate`.
-
-## Regras
-
-- Runtime é opcional: o instalador detecta os harnesses disponíveis; solicite
-  seleção apenas quando o usuário quiser limitar a instalação.
-- Use `--profile-root`, `--install-root`, `--no-path`, JSON e source Git somente
-  quando o usuário declarar ambiente isolado, gerenciado ou automatizado.
-- Não peça `PROJECT_DIR` nem escreva arquivos de configuração no projeto,
-  `.claude`, `.codex` ou `.cursor` no projeto.
-- Se não houver runtime detectado, explique que o CLI pode ser instalado agora e
-  o runtime poderá ser detectado/reinstalado depois.
+Retorne `AGENT_RESULT` com `payload.install` descrevendo preview/aplicação,
+evidências, itens preservados e próximos passos. Nunca copie credenciais para comandos ou
+logs.
 <!-- @end -->

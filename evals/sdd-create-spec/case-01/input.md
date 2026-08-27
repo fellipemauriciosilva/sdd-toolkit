@@ -3,10 +3,10 @@
 
 ## Invocação
 ```
-/sdd-create-spec example-api-gestao-meta JT-2345 --type=feature
+/sdd-create-spec example-api-gestao-meta ABC-2345 --type=feature
 ```
 
 ## Contexto
 - Projeto existe com SDD Kit instalado
-- JT-2345 ainda não tem pasta no workspace user
+- ABC-2345 ainda não tem pasta no workspace user
 - Template disponível no toolkit instalado

@@ -1,0 +1,223 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/agent-result.schema.json",
+  "title": "SDD Toolkit agent result",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "agent",
+    "agent_version",
+    "runtime",
+    "status",
+    "summary",
+    "changes",
+    "evidence",
+    "decisions",
+    "preexisting_failures",
+    "residual_risks",
+    "blocked_on",
+    "next_agent"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": 1
+    },
+    "agent": {
+      "type": "string",
+      "pattern": "^sdd-[a-z0-9-]+$"
+    },
+    "agent_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "runtime": {
+      "enum": [
+        "copilot",
+        "claude",
+        "codex",
+        "cursor"
+      ]
+    },
+    "status": {
+      "enum": [
+        "completed",
+        "blocked",
+        "failed",
+        "not-applicable"
+      ]
+    },
+    "summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "changes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "action"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "enum": [
+              "created",
+              "modified",
+              "deleted",
+              "none"
+            ]
+          }
+        }
+      }
+    },
+    "evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "kind",
+          "source",
+          "outcome"
+        ],
+        "properties": {
+          "kind": {
+            "enum": [
+              "command",
+              "file",
+              "test",
+              "observation"
+            ]
+          },
+          "source": {
+            "type": "string",
+            "minLength": 1
+          },
+          "outcome": {
+            "enum": [
+              "passed",
+              "failed",
+              "observed",
+              "not-run"
+            ]
+          }
+        }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "statement",
+          "confidence",
+          "evidence_refs"
+        ],
+        "properties": {
+          "statement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "confidence": {
+            "enum": [
+              "confirmed",
+              "inferred",
+              "unknown"
+            ]
+          },
+          "evidence_refs": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          }
+        }
+      }
+    },
+    "preexisting_failures": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "residual_risks": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocked_on": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "next_agent": {
+      "type": "string"
+    },
+    "payload": {
+      "type": "object",
+      "description": "Resultado específico do agente. A chave é o payload_key declarado em docs/AGENT-CONTRACT.md.",
+      "additionalProperties": false,
+      "minProperties": 0,
+      "properties": {
+        "analysis": {
+          "type": "object"
+        },
+        "architecture": {
+          "type": "object"
+        },
+        "delivery": {
+          "type": "object"
+        },
+        "document": {
+          "type": "object"
+        },
+        "documentation": {
+          "type": "object"
+        },
+        "e2e": {
+          "type": "object"
+        },
+        "install": {
+          "type": "object"
+        },
+        "integration": {
+          "type": "object"
+        },
+        "investigation": {
+          "type": "object"
+        },
+        "migration_analysis": {
+          "type": "object"
+        },
+        "orchestration": {
+          "type": "object"
+        },
+        "project_discovery": {
+          "type": "object"
+        },
+        "review": {
+          "type": "object"
+        },
+        "scaffold": {
+          "type": "object"
+        },
+        "unit": {
+          "type": "object"
+        },
+        "workspace": {
+          "type": "object"
+        }
+      }
+    }
+  }
+}

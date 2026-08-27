@@ -1,5 +1,5 @@
 ---
-ticket: "JT-XXXX"
+ticket: "ABC-123"
 project: "<nome-do-projeto>"
 ---
 
@@ -7,7 +7,7 @@ project: "<nome-do-projeto>"
 
 | Campo               | Valor                               |
 |---------------------|-------------------------------------|
-| ticket              | JT-XXXX                             |
+| ticket              | ABC-123                             |
 | project             | <nome-do-projeto>                   |
 | status              | analysis                            |
 | run_mode            | step                                |
@@ -39,7 +39,7 @@ project: "<nome-do-projeto>"
 
 > `run_mode`: `step` (um agente por vez) ou `autonomous` (pipeline contínuo).
 > `affected_projects`: lista de projetos adicionais afetados por esta demanda (ex.: `example-project-a, example-project-b`). Quando preenchido, `sdd-implement-spec` cria um sub-step de implementação por projeto na seção "Multi-projeto" do task.md.
-> `profile`: conjunto de políticas aplicado (`safe` · `fast` · `paranoid` · `yolo`). Flags individuais sobrescrevem o profile.
+> `profile`: conjunto de políticas aplicado (`safe` · `fast` · `paranoid` · `permissive`). Flags individuais sobrescrevem o profile. Mesmo no perfil permissivo, ações externas exigem autorização explícita.
 > `awaiting_checkpoint`: quando preenchido, o pipeline está PAUSADO aguardando decisão humana.
 
 ## Pipeline Steps
@@ -81,7 +81,7 @@ Avaliados após cada agente. `Policy` define o comportamento; `Tipo` é a nature
 > `Policy`: `auto` (avalia e avança) · `confirm` (sempre pausa) · `skip` (não avalia, avança).
 > `Status`: `pending` · `passed` · `failed` · `waiting-human` · `skipped`.
 > ¹ G5 só pausa se houver achado 🔴 Crítico.
-> 🔒 G2, G5 e G6 só vão para `auto`/`skip` com flag nominal explícita (`--auto=G6`) ou `--profile=yolo`.
+> 🔒 G2, G5 e G6 só vão para `auto`/`skip` com flag nominal explícita. Mesmo no perfil `permissive`, publicação, PR e ações externas exigem autorização explícita.
 
 ## Checkpoint
 

@@ -13,7 +13,7 @@ class E2EAgentContractTests(unittest.TestCase):
             "sdd context resolve",
             "not-applicable",
             "framework-conflict",
-            "E2E_RESULT",
+            "payload.e2e",
             "Não execute instalação",
             "Todos os arquivos",
         ):

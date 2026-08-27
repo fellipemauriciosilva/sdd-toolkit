@@ -8,7 +8,7 @@
 
 ## Estado do session-state.md (pré-existente)
 ```yaml
-last_runtime: github-copilot
+last_runtime: copilot
 status: in-progress
 ```
 
@@ -22,7 +22,7 @@ status: in-progress
 ## Agent History
 | Timestamp | Agent | Runtime | Gate | Resultado |
 |-----------|-------|---------|------|-----------|
-| 2026-06-19 | sdd-architect | github-copilot | G3:passed[auto] | Build simulado — Copilot sem terminal |
+| 2026-06-19 | sdd-architect | copilot | G3:passed[auto] | Build simulado — Copilot sem terminal |
 
 ## Contexto adicional
 - pom.xml exige Java 21

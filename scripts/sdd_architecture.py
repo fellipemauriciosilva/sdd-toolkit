@@ -51,7 +51,7 @@ def propose(type_name: str, description: str = "", delivery_kind: str = "") -> D
         "architecture_artifact": "technical-design.md",
         "rationale": rationale,
         "decisions": [],
-        "required_evidence": ["ARCHITECTURE_RESULT"],
+        "required_evidence": ["payload.architecture"],
         "full_design_required": impact != "low",
     }
 

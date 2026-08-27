@@ -26,6 +26,31 @@ class CliTests(unittest.TestCase):
         self.assertEqual(0, version.returncode)
         self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), version.stdout.strip())
 
+    def test_agent_result_validation(self):
+        with tempfile.TemporaryDirectory(prefix="sdd-result-") as temporary:
+            result_path = Path(temporary) / "result.json"
+            result_path.write_text(json.dumps({
+                "schema_version": 1,
+                "agent": "sdd-generate-tests",
+                "agent_version": "4.0.0",
+                "runtime": "copilot",
+                "status": "completed",
+                "summary": "Testes gerados.",
+                "changes": [{"path": "tests/example", "action": "created"}],
+                "evidence": [{"kind": "command", "source": "test command", "outcome": "passed"}],
+                "decisions": [{"statement": "Framework existente reutilizado.", "confidence": "confirmed", "evidence_refs": [0]}],
+                "preexisting_failures": [],
+                "residual_risks": [],
+                "blocked_on": [],
+                "next_agent": "sdd-bootstrap",
+            }), encoding="utf-8")
+            validated = subprocess.run(
+                [sys.executable, str(CLI), "result", "validate", "--file", str(result_path), "--json"],
+                capture_output=True, text=True, check=False,
+            )
+            self.assertEqual(0, validated.returncode, msg=validated.stderr)
+            self.assertEqual("valid", json.loads(validated.stdout)["status"])
+
     def test_user_activation_preview_and_context_do_not_write_project(self):
         with tempfile.TemporaryDirectory(prefix="sdd-cli-") as temporary:
             root = Path(temporary)

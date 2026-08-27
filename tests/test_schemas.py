@@ -6,6 +6,7 @@ from jsonschema import Draft202012Validator, FormatChecker
 
 
 ROOT = Path(__file__).resolve().parents[1]
+TOOLKIT_VERSION = (ROOT / "VERSION").read_text(encoding="utf-8").strip()
 
 
 class SchemaTests(unittest.TestCase):
@@ -32,7 +33,7 @@ class SchemaTests(unittest.TestCase):
             "workspace_root": "C:/Users/user/sdd-history-implementations/example-aaaaaaaaaaaa",
             "workspace": "C:/Users/user/sdd-history-implementations/example-aaaaaaaaaaaa/example/specs",
             "kit_root": "C:/tools/sdd-toolkit",
-            "toolkit_version": "3.1.1",
+            "toolkit_version": TOOLKIT_VERSION,
             "created_at": "2026-08-26T12:00:00Z",
             "updated_at": "2026-08-26T12:00:00Z",
         }
@@ -47,7 +48,7 @@ class SchemaTests(unittest.TestCase):
             "scope": "user",
             "name": "default",
             "runtimes": ["copilot", "claude"],
-            "toolkit_version": "3.1.1",
+            "toolkit_version": TOOLKIT_VERSION,
         })
 
     def test_user_installation_schema_rejects_non_toolkit_ownership(self):
@@ -57,7 +58,7 @@ class SchemaTests(unittest.TestCase):
             "scope": "user",
             "profile_root": "C:/Users/user",
             "kit_root": "C:/tools/sdd-toolkit",
-            "toolkit_version": "3.1.1",
+            "toolkit_version": TOOLKIT_VERSION,
             "updated_at": "2026-08-26T12:00:00Z",
             "managed_files": [{
                 "path": ".copilot/agents/example.agent.md",
@@ -134,7 +135,7 @@ class SchemaTests(unittest.TestCase):
             "verification": ["e2e"],
             "rationale": "A suíte E2E é a entrega solicitada.",
             "owner": "sdd-analyze-demand",
-            "expected_evidence": ["DELIVERY_RESULT", "E2E_RESULT"],
+            "expected_evidence": ["payload.delivery", "payload.e2e"],
             "commands": [],
         })
         invalid = {
@@ -143,7 +144,7 @@ class SchemaTests(unittest.TestCase):
             "verification": ["unit"],
             "rationale": "invalid",
             "owner": "sdd-analyze-demand",
-            "expected_evidence": ["DELIVERY_RESULT"],
+            "expected_evidence": ["payload.delivery"],
         }
         self.assertTrue(list(validator.iter_errors(invalid)))
 
@@ -159,9 +160,31 @@ class SchemaTests(unittest.TestCase):
             "architecture_artifact": "technical-design.md",
             "rationale": "A demanda altera um fluxo existente.",
             "decisions": [],
-            "required_evidence": ["ARCHITECTURE_RESULT"],
+            "required_evidence": ["payload.architecture"],
             "full_design_required": True,
         })
+
+    def test_agent_result_schema_accepts_evidenced_result(self):
+        validator = self.load("agent-result.schema.json")
+        result = {
+            "schema_version": 1,
+            "agent": "sdd-review-code",
+            "agent_version": "4.0.0",
+            "runtime": "codex",
+            "status": "completed",
+            "summary": "Nenhum achado crítico.",
+            "changes": [{"path": "none", "action": "none"}],
+            "evidence": [{"kind": "test", "source": "python -m unittest", "outcome": "passed"}],
+            "decisions": [{"statement": "O diff está dentro da spec.", "confidence": "confirmed", "evidence_refs": [0]}],
+            "preexisting_failures": [],
+            "residual_risks": [],
+            "blocked_on": [],
+            "next_agent": "sdd-bootstrap",
+        }
+        validator.validate(result)
+        invalid = dict(result)
+        invalid["runtime"] = "github-copilot"
+        self.assertTrue(list(validator.iter_errors(invalid)))
 
     def test_identity_and_versioned_capabilities_schemas_accept_repository_metadata(self):
         identity = json.loads((ROOT / "metadata" / "project-identity.json").read_text(encoding="utf-8"))

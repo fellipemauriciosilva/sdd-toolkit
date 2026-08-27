@@ -3,7 +3,7 @@
 
 ## Contexto
 - Projeto: example-api-gestao-meta
-- Ticket: JT-1234
+- Ticket: ABC-1234
 - Spec: task.md com Demand Summary e Expected Behavior preenchidos
 - Docs de referência: `.github/docs/migration/STATUS-ONDA-0.md` existe
 

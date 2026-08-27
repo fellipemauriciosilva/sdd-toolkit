@@ -28,6 +28,7 @@ except ModuleNotFoundError:
 FRONTMATTER_DELIMITER = "---"
 SECTION_START = re.compile(r"^\s*<!--\s*@([a-z0-9-]+)\s*-->\s*$", re.IGNORECASE)
 SECTION_END = re.compile(r"^\s*<!--\s*@end\s*-->\s*$", re.IGNORECASE)
+SHARED_POLICY = Path("templates") / "agent-policy.md"
 
 
 def canonical_identity(kit_root: Path) -> Dict[str, str]:
@@ -43,6 +44,27 @@ def canonical_identity(kit_root: Path) -> Dict[str, str]:
         }
     except (OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
         raise ValueError(f"Invalid canonical project identity: {path}") from exc
+
+
+def shared_policy(kit_root: Path) -> str:
+    """Load the common policy injected in every compiled agent artifact."""
+    path = kit_root / SHARED_POLICY
+    if not path.is_file():
+        return ""
+    text = path.read_text(encoding="utf-8-sig").strip()
+    for line in text.splitlines():
+        if SECTION_START.match(line) or SECTION_END.match(line):
+            raise ValueError(f"Shared policy must not declare runtime sections: {path}")
+    return text + "\n"
+
+
+def with_policy(body: str, policy: str) -> str:
+    """Append the shared policy once, keeping compilation deterministic."""
+    if not policy:
+        return body
+    if policy.strip() in body:
+        return body
+    return body.rstrip("\n") + "\n\n" + policy
 
 
 def attribution(values: Dict[str, str]) -> str:
@@ -101,17 +123,24 @@ def filter_sections(body: str, target: str) -> str:
 def markdown_artifact(values: Dict[str, str], body: str) -> str:
     name = values.get("name") or "sdd-agent"
     description = values.get("description") or name
-    return f"---\nname: {name}\ndescription: {json.dumps(description, ensure_ascii=False)}\n---\n\n{attribution(values)}{body}"
+    header = f"---\nname: {name}\ndescription: {json.dumps(description, ensure_ascii=False)}\n"
+    if values.get("version"):
+        header += f"version: {json.dumps(values['version'], ensure_ascii=False)}\n"
+    if values.get("capabilities"):
+        header += f"capabilities: {json.dumps(values['capabilities'], ensure_ascii=False)}\n"
+    return f"{header}---\n\n{attribution(values)}{body}"
 
 
 def claude_artifact(values: Dict[str, str], body: str) -> str:
     name = values.get("name") or "sdd-agent"
     description = values.get("description") or name
     capabilities = values.get("capabilities") or "read"
+    version = values.get("version") or "1.0.0"
     return (
         "---\n"
         f"name: {json.dumps(name, ensure_ascii=False)}\n"
         f"description: {json.dumps(description, ensure_ascii=False)}\n"
+        f"version: {json.dumps(version, ensure_ascii=False)}\n"
         f"capabilities: {json.dumps(capabilities, ensure_ascii=False)}\n"
         "---\n\n"
         f"{attribution(values)}{body}"
@@ -155,9 +184,13 @@ def copilot_artifact(values: Dict[str, str], body: str) -> str:
 def codex_artifact(values: Dict[str, str], body: str) -> str:
     name = values.get("name") or "sdd-agent"
     description = values.get("description") or name
+    version = values.get("version") or "1.0.0"
+    capabilities = values.get("capabilities") or "read"
     return (
         f"name = {json.dumps(name, ensure_ascii=False)}\n"
         f"description = {json.dumps(description, ensure_ascii=False)}\n"
+        f"version = {json.dumps(version, ensure_ascii=False)}\n"
+        f"capabilities = {json.dumps(capabilities, ensure_ascii=False)}\n"
         f"developer_instructions = {json.dumps(attribution(values) + body, ensure_ascii=False)}\n"
     )
 
@@ -171,6 +204,7 @@ def compile_agents(kit_root: Path, target: str) -> List[Path]:
     outputs: List[Path] = []
     expected_files = set()
     identity = canonical_identity(kit_root)
+    policy = shared_policy(kit_root)
     for source in sorted(source_root.glob("*.md")):
         values, body = read_source(source)
         missing_attribution = [
@@ -183,7 +217,7 @@ def compile_agents(kit_root: Path, target: str) -> List[Path]:
             )
         if any(values[key].strip() != expected for key, expected in identity.items()):
             raise ValueError(f"Agent attribution differs from canonical identity: {source}")
-        rendered_body = filter_sections(body, target)
+        rendered_body = with_policy(filter_sections(body, target), policy)
         name = values.get("name") or source.stem
         filename = adapter.output_filename.format(name=name)
         expected_files.add(filename)
@@ -212,9 +246,12 @@ def compile_shared_skills(kit_root: Path, targets: Iterable[str]) -> List[Path]:
     outputs: List[Path] = []
     output_root = kit_root / "dist" / "shared" / "skills"
     expected_directories = set()
+    policy = shared_policy(kit_root)
     for source in sources:
         values, body = read_source(source)
         rendered = filter_sections(body, "all")
+        if source.parent.name == "agents":
+            rendered = with_policy(rendered, policy)
         # Keep the catalog directory name stable even when a skill's frontmatter
         # uses a display name (for example ios-swift vs. swift-ios).
         name = source.parent.name if source.name == "SKILL.md" else (values.get("name") or source.stem)

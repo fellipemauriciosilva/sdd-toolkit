@@ -25,6 +25,8 @@ import sdd_runtime as RUNTIME
 import sdd_discovery as DISCOVERY
 import sdd_delivery as DELIVERY
 import sdd_architecture as ARCHITECTURE
+import sdd_agent_result as AGENT_RESULT
+import sdd_lint as LINT
 import sdd_user_state as STATE
 
 
@@ -1111,6 +1113,26 @@ def architecture_inspect(args: argparse.Namespace) -> int:
     return 0
 
 
+def agent_result_validate(args: argparse.Namespace) -> int:
+    """Validate a portable result emitted by an SDD agent."""
+    try:
+        result = AGENT_RESULT.load(args.file)
+    except (OSError, json.JSONDecodeError, ValueError) as exc:
+        raise STATE.StateError(str(exc)) from exc
+    emit({"status": "valid", "result": result}, args.json)
+    return 0
+
+
+def contract_lint(args: argparse.Namespace) -> int:
+    """Run the semantic contract linter over a toolkit source tree."""
+    root = Path(args.kit_root).expanduser().resolve(strict=False)
+    if not (root / "agents").is_dir():
+        raise STATE.StateError(f"not a toolkit source tree: {root}")
+    report = LINT.lint(root)
+    emit(report, args.json)
+    return 0 if report["status"] == "clean" else 1
+
+
 def redact_paths(value: Any) -> Any:
     sensitive_keys = {
         "path", "project_path", "profile_root", "kit_root", "state_path", "source_state",
@@ -1747,6 +1769,18 @@ def build_parser() -> argparse.ArgumentParser:
     architecture_source.add_argument("--task")
     architecture_validate.add_argument("--json", action="store_true")
     architecture_validate.set_defaults(handler=architecture_inspect)
+
+    result_parser = sub.add_parser("result", help="Validate a portable agent result envelope")
+    result_sub = result_parser.add_subparsers(dest="result_command", required=True)
+    result_validate = result_sub.add_parser("validate", help="Validate an AGENT_RESULT JSON document")
+    result_validate.add_argument("--file", required=True)
+    result_validate.add_argument("--json", action="store_true")
+    result_validate.set_defaults(handler=agent_result_validate)
+
+    lint_parser = sub.add_parser("lint", help="Lint agent contracts, compiled artifacts and evals")
+    lint_parser.add_argument("--kit-root", default=str(ROOT))
+    lint_parser.add_argument("--json", action="store_true")
+    lint_parser.set_defaults(handler=contract_lint)
 
     source_parser = sub.add_parser("source", help="Manage the user-scoped toolkit source")
     source_sub = source_parser.add_subparsers(dest="source_command", required=True)

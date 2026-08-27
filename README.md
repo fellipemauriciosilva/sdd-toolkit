@@ -93,6 +93,7 @@ impacto (`low`, `medium` ou `high`); mudanças estruturais usam
 | Arquitetura do toolkit | [ARCHITECTURE](docs/ARCHITECTURE.md) |
 | Pipeline, gates e E2E | [PIPELINE](docs/PIPELINE.md) |
 | Catálogo de agentes | [AGENTS](docs/AGENTS.md) |
+| Contrato dos agentes | [AGENT-CONTRACT](docs/AGENT-CONTRACT.md) |
 | Skills disponíveis | [SKILLS](docs/SKILLS.md) |
 | Referência da CLI | [CLI-REFERENCE](docs/CLI-REFERENCE.md) |
 | Evals e contratos | [EVALUATIONS](docs/EVALUATIONS.md) |

@@ -57,6 +57,13 @@ das flags, do estado da demanda e do perfil padrão. Um gate automático precisa
 de evidência do runtime atual; estado herdado não é aceito como sucesso
 automático.
 
+A evidência de cada gate chega ao bootstrap como um `AGENT_RESULT`, descrito em
+[AGENT-CONTRACT.md](AGENT-CONTRACT.md). O bootstrap valida cada resultado com
+`sdd result validate --file <resultado> --json` antes de persistir o estado.
+Evidência `not-run`, `failed`, `flaky` ou `blocked` não aprova gate, e nenhum
+perfil — incluindo `permissive` — autoriza rede, instalação, commit, push, PR ou
+publicação sem autorização explícita na mesma sessão.
+
 ```mermaid
 flowchart TB
     G1[G1: entendimento da demanda] --> G2[G2: design e contrato de entrega]

@@ -42,7 +42,7 @@ TODO — exactly what should happen instead.
 | verification | [unit] |
 | rationale | The regression fix is application delivery; verification is defined by `sdd-analyze-demand`. |
 | owner | `sdd-analyze-demand` |
-| expected_evidence | [DELIVERY_RESULT, UNIT_RESULT] |
+| expected_evidence | [payload.delivery, payload.unit] |
 
 ## Architecture Strategy
 
@@ -58,7 +58,7 @@ TODO — exactly what should happen instead.
 | full_design_required | false |
 | rationale | TODO — confirmar se a correção permanece isolada |
 | decisions | none |
-| required_evidence | ARCHITECTURE_RESULT |
+| required_evidence | payload.architecture |
 
 ## Root Cause Analysis
 
@@ -72,11 +72,11 @@ TODO — fill after analyzing the code. Identify the exact class, method and lin
 
 | File | Layer | Change |
 |------|-------|--------|
-| `path/to/BuggyClass.java` | application | modify |
+| `path/to/affected-component` | application | modify |
 
 ## Entry Point
 
-TODO — which flow triggers this bug? (Kafka message, REST call, scheduler, etc.)
+TODO — which flow triggers this bug? (API, message, scheduler, UI action, CLI, etc.)
 
 ## Fix Plan
 

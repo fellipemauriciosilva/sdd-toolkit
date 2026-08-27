@@ -1,16 +1,16 @@
 # Eval Input — sdd-bootstrap case-03
-# Cenário: Novo projeto sem session-state, ticket inexistente → orientar sdd-create-spec
+# Cenário: Ticket sem spec criada → orientar sdd-create-spec e encerrar
 
 ## Invocação
 ```
-/sdd-bootstrap example-api-gestao-meta JT-9999 --run
+/sdd-bootstrap ABC-9999 --run
 ```
 
 ## Estado do sistema
-- O workspace user ainda não contém a pasta JT-9999
-- O workspace user ainda não contém `session-state.md` para JT-9999
-- O workspace user ainda não contém `status-task.md` para JT-9999
+- `sdd context resolve --ticket ABC-9999 --runtime auto --json` resolve o
+  workspace, mas `SPEC_PATH` não existe
+- Não há `task.md` nem `session-state.md` para ABC-9999
 
 ## Contexto adicional
-- Projeto existe e tem SDD Kit instalado
-- Nenhuma spec foi criada para JT-9999
+- O projeto está ativado para trabalho SDD user-scoped
+- Nenhuma spec foi criada para ABC-9999

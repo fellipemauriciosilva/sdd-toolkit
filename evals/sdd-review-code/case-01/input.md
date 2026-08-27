@@ -1,5 +1,5 @@
 # Eval Input — sdd-review-code case-01
-# Cenário: SQL Injection encontrado → G5 achado 🔴, CHECKPOINT 2
+# Cenário: SQL Injection encontrado → G5 achado `critical`, CHECKPOINT 2
 
 ## Código para revisar
 ```java

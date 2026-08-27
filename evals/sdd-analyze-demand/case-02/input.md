@@ -3,7 +3,7 @@
 
 ## Contexto
 - Projeto: example-project
-- Ticket: JT-5678
+- Ticket: ABC-5678
 
 ## task.md atual
 ```markdown
@@ -15,6 +15,6 @@ TODO
 ```
 
 ## Informação disponível
-- Apenas o nome do ticket: "JT-5678 — Ajuste no cálculo de meta"
+- Apenas o nome do ticket: "ABC-5678 — Ajuste no cálculo de meta"
 - Nenhuma spec adicional fornecida
 - Nenhum código relevante identificado ainda

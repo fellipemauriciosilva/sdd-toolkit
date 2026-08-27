@@ -3,5 +3,9 @@
 
 ## Invocação
 ```
-/sdd-create-spec example-api-gestao-meta JT-4567 --type=bugfix --description="Meta duplicada ao aprovar duas vezes via Kafka"
+/sdd-create-spec ABC-4567 --type=bugfix --description="Meta duplicada ao aprovar duas vezes"
 ```
+
+## Contexto
+- `SPEC_PATH` ainda não existe para ABC-4567
+- Nenhum critério de aceite foi informado pelo usuário
