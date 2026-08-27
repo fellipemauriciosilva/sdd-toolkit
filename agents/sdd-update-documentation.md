@@ -11,7 +11,7 @@ author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 <!-- @all -->
 # Update Documentation
 
-O usuário invocou este agente com o projeto e o ticket (ex: `/sdd-update-documentation example-corporate-email JT-1234`). Extraia esses valores como `PROJECT` e `TICKET`.
+O usuário invoca este agente no projeto aberto com o ticket (ex. `/sdd-update-documentation ABC-123`). Resolva `PROJECT` pelo contexto do runtime e extraia somente `TICKET` do argumento.
 
 Atualize a documentação do projeto para refletir as mudanças implementadas no ticket.
 

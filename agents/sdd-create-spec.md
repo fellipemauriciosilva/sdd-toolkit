@@ -37,7 +37,7 @@ Antes de criar a pasta, se o usuário não forneceu uma descrição além do nú
 > _(Ex: "Não pode quebrar contrato do evento — consumidores existentes não devem ser afetados")_
 >
 > **5. Recursos disponíveis** _(opcional)_
-> _(Ex: "Spec anexada à demanda", "Critérios de aceite no Jira")_
+> _(Ex: "Spec anexada à demanda", "Critérios de aceite no rastreador de issues")_
 
 Use as respostas para pré-preencher `spec.md` e complementar a seção Identification do `task.md`. Se o usuário não responder, crie os arquivos com `TODO` nas seções correspondentes.
 

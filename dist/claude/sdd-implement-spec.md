@@ -69,7 +69,7 @@ Based on the demand description in `task.md → Identification` and any notes th
 
 ## Step 3.5 — Multi-projeto (se `affected_projects` preenchido)
 
-Se `session-state.md` tiver `affected_projects` com um ou mais projetos (ex.: `example-project-a, example-project-b`):
+Se `session-state.md` tiver `affected_projects` com um ou mais projetos (ex.: `<projeto-a>, <projeto-b>`):
 
 1. Leia o contexto de cada projeto adicional (passos 2–3 repetidos para cada um).
 2. Adicione ao `task.md` uma seção **Multi-projeto** abaixo de **Affected Files**:
@@ -79,19 +79,19 @@ Se `session-state.md` tiver `affected_projects` com um ou mais projetos (ex.: `e
 
 Esta demanda afeta múltiplos projetos. Sub-plano por projeto:
 
-### Projeto: example-project-a
+### Projeto: <projeto-a>
 | File | Layer | Change |
 |------|-------|--------|
 | `path/to/File.java` | application | modify |
 
-### Projeto: example-project-b
+### Projeto: <projeto-b>
 | File | Layer | Change |
 |------|-------|--------|
 | `path/to/Other.java` | domain | create |
 ```
 
 3. Durante o **Step 6 (Implement)**, execute os sub-passos para cada projeto na ordem declarada.
-4. Faça commits separados por projeto: `feat(TICKET): <desc> [example-project-a]`.
+4. Faça commits separados por projeto: `feat(TICKET): <descrição> [<projeto>]`.
 5. Se um projeto falhar (G3), não avance para o próximo — pare e escale ao humano.
 
 Se `affected_projects` estiver vazio ou `—`, ignore este step.

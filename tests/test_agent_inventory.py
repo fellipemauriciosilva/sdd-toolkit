@@ -66,9 +66,11 @@ class AgentInventoryTests(unittest.TestCase):
             ROOT / "install.ps1",
             ROOT / "install.sh",
             ROOT / "scripts" / "sdd_user_state.py",
-            ROOT / ".github" / "workflows" / "ci.yml",
             *(ROOT / "agents").glob("*.md"),
         ]
+        workflow = ROOT / ".github" / "workflows" / "ci.yml"
+        if workflow.is_file():
+            files.append(workflow)
         combined = "\n".join(path.read_text(encoding="utf-8-sig") for path in files)
         for removed in REMOVED_AGENTS:
             self.assertNotIn(removed, combined)

@@ -13,22 +13,20 @@ author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 
 Analisa um projeto do workspace, preenche toda a estrutura de docs do kit SDD e gera um índice de navegação DeepWiki para onboarding rápido.
 
-O usuário invoca este agente com o nome do projeto como argumento:
+O usuário invoca este agente no projeto aberto:
 ```
-/sdd-setup-project example-service-back
+/sdd-setup-project
 ```
 
-Extraia o nome do projeto como `PROJECT`.
+Resolva o diretório atual como `PROJECT` pelo contexto do runtime.
 
 ---
 
 ## Etapa 0 — Verificação do Kit SDD
 
-1. Verifique se o kit SDD está instalado no projeto:
-   - `PROJECT/.github/copilot-instructions.md` existe?
-   - `PROJECT/.github/AGENTS.md` existe?
-2. Se o SDD Kit não estiver disponível: informe ao usuário e sugira executar `sdd install --scope user` fora do projeto antes de prosseguir.
-3. Se **instalado**: leia ambos os arquivos e prossiga.
+1. Verifique se o kit SDD está disponível com `sdd doctor --scope user --json`.
+2. Se não estiver disponível: informe ao usuário e sugira executar `sdd install --scope user` fora do projeto antes de prosseguir.
+3. Se estiver instalado: leia as instruções e documentação existentes no projeto, quando houver, e prossiga.
 
 ---
 
@@ -45,7 +43,7 @@ Leia os seguintes arquivos **em paralelo**:
 ### 1.2 — Configuração e Infra
 
 - `PROJECT/src/main/resources/application.yml` (ou `.properties`)
-- `PROJECT/src/main/resources/application-hlg.yml` (ou `.properties`) — ambiente staging
+- `PROJECT/src/main/resources/application-<environment>.yml` (ou `.properties`), quando existir
 - `PROJECT/helm-values/` — todos os arquivos YAML de values
 - `PROJECT/docker-compose.yml` (se existir)
 - `PROJECT/Dockerfile` (se existir)

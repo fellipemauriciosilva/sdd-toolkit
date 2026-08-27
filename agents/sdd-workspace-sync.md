@@ -86,8 +86,8 @@ Gere ou sobrescreva o arquivo `WORKSPACE.md` na raiz `WORKSPACE_ROOT` com o segu
 
 | Projeto | Tech Stack | SDD Kit | Remote |
 |---------|-----------|---------|--------|
-| example-example | Java / Spring Boot | ✅ instalado | https://github.com/example-org/example-example |
-| example-other   | Node.js / TypeScript | ❌ não instalado | https://github.com/example-org/example-other |
+| `<projeto-a>` | `<stack>` | ✅ instalado | `https://<git-host>/<organização>/<repositório>.git` |
+| `<projeto-b>` | `<stack>` | ❌ não instalado | `https://<git-host>/<organização>/<repositório>.git` |
 
 ## Estatísticas
 
@@ -113,11 +113,11 @@ Após apresentar o catálogo, pergunte ao usuário:
 
 > Deseja clonar novos repositórios no workspace?
 > Se sim, informe a lista de repositórios (um por linha ou separados por vírgula).
-> Use o formato `nome-do-repo` ou `org/nome-do-repo`. Exemplos:
+> Use o formato `<organização>/<repositório>` ou uma URL HTTPS. Exemplos:
 >
 > ```
-> example-example
-> example-org/example-other
+> equipe/plataforma-api
+> https://<git-host>/equipe/plataforma-web.git
 > ```
 >
 > Deixe em branco para encerrar.
@@ -129,8 +129,8 @@ Se o usuário **informar repositórios**, execute as sub-etapas abaixo.
 ### 3.1 — Normalizar nomes
 
 Para cada item da lista:
-- Se estiver no formato `org/repo`, use como está.
-- Se estiver apenas como `nome-do-repo`, prefixe com `example-org/` → `example-org/nome-do-repo`.
+- Se estiver no formato `<organização>/<repositório>` ou URL HTTPS, use como está.
+- Se estiver apenas como `nome-do-repo`, peça a organização ou URL HTTPS; nunca assuma uma organização padrão.
 
 ### 3.2 — Verificar se já existe localmente
 
@@ -142,7 +142,7 @@ Para cada repositório que **não existe localmente**, execute:
 
 ```bash
 cd <WORKSPACE_ROOT>
-git clone https://github.com/<org>/<repo>.git
+git clone https://<git-host>/<organização>/<repositório>.git
 ```
 
 Trate os seguintes casos:
@@ -222,13 +222,13 @@ Regras:
 > ```
 > /metricas-sprint <PROJETO> <SPRINT_ID>
 > ```
-> Exemplo: `/metricas-sprint example-service-back sprint-42`
+> Exemplo: `/metricas-sprint <projeto> <sprint-id>`
 >
 > Não execute automaticamente durante a sincronização padrão.
 
 ### 5.1 — Coletar dados do sprint
 
-Para o projeto e sprint informados, colete via Jira (se disponível) ou a partir dos `session-state.md` do workspace:
+Para o projeto e sprint informados, colete via rastreador de issues (se disponível) ou a partir dos `session-state.md` do workspace:
 
 - **Tickets concluídos** no sprint (status = `done`)
 - **Tickets em progresso** no sprint (status diferente de `done` e `blocked`)
@@ -343,13 +343,13 @@ Gere ou sobrescreva `.github/PIPELINE-STATUS.md` na raiz do workspace SDD Kit co
 
 | Projeto | Ticket | Bloqueio | Desde |
 |---------|--------|----------|-------|
-| example-project | JT-123 | ⚠️ build-failed G3 — JAVA_HOME errado | 2026-06-21 |
+| `<projeto>` | `<ticket>` | ⚠️ build-failed G3 — ambiente de build inválido | YYYY-MM-DD |
 
 ## Histórico de Gates por Demanda
 
 | Projeto | Ticket | G1 | G2 | G3 | G4 | G5 | G6 | Status |
 |---------|--------|----|----|----|----|----|----|--------|
-| example-project | JT-789 | ✓ | ✓ | ✓ | ⊘ | ⊘ | ✓ | done |
+| `<projeto>` | `<ticket>` | ✓ | ✓ | ✓ | ⊘ | ⊘ | ✓ | done |
 | example-other | JT-101 | ✓ | ✓ | ✗ | — | — | — | in-progress |
 
 Legenda: `✓` passed · `✗` failed · `⊘` skipped · `⸺` pending
@@ -368,6 +368,5 @@ Regras:
 - Nunca modifique código de produção nem arquivos de testes.
 - Não clone repositórios sem confirmação explícita do usuário.
 - Se `WORKSPACE.md` já existir, **sempre sobrescreva** — não concatene.
-- Ao clonar, use sempre HTTPS (`https://github.com/...`), nunca SSH, para compatibilidade com ambientes corporativos.
-- Não assuma a organização padrão em nenhum outro contexto além de `example-org/` — se o usuário informar uma org diferente, use a informada.
+- Ao clonar, use HTTPS quando o host remoto oferecer esse protocolo; nunca assuma uma organização ou host padrão.
 <!-- @end -->

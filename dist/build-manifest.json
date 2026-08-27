@@ -26,7 +26,7 @@
         },
         {
           "path": "dist/claude/sdd-architect.md",
-          "sha256": "559babf423fc33598f1aef15a39c0619c5cf2aa184c476b6fcfa8a856b8e0e4d"
+          "sha256": "5476676367bcdd788e7b7c6118cd2f1feb043b43400f22cc75657c7ebcd53fe0"
         },
         {
           "path": "dist/claude/sdd-bootstrap.md",
@@ -34,7 +34,7 @@
         },
         {
           "path": "dist/claude/sdd-create-spec.md",
-          "sha256": "60dfe3ca6171c02cc8319e6add7f9df454c11406435543744e1283bfb9b2df79"
+          "sha256": "927aea304f5d25cf887b3e586bab4111254bfe8b2edb391debbc68057603ee52"
         },
         {
           "path": "dist/claude/sdd-generate-e2e-tests.md",
@@ -50,7 +50,7 @@
         },
         {
           "path": "dist/claude/sdd-implement-spec.md",
-          "sha256": "1a976e0926da59ee9599ed7e60a358f15fc65070a4b7eb745a489b9708256e0d"
+          "sha256": "ca7ecae3869c947916c2ee7611adefc6293edf17b42689b73d137f5355d1f834"
         },
         {
           "path": "dist/claude/sdd-install-sdd-kit.md",
@@ -74,15 +74,15 @@
         },
         {
           "path": "dist/claude/sdd-setup-project.md",
-          "sha256": "c05eeb6d3e83443c1ff19e0c7e7fec164e683e68279db43b0d266b4dc32b8b15"
+          "sha256": "b80e55661d00f608e4c0d396c16cf402fa7dcb06724766eb2817a64a371b46b2"
         },
         {
           "path": "dist/claude/sdd-update-documentation.md",
-          "sha256": "f61a3a0518d896c19d1986cd348a82df1a8b9dc9e2573cbe6d29d03c283d75c5"
+          "sha256": "d892493d6721fb3aafaa37c93fc1a8846700e69c39ddc00ba9ca1b81b1dfeab7"
         },
         {
           "path": "dist/claude/sdd-workspace-sync.md",
-          "sha256": "c5331a3e65b72f1223d1351e1b6104d3e7cc332556597c2e77df3be837198063"
+          "sha256": "20f481a551849c539803e776acfbfcf340e3dcad71ca7e2db013a1dfe87a8d52"
         }
       ]
     },
@@ -100,7 +100,7 @@
         },
         {
           "path": "dist/codex/sdd-architect.toml",
-          "sha256": "4ed49bdcafcdccde1cc15a4bdbb87837df93080b6ded556395ff120990c5439a"
+          "sha256": "fda04120021361ca1997314f3f53acd7262041d646517b6cc4b3d1679c638654"
         },
         {
           "path": "dist/codex/sdd-bootstrap.toml",
@@ -108,7 +108,7 @@
         },
         {
           "path": "dist/codex/sdd-create-spec.toml",
-          "sha256": "99673111629c094c65ad548bc0f3eb5fdcee9d080ea6177f7267b29a604494e9"
+          "sha256": "455f5507c0da22c5e6c6ef8b4421322d1f747be7195eed81b2eae9288bffd97a"
         },
         {
           "path": "dist/codex/sdd-generate-e2e-tests.toml",
@@ -124,7 +124,7 @@
         },
         {
           "path": "dist/codex/sdd-implement-spec.toml",
-          "sha256": "6b64cbb44e72cf8d93e303ddf69839acd8369a63bf7465fa4899d781056ae9cb"
+          "sha256": "6e8bfba819b0f0aeeda7f37374640ab371b8c59f1593e1d30b82e56ee4d53184"
         },
         {
           "path": "dist/codex/sdd-install-sdd-kit.toml",
@@ -148,15 +148,15 @@
         },
         {
           "path": "dist/codex/sdd-setup-project.toml",
-          "sha256": "3ad4f66b5398886881596d598607275e9aae673ed2b94fb1a6c91ef74cf60220"
+          "sha256": "aef74bf132a22f472d6e5712236cd85d9bdde1a0a61f6b086875e1783d86285b"
         },
         {
           "path": "dist/codex/sdd-update-documentation.toml",
-          "sha256": "436eaea345e75c430cb972af1e6ad79b50ceef35ddd04c45ea98c40dd1705b67"
+          "sha256": "2ed11460c739eb55f6276ed11a80f24299938c3a5c08bf264c3121fd44f22298"
         },
         {
           "path": "dist/codex/sdd-workspace-sync.toml",
-          "sha256": "2e6803c4ff2ad7f4ad0b0df32ad831d246ddc38f0ae43280d92d476523f45f88"
+          "sha256": "c992e0558be601f774e190ade837cffe07309ad14b091a1732fc2ef18d8b7cd8"
         }
       ]
     },
@@ -174,7 +174,7 @@
         },
         {
           "path": "dist/copilot/sdd-architect.agent.md",
-          "sha256": "ee3be80d39ee9bcb2545a872771ce9f74f4dedfe9261676862ee9f070098da15"
+          "sha256": "97665f0ead35ee59eac91dc60e813731041cf3392485aa959f66a9adc51d35ec"
         },
         {
           "path": "dist/copilot/sdd-bootstrap.agent.md",
@@ -182,7 +182,7 @@
         },
         {
           "path": "dist/copilot/sdd-create-spec.agent.md",
-          "sha256": "ad7211be61978de01add2f0fe3f5ccdf898f03d5843d3ec2826254adb9e55aad"
+          "sha256": "add11472c3e19f689fc405daee01e639c57f82ac1369682e27204bc469b799dc"
         },
         {
           "path": "dist/copilot/sdd-generate-e2e-tests.agent.md",
@@ -198,7 +198,7 @@
         },
         {
           "path": "dist/copilot/sdd-implement-spec.agent.md",
-          "sha256": "8120a09fbc28ddc702c6d41119b773c43f837f2637a00766b9c18f4c2beabe4d"
+          "sha256": "7ba6e532b9518c12d4a1a0a18380099270c94ac1f112813ebbaaf98e1111bf4e"
         },
         {
           "path": "dist/copilot/sdd-install-sdd-kit.agent.md",
@@ -222,15 +222,15 @@
         },
         {
           "path": "dist/copilot/sdd-setup-project.agent.md",
-          "sha256": "38e34c269557f266349d2375291213ce998556f6eaa4fc585441ea3cc29ef672"
+          "sha256": "3c2c6f77ca040b7d2cb6f4447177952661b1c68e4fd2ffd713b950809642a78a"
         },
         {
           "path": "dist/copilot/sdd-update-documentation.agent.md",
-          "sha256": "8b64b334d647a1b171c01a5a3159af7f4ff0ae32cbc44daa813a015de77e554f"
+          "sha256": "d42cd097682e41ba40c6ae7ab62a3a79d070dab81301db67f172b154a21c37af"
         },
         {
           "path": "dist/copilot/sdd-workspace-sync.agent.md",
-          "sha256": "c77da79e8948f0b54181ff6132ac5d15f554b1cecd64459d10115c79118c310a"
+          "sha256": "e8e74753de9292b91f4ff9ea3e564db0e63399fb54360c4881cd9bb49db96c4d"
         }
       ]
     },
@@ -248,7 +248,7 @@
         },
         {
           "path": "dist/cursor/sdd-architect.md",
-          "sha256": "9b9ba7b615bc84d4471464625bea346293cb9842a9e5789e5b3483bc58386fde"
+          "sha256": "dbd744fce32d0aa5dbdf0ac6ec916e0d8bd6236d568ef036a1fe58c76fa174f9"
         },
         {
           "path": "dist/cursor/sdd-bootstrap.md",
@@ -256,7 +256,7 @@
         },
         {
           "path": "dist/cursor/sdd-create-spec.md",
-          "sha256": "2a9a9e606d335740cb6499942f9f6cef350515035e8c0683b4651fb0bb15c03c"
+          "sha256": "ae5e639d88360541f5f014a753c44b4b9d5981bf590cdf69f82fc29a6293b5c7"
         },
         {
           "path": "dist/cursor/sdd-generate-e2e-tests.md",
@@ -272,7 +272,7 @@
         },
         {
           "path": "dist/cursor/sdd-implement-spec.md",
-          "sha256": "9d7e30d899e6a72a6dc2bbbdf38ce1417d51f9bd19d6907e0a464a8865d18404"
+          "sha256": "4a24661985822eeb50cb90575f2a46dfa52d460666a7c7921888035e79f6d6b3"
         },
         {
           "path": "dist/cursor/sdd-install-sdd-kit.md",
@@ -296,15 +296,15 @@
         },
         {
           "path": "dist/cursor/sdd-setup-project.md",
-          "sha256": "f38bee860940fc3d651be7b8d5cb1ab70202bdec482122d69530fe710b739b75"
+          "sha256": "962211f730d7b2129b5a5a7259d09ed4f4145327975240663bbd2fde7a43704f"
         },
         {
           "path": "dist/cursor/sdd-update-documentation.md",
-          "sha256": "3aa1a95e20bd40a78effef39e884d21decca32da5d41dbfa37ca6374f3e841a4"
+          "sha256": "511a81daa53a2d22f8248543057598f69c8f062451eff0dd2fca8142d0c675b0"
         },
         {
           "path": "dist/cursor/sdd-workspace-sync.md",
-          "sha256": "46d20334949e39a288a35ea09fc7f17d5a52d18b24ef7dc389c959d89bfa82bf"
+          "sha256": "927b9b2c1b5e384af94ba796f10a5e162bd5d738216fe2d1c8423b3511a1b390"
         }
       ]
     }
