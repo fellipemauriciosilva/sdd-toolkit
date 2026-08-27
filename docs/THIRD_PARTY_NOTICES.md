@@ -19,16 +19,6 @@ consumidor, mas não depende nem redistribui Playwright, browsers ou pacotes npm
 Licenças e versões dessas dependências pertencem ao inventário do projeto que
 optar por gerá-las.
 
-## Automação de CI
-
-| Componente | Uso | Referência fixada | Licença | Origem |
-|---|---|---|---|---|
-| `actions/checkout` | Checkout do repositório nos workflows | SHA fixado no workflow | MIT (`MIT`) | https://github.com/actions/checkout |
-| `gitleaks/gitleaks-action` | Secret scan do checkout e histórico | SHA fixado em `.github/workflows/security.yml` | MIT (`MIT`) | https://github.com/gitleaks/gitleaks-action |
-
-As actions são executadas somente no ambiente de CI. Não fazem parte dos
-artefatos instalados no projeto do usuário.
-
 ## Conteúdo do toolkit
 
 `agents/`, `templates/`, `evals/`, `schemas/`, `scripts/` e `dist/` são tratados
@@ -41,7 +31,6 @@ marcas, imagens ou trechos de documentação sem origem e licença verificáveis
 ## Checklist de release
 
 - [ ] Confirmar a licença de cada dependência na versão efetivamente usada.
-- [ ] Atualizar referências SHA quando uma action for atualizada.
 - [ ] Registrar novos componentes neste arquivo e no inventário de proveniência.
 - [ ] Validar que o pacote final não contém dependências de desenvolvimento,
       fixtures, caches ou dados locais.

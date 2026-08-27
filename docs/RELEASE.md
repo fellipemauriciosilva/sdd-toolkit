@@ -7,10 +7,14 @@ O pacote público é produzido somente por `scripts/sdd_release.py`. Ele recompi
 1. Executar testes, schemas, compilação e validação de conteúdo público.
 2. Revisar `THIRD_PARTY_NOTICES.md` e `PROVENANCE.md`.
 3. Criar e verificar uma tag assinada: `git tag -s vX.Y.Z -m "vX.Y.Z"`.
-4. Acionar o workflow **Release SDD Toolkit** e escolher se é prerelease.
-5. Baixar um artefato publicado em máquina limpa, conferir `SHA256SUMS` e executar install, doctor, update e uninstall.
+4. Gerar os artefatos localmente com o comando abaixo e conferir `SHA256SUMS`.
+5. Criar a release manualmente no GitHub, anexando ZIP, tar.gz, `SHA256SUMS`,
+   SBOM e `provenance.json`.
+6. Baixar um artefato publicado em máquina limpa e executar install, doctor,
+   update e uninstall.
 
-O workflow exige environment `release` e tag assinada. A identidade e a attestation do provedor de release ainda exigem aprovação/configuração na organização GitHub; `provenance.json` local não substitui uma attestation assinada pelo provedor.
+O repositório não executa pipeline de release. A identidade, assinatura da tag
+e revisão dos artefatos são responsabilidade do mantenedor antes da publicação.
 
 ## Build local sem publicar
 
