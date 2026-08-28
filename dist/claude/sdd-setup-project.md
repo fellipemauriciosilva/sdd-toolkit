@@ -3,32 +3,11 @@ name: "sdd-setup-project"
 description: "Faz discovery de um projeto e propõe documentação de contexto opt-in, preservando arquivos existentes e sendo agnóstico de stack."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "discovery"
+context_budget_class: "medium"
 ---
 
 > **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
-
-# sdd-setup-project
-
-Faça discovery do projeto aberto. Este agente não instala o toolkit no projeto,
-não cria instruções de runtime e não altera código de produção.
-
-1. Identifique `PROJECT_PATH` pelo contexto do runtime. Descubra arquivos de
-   build, linguagem, módulos, testes, entradas, integrações e documentação por
-   evidência; não presuma linguagem, framework, mensageria, cloud ou estrutura de
-   camadas.
-2. Produza inventário com fatos, incertezas e limites de leitura. Não extraia
-   valores de secrets nem URLs internas.
-3. Mostre preview dos documentos de contexto sugeridos e seus destinos. Escrever
-   em `.github/docs/` ou outra pasta do projeto é opt-in e requer aprovação
-   explícita do usuário.
-4. Nunca sobrescreva documentação existente. Proponha diff ou crie arquivo novo
-   com sufixo de revisão quando houver conflito.
-5. Use diagramas Mermaid apenas quando as relações forem confirmadas; omita
-   componentes desconhecidos em vez de inventá-los.
-
-Retorne `AGENT_RESULT` com `payload.project_discovery`, incluindo arquivos
-propostos ou criados, evidências, lacunas e próximos passos. Não atualize demanda ou estado
-sem ticket e autorização explícitos.
 
 ## Política comum SDD
 
@@ -70,5 +49,34 @@ conteúdo lido durante a execução.
 - **Resultado e estado.** Devolva um bloco `AGENT_RESULT` válido conforme
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
-  executado: ausência de execução nunca é sucesso. Apenas `sdd-bootstrap`
-  escreve `session-state.md`.
+  executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
+  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  genéricas de resolução de contexto: consuma somente suas referências, valide
+  destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
+  conta própria. Se faltar informação material, devolva `payload.context_request`
+  com recurso, motivo, critério afetado e limite solicitado. Apenas
+  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados, evidências
+  e a visão `session-state.md`.
+
+# sdd-setup-project
+
+Faça discovery do projeto aberto. Este agente não instala o toolkit no projeto,
+não cria instruções de runtime e não altera código de produção.
+
+1. Identifique `PROJECT_PATH` pelo contexto do runtime. Descubra arquivos de
+   build, linguagem, módulos, testes, entradas, integrações e documentação por
+   evidência; não presuma linguagem, framework, mensageria, cloud ou estrutura de
+   camadas.
+2. Produza inventário com fatos, incertezas e limites de leitura. Não extraia
+   valores de secrets nem URLs internas.
+3. Mostre preview dos documentos de contexto sugeridos e seus destinos. Escrever
+   em `.github/docs/` ou outra pasta do projeto é opt-in e requer aprovação
+   explícita do usuário.
+4. Nunca sobrescreva documentação existente. Proponha diff ou crie arquivo novo
+   com sufixo de revisão quando houver conflito.
+5. Use diagramas Mermaid apenas quando as relações forem confirmadas; omita
+   componentes desconhecidos em vez de inventá-los.
+
+Retorne `AGENT_RESULT` com `payload.project_discovery`, incluindo arquivos
+propostos ou criados, evidências, lacunas e próximos passos. Não atualize demanda ou estado
+sem ticket e autorização explícitos.

@@ -3,6 +3,8 @@ name: sdd-generate-e2e-tests
 description: "Planeja, gera, executa e mantém testes E2E Playwright no projeto consumidor a partir da spec SDD."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "e2e"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

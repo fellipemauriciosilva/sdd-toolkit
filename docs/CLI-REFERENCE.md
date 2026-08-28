@@ -1,5 +1,24 @@
 # Referência curta da CLI
 
+## Contexto incremental de agentes
+
+No uso diário, `sdd-bootstrap` executa estes comandos automaticamente. Eles
+existem também para diagnóstico e para `sdd run` avulso:
+
+```bash
+sdd context pack --ticket ABC-123 --agent sdd-implement-spec --apply --json
+sdd context validate --file <pack.json> --json
+sdd context explain --file <pack.json> --json
+sdd context expand --ticket ABC-123 --parent-file <pack.json> --request-file <result.json> --apply --json
+sdd result record --ticket ABC-123 --file <result.json> --context-file <pack.json> --apply --json
+sdd context state --ticket ABC-123 --json
+sdd run sdd-review-code --ticket ABC-123 --apply --json
+```
+
+`context pack` e `run` usam preview por padrão. `--apply` persiste apenas dados
+no workspace pessoal da demanda, nunca no projeto consumidor. `result record`
+rejeita resultado, ticket, agente, hash ou pack incompatíveis.
+
 Todos os comandos mutáveis usam preview por padrão; `--apply` confirma a ação.
 
 | Objetivo | Comando |

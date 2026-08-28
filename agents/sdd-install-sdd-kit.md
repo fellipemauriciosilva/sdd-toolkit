@@ -3,6 +3,8 @@ name: sdd-install-sdd-kit
 description: "Orienta a instalação global do SDD Toolkit com preview, integridade, escopo user e confirmação explícita."
 version: "4.0.0"
 capabilities: "read,terminal,questions"
+context_profile: "support"
+context_budget_class: "low"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

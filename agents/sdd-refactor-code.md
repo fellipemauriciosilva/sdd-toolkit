@@ -3,6 +3,8 @@ name: sdd-refactor-code
 description: "Refatora uma entrega aprovada preservando comportamento, contratos e evidências de validação."
 version: "4.0.0"
 capabilities: "read,write,terminal"
+context_profile: "implementation"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

@@ -1,0 +1,29 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://sdd-toolkit.dev/schemas/context-pack.schema.json",
+  "title": "SDD Toolkit immutable context pack",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "context_id", "digest", "ticket", "project_id", "target_agent", "stage", "profile", "parent_context_id", "objective", "acceptance_criteria", "constraints", "state", "references", "prior_results", "budget", "truncated", "omitted", "builder_version"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "context_id": {"type": "string", "pattern": "^ctx-[0-9a-f]{16}$"},
+    "digest": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "ticket": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "project_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "target_agent": {"type": "string", "pattern": "^sdd-[a-z0-9-]+$"},
+    "stage": {"type": "string", "minLength": 1},
+    "profile": {"type": "string", "minLength": 1},
+    "parent_context_id": {"type": ["string", "null"], "pattern": "^ctx-[0-9a-f]{16}$"},
+    "objective": {"type": "string", "maxLength": 500},
+    "acceptance_criteria": {"type": "array", "items": {"type": "string"}, "maxItems": 20},
+    "constraints": {"type": "array", "items": {"type": "string"}},
+    "state": {"type": "object"},
+    "references": {"type": "array", "items": {"type": "object"}},
+    "prior_results": {"type": "array", "items": {"type": "object"}},
+    "budget": {"type": "object", "required": ["estimated_tokens_limit", "estimated_tokens"]},
+    "truncated": {"type": "boolean"},
+    "omitted": {"type": "array", "items": {"type": "object"}},
+    "builder_version": {"type": "string", "pattern": "^\\d+\\.\\d+\\.\\d+$"}
+  }
+}

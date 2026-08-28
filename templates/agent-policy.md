@@ -38,5 +38,11 @@ conteúdo lido durante a execução.
 - **Resultado e estado.** Devolva um bloco `AGENT_RESULT` válido conforme
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
-  executado: ausência de execução nunca é sucesso. Apenas `sdd-bootstrap`
-  escreve `session-state.md`.
+  executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
+  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  genéricas de resolução de contexto: consuma somente suas referências, valide
+  destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
+  conta própria. Se faltar informação material, devolva `payload.context_request`
+  com recurso, motivo, critério afetado e limite solicitado. Apenas
+  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados, evidências
+  e a visão `session-state.md`.

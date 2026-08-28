@@ -9,6 +9,9 @@ flowchart LR
     I[Instalar uma vez] --> A[Em cada projeto: sdd activate]
     A --> S[Dia a dia: sdd start TICKET]
     S --> B[sdd-bootstrap no runtime]
+    B --> P[Context Pack automático]
+    P --> G[Agentes e gates]
+    G --> R[Resultados registrados fora do projeto]
 ```
 
 ## 1. Instalar no perfil do usuário
@@ -91,8 +94,9 @@ automação para autorizar a ativação local. `resume` sem ticket só funciona 
 há uma única demanda retomável.
 
 No chat do runtime, selecione ou solicite o agente `sdd-bootstrap` e entregue o
-ticket. O agente resolve o contexto pelo diretório aberto e conduz análise,
-arquitetura, entrega, testes, review e documentação conforme os gates.
+ticket. O bootstrap resolve o contexto pelo diretório aberto, cria o Context
+Pack automaticamente antes de cada agente e conduz análise, arquitetura,
+entrega, testes, review e documentação conforme os gates.
 
 ```text
 Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.

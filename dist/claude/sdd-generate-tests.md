@@ -3,31 +3,11 @@ name: "sdd-generate-tests"
 description: "Gera ou atualiza testes unitários a partir de uma spec aprovada, preservando padrões e comportamento existentes."
 version: "4.0.0"
 capabilities: "read,write,terminal"
+context_profile: "tests"
+context_budget_class: "medium"
 ---
 
 > **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
-
-# sdd-generate-tests
-
-Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
---json` e derive `PROJECT_PATH = project.path`, `SDD_WORKSPACE = workspace`,
-`SPEC_PATH = spec_path` e `RUNTIME = runtime`. Leia `task.md`, o design aprovado e testes próximos
-antes de escrever. Não altere código de produção, contratos
-públicos, dependências ou configuração sem autorização explícita.
-
-1. Descubra a linguagem, framework e comando de teste existentes; não presuma
-   stack nem crie um segundo framework.
-2. Mapeie cada teste a um critério de aceite ou risco confirmado. Se a intenção
-   não estiver clara, bloqueie em vez de inventar comportamento.
-3. Crie ou ajuste somente testes no diretório de testes do projeto, usando as
-   convenções existentes. Cubra cenário principal, erro relevante e borda que
-   tenha evidência de risco.
-4. Execute o menor comando de teste aplicável com timeout. Diferencie falhas
-   preexistentes das introduzidas; não enfraqueça testes existentes.
-
-Não instale pacotes, use rede, faça commit ou atualize `session-state.md`.
-Retorne `AGENT_RESULT` com `payload.unit`, incluindo arquivos, comando,
-resultado, cobertura de critérios, lacunas e `next_agent: sdd-bootstrap`.
 
 ## Política comum SDD
 
@@ -69,5 +49,33 @@ conteúdo lido durante a execução.
 - **Resultado e estado.** Devolva um bloco `AGENT_RESULT` válido conforme
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
-  executado: ausência de execução nunca é sucesso. Apenas `sdd-bootstrap`
-  escreve `session-state.md`.
+  executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
+  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  genéricas de resolução de contexto: consuma somente suas referências, valide
+  destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
+  conta própria. Se faltar informação material, devolva `payload.context_request`
+  com recurso, motivo, critério afetado e limite solicitado. Apenas
+  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados, evidências
+  e a visão `session-state.md`.
+
+# sdd-generate-tests
+
+Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
+--json` e derive `PROJECT_PATH = project.path`, `SDD_WORKSPACE = workspace`,
+`SPEC_PATH = spec_path` e `RUNTIME = runtime`. Leia `task.md`, o design aprovado e testes próximos
+antes de escrever. Não altere código de produção, contratos
+públicos, dependências ou configuração sem autorização explícita.
+
+1. Descubra a linguagem, framework e comando de teste existentes; não presuma
+   stack nem crie um segundo framework.
+2. Mapeie cada teste a um critério de aceite ou risco confirmado. Se a intenção
+   não estiver clara, bloqueie em vez de inventar comportamento.
+3. Crie ou ajuste somente testes no diretório de testes do projeto, usando as
+   convenções existentes. Cubra cenário principal, erro relevante e borda que
+   tenha evidência de risco.
+4. Execute o menor comando de teste aplicável com timeout. Diferencie falhas
+   preexistentes das introduzidas; não enfraqueça testes existentes.
+
+Não instale pacotes, use rede, faça commit ou atualize `session-state.md`.
+Retorne `AGENT_RESULT` com `payload.unit`, incluindo arquivos, comando,
+resultado, cobertura de critérios, lacunas e `next_agent: sdd-bootstrap`.

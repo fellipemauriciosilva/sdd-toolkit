@@ -68,7 +68,13 @@ class EnvelopeAcceptanceTests(unittest.TestCase):
 
     def test_every_agent_payload_key_is_accepted(self):
         for key in sorted(ENVELOPE.PAYLOAD_KEYS):
-            value = mutated(payload={key: {}})
+            payload = {} if key != "context_request" else {
+                "resource": "src/auth.py",
+                "reason": "Contrato de sessão é necessário.",
+                "acceptance_criterion": "Validar sessão.",
+                "requested_tokens": 400,
+            }
+            value = mutated(payload={key: payload})
             schema_validator().validate(value)
             ENVELOPE.validate(copy.deepcopy(value))
 

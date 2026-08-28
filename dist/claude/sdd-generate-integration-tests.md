@@ -3,29 +3,11 @@ name: "sdd-generate-integration-tests"
 description: "Planeja, gera e valida testes de integração no projeto consumidor com evidências separadas de geração e execução."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "tests"
+context_budget_class: "medium"
 ---
 
 > **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
-
-# sdd-generate-integration-tests
-
-Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
---json` e derive `PROJECT_PATH = project.path`, `SDD_WORKSPACE = workspace`,
-`SPEC_PATH = spec_path` e `RUNTIME = runtime`. Leia o contrato de entrega, design e testes
-existentes. Não presuma banco, container, porta, framework ou credencial.
-
-1. Faça discovery de convenções, serviços locais e comandos já existentes.
-2. Proponha plano com fluxos, dependências simuladas/reais, dados, cleanup,
-   timeout e risco. Aguarde aprovação antes de instalar pacote ou alterar
-   manifest, lockfile ou configuração compartilhada.
-3. Gere testes apenas em `PROJECT_PATH`, preservando o framework já adotado.
-4. Execute somente contra ambiente local explicitamente autorizado. Registre
-   fidelidade de mocks/serviços e limpe dados criados.
-5. Diferencie `generated`, `passed`, `failed`, `blocked` e `not-run`.
-
-Nunca persista secrets, faça rede sem autorização, commit ou atualize
-`session-state.md`. Retorne `AGENT_RESULT` com `payload.integration` contendo comando,
-evidência, limitações e `next_agent: sdd-bootstrap`.
 
 ## Política comum SDD
 
@@ -67,5 +49,31 @@ conteúdo lido durante a execução.
 - **Resultado e estado.** Devolva um bloco `AGENT_RESULT` válido conforme
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
-  executado: ausência de execução nunca é sucesso. Apenas `sdd-bootstrap`
-  escreve `session-state.md`.
+  executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
+  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  genéricas de resolução de contexto: consuma somente suas referências, valide
+  destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
+  conta própria. Se faltar informação material, devolva `payload.context_request`
+  com recurso, motivo, critério afetado e limite solicitado. Apenas
+  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados, evidências
+  e a visão `session-state.md`.
+
+# sdd-generate-integration-tests
+
+Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
+--json` e derive `PROJECT_PATH = project.path`, `SDD_WORKSPACE = workspace`,
+`SPEC_PATH = spec_path` e `RUNTIME = runtime`. Leia o contrato de entrega, design e testes
+existentes. Não presuma banco, container, porta, framework ou credencial.
+
+1. Faça discovery de convenções, serviços locais e comandos já existentes.
+2. Proponha plano com fluxos, dependências simuladas/reais, dados, cleanup,
+   timeout e risco. Aguarde aprovação antes de instalar pacote ou alterar
+   manifest, lockfile ou configuração compartilhada.
+3. Gere testes apenas em `PROJECT_PATH`, preservando o framework já adotado.
+4. Execute somente contra ambiente local explicitamente autorizado. Registre
+   fidelidade de mocks/serviços e limpe dados criados.
+5. Diferencie `generated`, `passed`, `failed`, `blocked` e `not-run`.
+
+Nunca persista secrets, faça rede sem autorização, commit ou atualize
+`session-state.md`. Retorne `AGENT_RESULT` com `payload.integration` contendo comando,
+evidência, limitações e `next_agent: sdd-bootstrap`.

@@ -1,35 +1,40 @@
 # Catálogo de agentes
 
 Os 17 agentes são escritos em `agents/` e compilados para todos os runtimes.
-Todos devem resolver contexto pela CLI, respeitar capabilities declaradas e
-preservar a revisão humana nos gates.
+O bootstrap resolve o ticket, entrega Context Packs por estágio, respeita as
+capabilities declaradas e preserva a revisão humana nos gates.
 
 O contrato comum está em [AGENT-CONTRACT.md](AGENT-CONTRACT.md): contexto
 canônico, classificação entre agentes de demanda e de apoio, capabilities versus
 efeitos reais, envelope `AGENT_RESULT` e chave `payload` de cada agente. A
-política operacional vive em `templates/agent-policy.md` e é injetada pelo
-compilador no final de todo agente compilado, nos quatro runtimes.
+política operacional vive em `templates/agent-policy.md` e é injetada como
+prefixo estável de todo agente compilado, nos quatro runtimes.
 
 ## Como os agentes cooperam
 
 ```mermaid
-flowchart LR
-    C[sdd-create-spec] --> A[sdd-analyze-demand]
-    A --> R[sdd-architect]
-    R --> B[sdd-bootstrap]
-    B --> D{Tipo de entrega}
-    D -->|Aplicação| I[sdd-implement-spec]
-    D -->|Refactor| F[sdd-refactor-code]
-    D -->|Bug| G[sdd-investigate-bug]
-    D -->|Migração| M[sdd-analyze-migration]
-    D -->|E2E| E[sdd-generate-e2e-tests]
-    I --> T[Testes e verificações]
-    F --> T
-    G --> T
-    M --> T
-    E --> T
-    T --> V[sdd-review-code]
-    V --> U[sdd-update-documentation]
+flowchart TB
+    B[sdd-bootstrap] --> P[Context Pack]
+    P --> A[sdd-analyze-demand]
+    A --> R[AGENT_RESULT]
+    R --> B
+    B --> P2[Context Pack de arquitetura]
+    P2 --> AR[sdd-architect]
+    AR --> R2[AGENT_RESULT]
+    R2 --> B
+    B --> D{delivery_kind}
+    D --> I[sdd-implement-spec]
+    D --> F[sdd-refactor-code]
+    D --> E[sdd-generate-e2e-tests]
+    D --> T[sdd-generate tests]
+    I --> V[resultado validado]
+    F --> V
+    E --> V
+    T --> V
+    V --> B
+    B --> RV[sdd-review-code]
+    RV --> U[sdd-update-documentation]
+    U --> B
 ```
 
 `sdd-architect` é o ponto de aprofundamento técnico: ele define impacto,
@@ -48,7 +53,8 @@ acionados conforme a necessidade, sem pular os gates.
 
 ## Resultado dos agentes
 
-Nenhum agente de execução escreve `session-state.md`. Cada agente devolve um
+Nenhum agente de execução escreve `state.json`, `events.ndjson` ou
+`session-state.md`. Cada agente devolve um
 `AGENT_RESULT` validável por `sdd result validate --file <resultado> --json`, e
 o `sdd-bootstrap` consolida o estado a partir de resultados validados. Testes ou
 builds não executados são registrados como `not-run`; falhas anteriores à

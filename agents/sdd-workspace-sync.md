@@ -3,6 +3,8 @@ name: sdd-workspace-sync
 description: "Gera inventário local de ativações e demandas SDD sem clonar repositórios, alterar código ou inferir instalação legada."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "support"
+context_budget_class: "low"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

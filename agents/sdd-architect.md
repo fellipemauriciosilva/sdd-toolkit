@@ -3,6 +3,8 @@ name: sdd-architect
 description: "Produz design técnico proporcional e revisa aderência arquitetural com evidências, sem implementar código de produção."
 version: "4.0.0"
 capabilities: "read,write,terminal"
+context_profile: "architecture"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

@@ -59,12 +59,12 @@ def shared_policy(kit_root: Path) -> str:
 
 
 def with_policy(body: str, policy: str) -> str:
-    """Append the shared policy once, keeping compilation deterministic."""
+    """Prefix the shared policy once, keeping a stable cacheable instruction prefix."""
     if not policy:
         return body
     if policy.strip() in body:
         return body
-    return body.rstrip("\n") + "\n\n" + policy
+    return policy.rstrip("\n") + "\n\n" + body.lstrip("\n")
 
 
 def attribution(values: Dict[str, str]) -> str:
@@ -128,6 +128,9 @@ def markdown_artifact(values: Dict[str, str], body: str) -> str:
         header += f"version: {json.dumps(values['version'], ensure_ascii=False)}\n"
     if values.get("capabilities"):
         header += f"capabilities: {json.dumps(values['capabilities'], ensure_ascii=False)}\n"
+    for key in ("context_profile", "context_budget_class"):
+        if values.get(key):
+            header += f"{key}: {json.dumps(values[key], ensure_ascii=False)}\n"
     return f"{header}---\n\n{attribution(values)}{body}"
 
 
@@ -142,6 +145,8 @@ def claude_artifact(values: Dict[str, str], body: str) -> str:
         f"description: {json.dumps(description, ensure_ascii=False)}\n"
         f"version: {json.dumps(version, ensure_ascii=False)}\n"
         f"capabilities: {json.dumps(capabilities, ensure_ascii=False)}\n"
+        f"context_profile: {json.dumps(values.get('context_profile', ''), ensure_ascii=False)}\n"
+        f"context_budget_class: {json.dumps(values.get('context_budget_class', ''), ensure_ascii=False)}\n"
         "---\n\n"
         f"{attribution(values)}{body}"
     )
@@ -173,6 +178,8 @@ def copilot_artifact(values: Dict[str, str], body: str) -> str:
         f"description: {json.dumps(description, ensure_ascii=False)}\n"
         'model: "Claude Sonnet 4.6"\n'
         f"capabilities: {json.dumps(capabilities, ensure_ascii=False)}\n"
+        f"context_profile: {json.dumps(values.get('context_profile', ''), ensure_ascii=False)}\n"
+        f"context_budget_class: {json.dumps(values.get('context_budget_class', ''), ensure_ascii=False)}\n"
         "tools:\n"
         f"{tool_lines}\n"
         f"version: {json.dumps(version, ensure_ascii=False)}\n"
@@ -191,6 +198,8 @@ def codex_artifact(values: Dict[str, str], body: str) -> str:
         f"description = {json.dumps(description, ensure_ascii=False)}\n"
         f"version = {json.dumps(version, ensure_ascii=False)}\n"
         f"capabilities = {json.dumps(capabilities, ensure_ascii=False)}\n"
+        f"context_profile = {json.dumps(values.get('context_profile', ''), ensure_ascii=False)}\n"
+        f"context_budget_class = {json.dumps(values.get('context_budget_class', ''), ensure_ascii=False)}\n"
         f"developer_instructions = {json.dumps(attribution(values) + body, ensure_ascii=False)}\n"
     )
 

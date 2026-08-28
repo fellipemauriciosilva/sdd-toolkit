@@ -33,11 +33,15 @@ escolher uma raiz de histórico dedicada.
 ```mermaid
 flowchart LR
     P[Projeto consumidor] -->|sdd activate| R[Registro de ativações]
-    R --> W[Workspace user / specs]
+    R --> W[Workspace user e specs]
     P -->|context resolve| C[Contexto determinístico]
     R --> C
     W --> C
-    C --> H[Harness selecionado]
+    C --> B[sdd-bootstrap]
+    B --> K[Context Pack por estágio]
+    K --> H[Harness selecionado]
+    H --> O[AGENT_RESULT]
+    O --> W
 ```
 
 O vínculo é local ao usuário: ativar um projeto não cria, altera ou versiona
@@ -54,6 +58,10 @@ O resultado informa `project_id`, escopo efetivo, runtime, perfil, workspace e,
 quando solicitado, o caminho da especificação do ticket. O comando é somente
 de leitura. Um projeto sem ativação retorna `status: unactivated` e uma sugestão
 implícita para executar `activate`.
+
+Após essa resolução, o usuário usa somente o bootstrap no fluxo normal. Ele
+monta e persiste os Context Packs no workspace pessoal; o projeto consumidor não
+recebe arquivos de estado, agentes ou configuração do toolkit.
 
 ## Limites atuais
 

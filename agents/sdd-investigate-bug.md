@@ -3,6 +3,8 @@ name: sdd-investigate-bug
 description: "Investiga defeitos sem alterar código e produz hipóteses, evidências, reprodução e plano mínimo de correção."
 version: "4.0.0"
 capabilities: "read,terminal"
+context_profile: "investigation"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

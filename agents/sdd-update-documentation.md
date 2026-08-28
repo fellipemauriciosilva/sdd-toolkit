@@ -3,6 +3,8 @@ name: sdd-update-documentation
 description: "Atualiza documentação aprovada a partir de evidências da entrega, preservando histórico e sem fechar gates autonomamente."
 version: "4.0.0"
 capabilities: "read,write,terminal"
+context_profile: "documentation"
+context_budget_class: "low"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

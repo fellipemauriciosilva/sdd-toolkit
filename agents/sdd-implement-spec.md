@@ -3,6 +3,8 @@ name: sdd-implement-spec
 description: "Implementa uma entrega de aplicação aprovada com mudanças mínimas, validação real e efeitos externos sob autorização explícita."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "implementation"
+context_budget_class: "high"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

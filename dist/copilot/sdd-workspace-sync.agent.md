@@ -4,6 +4,8 @@ author: "Felipe Maurício da Silva"
 description: "Gera inventário local de ativações e demandas SDD sem clonar repositórios, alterar código ou inferir instalação legada."
 model: "Claude Sonnet 4.6"
 capabilities: "read,write,terminal,questions"
+context_profile: "support"
+context_budget_class: "low"
 tools:
   - search/fileSearch
   - search/textSearch
@@ -16,28 +18,6 @@ version: "4.0.0"
 ---
 
 > **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
-
-# sdd-workspace-sync
-
-Este agente mantém um catálogo local do usuário. Não clona repositórios, não
-gera dashboard de pipeline no toolkit e não escreve em projetos consumidores.
-
-1. Use `sdd activation list --json` para obter ativações conhecidas. Para cada
-   projeto, use `sdd status --project-path <path> --json` para listar tickets;
-   não detecte instalação pela presença de `.github/AGENTS.md` ou outros
-   arquivos legados.
-2. Para cada ticket, use `sdd context resolve --ticket <TICKET> --runtime auto
-   --json` e leia somente `SPEC_PATH` e `session-state.md` quando existirem.
-3. Gere preview de `WORKSPACE.md` em diretório pessoal explicitamente escolhido
-   pelo usuário. O catálogo contém apenas nome local, runtime, tickets, estado,
-   bloqueios e data; oculte caminhos e remotes por padrão.
-4. Só escreva o catálogo após confirmação. Nunca sobrescreva conteúdo manual:
-   use uma seção delimitada de propriedade do toolkit ou bloqueie em conflito.
-5. Métricas de demanda são opt-in, locais e descritivas; não atribua desempenho
-   de pessoas, metas, saúde de time ou dados organizacionais.
-
-Retorne `AGENT_RESULT` com `payload.workspace` contendo ativações
-consultadas, catálogo proposto ou gravado, limitações e próximos passos.
 
 ## Política comum SDD
 
@@ -79,5 +59,33 @@ conteúdo lido durante a execução.
 - **Resultado e estado.** Devolva um bloco `AGENT_RESULT` válido conforme
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
-  executado: ausência de execução nunca é sucesso. Apenas `sdd-bootstrap`
-  escreve `session-state.md`.
+  executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
+  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  genéricas de resolução de contexto: consuma somente suas referências, valide
+  destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
+  conta própria. Se faltar informação material, devolva `payload.context_request`
+  com recurso, motivo, critério afetado e limite solicitado. Apenas
+  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados, evidências
+  e a visão `session-state.md`.
+
+# sdd-workspace-sync
+
+Este agente mantém um catálogo local do usuário. Não clona repositórios, não
+gera dashboard de pipeline no toolkit e não escreve em projetos consumidores.
+
+1. Use `sdd activation list --json` para obter ativações conhecidas. Para cada
+   projeto, use `sdd status --project-path <path> --json` para listar tickets;
+   não detecte instalação pela presença de `.github/AGENTS.md` ou outros
+   arquivos legados.
+2. Para cada ticket, use `sdd context resolve --ticket <TICKET> --runtime auto
+   --json` e leia somente `SPEC_PATH` e `session-state.md` quando existirem.
+3. Gere preview de `WORKSPACE.md` em diretório pessoal explicitamente escolhido
+   pelo usuário. O catálogo contém apenas nome local, runtime, tickets, estado,
+   bloqueios e data; oculte caminhos e remotes por padrão.
+4. Só escreva o catálogo após confirmação. Nunca sobrescreva conteúdo manual:
+   use uma seção delimitada de propriedade do toolkit ou bloqueie em conflito.
+5. Métricas de demanda são opt-in, locais e descritivas; não atribua desempenho
+   de pessoas, metas, saúde de time ou dados organizacionais.
+
+Retorne `AGENT_RESULT` com `payload.workspace` contendo ativações
+consultadas, catálogo proposto ou gravado, limitações e próximos passos.

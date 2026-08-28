@@ -18,7 +18,7 @@ KINDS = {"command", "file", "test", "observation"}
 PAYLOAD_KEYS = {
     "analysis", "architecture", "delivery", "document", "documentation", "e2e", "install",
     "integration", "investigation", "migration_analysis", "orchestration",
-    "project_discovery", "review", "scaffold", "unit", "workspace",
+    "project_discovery", "review", "scaffold", "unit", "workspace", "context_request",
 }
 REQUIRED = {
     "schema_version", "agent", "agent_version", "runtime", "status", "summary",
@@ -41,6 +41,15 @@ def _validate_payload(payload: Any) -> None:
         _validate_nested("sdd_delivery", payload["delivery"], "payload.delivery")
     if "architecture" in payload:
         _validate_nested("sdd_architecture", payload["architecture"], "payload.architecture")
+    if "context_request" in payload:
+        request = payload["context_request"]
+        required = {"resource", "reason", "acceptance_criterion", "requested_tokens"}
+        if required.difference(request) or not isinstance(request["resource"], str) or not isinstance(request["reason"], str):
+            raise ValueError("payload.context_request is incomplete")
+        if not isinstance(request["acceptance_criterion"], str) or not isinstance(request["requested_tokens"], int):
+            raise ValueError("payload.context_request has invalid values")
+        if request["requested_tokens"] < 1 or request["requested_tokens"] > 10000:
+            raise ValueError("payload.context_request requested_tokens is out of range")
 
 
 def _validate_nested(module_name: str, contract: Dict[str, Any], label: str) -> None:
@@ -63,7 +72,8 @@ def validate(value: Dict[str, Any]) -> Dict[str, Any]:
     missing = REQUIRED.difference(value)
     if missing:
         raise ValueError(f"agent result missing: {', '.join(sorted(missing))}")
-    unknown = set(value).difference(REQUIRED | OPTIONAL)
+    optional = OPTIONAL | {"context"}
+    unknown = set(value).difference(REQUIRED | optional)
     if unknown:
         raise ValueError(f"agent result has unsupported fields: {', '.join(sorted(unknown))}")
     if value["schema_version"] != 1:
@@ -97,6 +107,19 @@ def validate(value: Dict[str, Any]) -> Dict[str, Any]:
         raise ValueError("a blocked result must declare blocked_on")
     if "payload" in value:
         _validate_payload(value["payload"])
+    if "context" in value:
+        context = value["context"]
+        expected = {"context_id", "digest", "ticket", "project_id"}
+        if not isinstance(context, dict) or set(context) != expected:
+            raise ValueError("context must contain context_id, digest, ticket and project_id")
+        if not re.fullmatch(r"ctx-[0-9a-f]{16}", str(context["context_id"])):
+            raise ValueError("context.context_id is invalid")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(context["digest"])):
+            raise ValueError("context.digest is invalid")
+        if not isinstance(context["ticket"], str) or not context["ticket"]:
+            raise ValueError("context.ticket is invalid")
+        if not re.fullmatch(r"[0-9a-f]{64}", str(context["project_id"])):
+            raise ValueError("context.project_id is invalid")
     return value
 
 

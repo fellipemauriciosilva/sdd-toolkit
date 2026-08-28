@@ -3,6 +3,8 @@ name: sdd-setup-project
 description: "Faz discovery de um projeto e propõe documentação de contexto opt-in, preservando arquivos existentes e sendo agnóstico de stack."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "discovery"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

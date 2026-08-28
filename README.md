@@ -60,13 +60,17 @@ specs e estado de sessão ficam no workspace do usuário, não no projeto. Veja 
 uso diário e os quatro runtimes em [docs/QUICKSTART.md](docs/QUICKSTART.md).
 
 ```mermaid
-flowchart LR
-    S[Create spec] --> A[Analyze demand]
-    A --> AR[Architecture]
-    AR --> D[Delivery]
-    D --> T[Tests e E2E]
-    T --> R[Review]
-    R --> DOC[Documentation]
+flowchart TB
+    U[Usuário informa ticket] --> B[sdd-bootstrap]
+    B --> P[Context Pack mínimo]
+    P --> A[Agente do estágio]
+    A --> R[AGENT_RESULT]
+    R --> V[validate e result record]
+    V --> S[state.json events results]
+    S --> B
+    B --> G{Gate ou checkpoint}
+    G -->|próximo estágio| P
+    G -->|conclusão| F[Resumo e decisão humana]
 ```
 
 Cada etapa possui evidência e gates. A etapa arquitetural é proporcional ao

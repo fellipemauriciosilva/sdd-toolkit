@@ -5,29 +5,37 @@ referência para manutenção, evals e validações semânticas; os artefatos em
 `dist/` são sempre gerados pelo compilador.
 
 A política operacional comum vive em [`templates/agent-policy.md`](../templates/agent-policy.md)
-e é injetada pelo compilador no final de todo agente compilado, em todos os
+e é injetada pelo compilador como prefixo estável de todo agente compilado, em todos os
 runtimes. Ela não é copiada nos fontes: editá-la em um único lugar mantém os 17
 agentes alinhados. `python scripts/sdd_lint.py` verifica essa injeção.
 
 ## Contexto canônico
 
-Um agente que atua em uma demanda recebe somente o ticket e resolve o contexto
-com `sdd context resolve --ticket <TICKET> --runtime auto --json`. Do JSON,
-deve derivar exatamente:
+O bootstrap resolve o ticket e cria um Context Pack imutável antes de cada
+agente. O pack é a entrada preferencial do agente: contém somente referências,
+seções, decisões e resultados anteriores selecionados para o seu papel. O
+agente valida `context_id`, digest, ticket, projeto, destino e orçamento; não
+faz busca ampla nem cria contexto adicional.
+
+`sdd context resolve --ticket <TICKET> --runtime auto --json` permanece o
+contrato para o bootstrap e para `sdd run` avulso. Do JSON, devem ser derivadas
+exatamente:
 
 | Variável | Origem | Uso permitido |
 |---|---|---|
 | `PROJECT_PATH` | `project.path` | Código, testes e documentação do projeto quando a demanda autorizar escrita nele. |
 | `SDD_WORKSPACE` | `workspace` | Diretório raiz pessoal das demandas; não é o projeto consumidor. |
-| `SPEC_PATH` | `spec_path` | `task.md`, `session-state.md`, evidências e artefatos da demanda. |
+| `SPEC_PATH` | `spec_path` | `task.md`, estado, resultados, evidências e artefatos da demanda. |
 | `RUNTIME` | `runtime` | Identificação canônica: `copilot`, `claude`, `codex` ou `cursor`. |
 
 Antes de escrever, o agente resolve os caminhos canônicos e confirma que o
 destino está contido em `PROJECT_PATH` ou `SPEC_PATH`. Links simbólicos que
 escapem desses diretórios bloqueiam a operação.
 
-`task.md` e `session-state.md` são os únicos arquivos canônicos de demanda.
-`tasks.md` e `status-task.md` não fazem parte do contrato.
+`task.md` é o artefato funcional da demanda. `state.json` é o estado canônico;
+`events.ndjson` é o histórico append-only; `results/` e `evidence/` preservam
+saídas completas; `context-summary.md` e `session-state.md` são visões humanas
+geradas. `tasks.md` e `status-task.md` não fazem parte do contrato.
 
 ## Agentes de demanda e agentes de apoio
 
@@ -98,15 +106,21 @@ saídas integrais de logs. Redigir valores sensíveis nas evidências.
 Cada agente devolve um bloco `AGENT_RESULT` validável pelo schema
 [`schemas/agent-result.schema.json`](../schemas/agent-result.schema.json) e pelo
 comando `sdd result validate --file <resultado> --json`. O `sdd-bootstrap` é o
-proprietário do estado de orquestração: ele valida o resultado e atualiza
-`session-state.md`. Em execução avulsa, o agente pode propor um patch de estado,
-mas não declara um gate como aprovado sem evidência real.
+proprietário do estado de orquestração: ele valida o resultado e usa
+`sdd result record --apply` para vinculá-lo ao pack, gravar resultado, evento,
+evidências e estado atomicamente. Em execução avulsa, `sdd run` prepara o mesmo
+protocolo; o agente nunca atualiza estado ou aprova gate.
 
 Os estados de resultado são `completed`, `blocked`, `failed` e
 `not-applicable`. Testes ou builds não executados devem ser registrados como
 `not-run`, nunca como sucesso implícito. `preexisting_failures` é obrigatório e
 separa o que já estava quebrado do que a entrega introduziu. Um resultado
 `blocked` precisa declarar `blocked_on`.
+
+Quando o pack for insuficiente, o agente devolve
+`payload.context_request` com `resource`, `reason`, `acceptance_criterion` e
+`requested_tokens`. Somente o bootstrap pode aprovar o pedido por
+`sdd context expand`; a resposta é um pack filho ligado ao `parent_context_id`.
 
 O campo `payload` carrega o resultado específico de cada agente sob uma chave
 fixa:

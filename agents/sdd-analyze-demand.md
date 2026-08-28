@@ -3,6 +3,8 @@ name: sdd-analyze-demand
 description: "Analisa documentos de uma demanda sem modificar código e consolida uma estratégia de entrega verificável."
 version: "4.0.0"
 capabilities: "read,write,terminal"
+context_profile: "analysis"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

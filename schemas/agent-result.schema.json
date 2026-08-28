@@ -216,6 +216,49 @@
         },
         "workspace": {
           "type": "object"
+        },
+        "context_request": {
+          "type": "object",
+          "required": [
+            "resource",
+            "reason",
+            "acceptance_criterion",
+            "requested_tokens"
+          ],
+          "properties": {
+            "resource": {"type": "string", "minLength": 1},
+            "reason": {"type": "string", "minLength": 1},
+            "acceptance_criterion": {"type": "string", "minLength": 1},
+            "requested_tokens": {"type": "integer", "minimum": 1, "maximum": 10000}
+          }
+        }
+      }
+    },
+    "context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "context_id",
+        "digest",
+        "ticket",
+        "project_id"
+      ],
+      "properties": {
+        "context_id": {
+          "type": "string",
+          "pattern": "^ctx-[0-9a-f]{16}$"
+        },
+        "digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ticket": {
+          "type": "string",
+          "minLength": 1
+        },
+        "project_id": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
         }
       }
     }

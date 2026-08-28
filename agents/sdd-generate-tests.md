@@ -3,6 +3,8 @@ name: sdd-generate-tests
 description: "Gera ou atualiza testes unitários a partir de uma spec aprovada, preservando padrões e comportamento existentes."
 version: "4.0.0"
 capabilities: "read,write,terminal"
+context_profile: "tests"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

@@ -4,12 +4,13 @@
 
 ```mermaid
 flowchart LR
-    S[Create spec] --> A[Analyze demand]
-    A --> AR[Architecture]
-    AR --> D[Delivery]
-    D --> T[Tests e E2E]
-    T --> R[Review]
-    R --> DOC[Documentation]
+    U[Ticket] --> B[sdd-bootstrap]
+    B --> P[Context Pack]
+    P --> A[Agente do estágio]
+    A --> R[AGENT_RESULT]
+    R --> V[Validate e record]
+    V --> S[Estado canônico]
+    S --> B
 ```
 
 `analyze`, `architecture` e `delivery` são etapas core. Testes, E2E, review e
@@ -19,23 +20,32 @@ autoriza declarar uma verificação como executada.
 ## Visualização do fluxo
 
 ```mermaid
-flowchart LR
+flowchart TB
     S[create spec] --> A[analyze demand]
     A --> G1{G1}
     G1 --> AR[architecture]
-    AR --> G2{G2}
+    AR --> G2{G2 e CP1}
     G2 --> K{delivery_kind}
-    K -->|application| I[implement spec]
-    K -->|e2e-tests| E[generate E2E tests]
-    I --> V[verify]
-    E --> V
-    V --> G3{G3}
-    G3 --> T[tests e E2E run]
+    K -->|application ou refactor| I[delivery]
+    K -->|test e2e| E[generate E2E]
+    K -->|testes| T0[generate tests]
+    I --> G3{G3}
+    E --> G3
+    T0 --> G3
+    G3 --> T[unit integração e E2E run]
     T --> G4{G4}
-    G4 --> R[review]
-    R --> G5{G5}
-    G5 --> D[docs e decisão humana]
-    D --> G6{G6}
+    G4 --> R[architecture review e code review]
+    R --> G5{G5 e CP2}
+    G5 --> D[documentation]
+    D --> G6{G6 e CP3}
+
+    B[sdd-bootstrap] -. cria pack .-> A
+    B -. cria pack .-> AR
+    B -. cria pack .-> I
+    B -. cria pack .-> E
+    B -. cria pack .-> T
+    B -. cria pack .-> R
+    B -. cria pack .-> D
 ```
 
 Os losangos são gates: se faltarem evidências, o fluxo retorna à etapa que as
@@ -63,6 +73,18 @@ A evidência de cada gate chega ao bootstrap como um `AGENT_RESULT`, descrito em
 Evidência `not-run`, `failed`, `flaky` ou `blocked` não aprova gate, e nenhum
 perfil — incluindo `permissive` — autoriza rede, instalação, commit, push, PR ou
 publicação sem autorização explícita na mesma sessão.
+
+```mermaid
+flowchart LR
+    P[Context Pack] --> A[Agente]
+    A -->|resultado completo| V[Validação]
+    V -->|válido| R[Result record]
+    R --> S[state.json e events.ndjson]
+    A -->|context_request| X{Bootstrap autoriza}
+    X -->|sim| C[Pack filho]
+    C --> A
+    X -->|não| B[blocked e checkpoint]
+```
 
 ```mermaid
 flowchart TB

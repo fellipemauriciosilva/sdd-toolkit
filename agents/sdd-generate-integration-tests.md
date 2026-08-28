@@ -3,6 +3,8 @@ name: sdd-generate-integration-tests
 description: "Planeja, gera e valida testes de integração no projeto consumidor com evidências separadas de geração e execução."
 version: "4.0.0"
 capabilities: "read,write,terminal,questions"
+context_profile: "tests"
+context_budget_class: "medium"
 author: "Felipe Maurício da Silva"
 author_email: "fellipemauriciosilva@gmail.com"
 author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"

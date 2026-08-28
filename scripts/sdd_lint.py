@@ -17,6 +17,8 @@ from typing import Dict, Iterable, List, Tuple
 CANONICAL_VARIABLES = ("PROJECT_PATH", "SDD_WORKSPACE", "SPEC_PATH", "RUNTIME")
 CONTEXT_COMMAND = "sdd context resolve"
 ALLOWED_CAPABILITIES = ("read", "write", "terminal", "questions")
+CONTEXT_PROFILES = {"analysis", "architecture", "orchestration", "scaffold", "e2e", "tests", "implementation", "support", "investigation", "review", "discovery", "documentation"}
+BUDGET_CLASSES = {"low", "medium", "high"}
 
 DEMAND_AGENTS = {
     "sdd-analyze-demand", "sdd-analyze-migration", "sdd-architect",
@@ -155,6 +157,10 @@ def lint_agents(root: Path, toolkit_version: str) -> List[Dict[str, str]]:
         unknown = [item for item in declared if item not in ALLOWED_CAPABILITIES]
         if unknown:
             results.append(finding("agents", stem, f"capabilities desconhecidas: {unknown}"))
+        if values.get("context_profile") not in CONTEXT_PROFILES:
+            results.append(finding("agents", stem, "context_profile ausente ou inválido"))
+        if values.get("context_budget_class") not in BUDGET_CLASSES:
+            results.append(finding("agents", stem, "context_budget_class ausente ou inválido"))
 
         lowered = body.lower()
         for token in legacy_hits(body):
@@ -209,8 +215,8 @@ def lint_agents(root: Path, toolkit_version: str) -> List[Dict[str, str]]:
         expected = PAYLOAD_BY_AGENT[stem]
         if not used:
             results.append(finding("agents", stem, "sem chave payload declarada"))
-        elif not used <= expected:
-            results.append(finding("agents", stem, f"payload fora do contrato: {sorted(used - expected)}"))
+        elif not used <= expected | {"context_request"}:
+            results.append(finding("agents", stem, f"payload fora do contrato: {sorted(used - expected - {'context_request'})}"))
 
         # stack neutrality
         exempt = STACK_EXEMPT.get(stem, ())
@@ -268,7 +274,7 @@ def lint_dist(root: Path) -> List[Dict[str, str]]:
                 body = json.loads('"' + match.group(1) + '"') if match else ""
             else:
                 body = text.split("---", 2)[-1]
-            marker = "# " + name if ("# " + name) in body else "## Política comum SDD"
+            marker = "## Política comum SDD"
             bodies[runtime] = body[body.find(marker):].strip() if marker in body else body.strip()
         distinct = set(bodies.values())
         if len(distinct) > 1:
