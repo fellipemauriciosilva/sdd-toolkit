@@ -130,6 +130,46 @@ class LintRegressionTests(unittest.TestCase):
         shutil.rmtree(self.kit / "evals" / "sdd-refactor-code" / "case-03")
         self.assertIn("sem caso adversarial", self.messages())
 
+    def test_detects_an_eval_that_rewards_approving_a_gate(self):
+        self.patch(
+            "evals/sdd-review-code/case-02/rubric.md",
+            "| 3 | Devolveu `payload.review` sem declarar G5 aprovado | 25 | ✓/✗ |",
+            "| 3 | Marcou G5:passed | 25 | ✓/✗ |",
+        )
+        self.assertIn("espera que o agente declare gate; o dono é o bootstrap", self.messages())
+
+    def test_detects_an_eval_that_rewards_writing_orchestration_state(self):
+        self.patch(
+            "evals/sdd-implement-spec/case-01/expected.md",
+            "4. Não atualiza `session-state.md`, `state.json` nem `events.ndjson`",
+            "4. Atualiza `session-state.md` com o checkpoint",
+        )
+        self.assertIn("espera escrita de estado pelo agente: session-state.md", self.messages())
+
+    def test_allows_the_scaffold_agent_to_create_the_session_view(self):
+        """sdd-create-spec cria a visão no scaffold; a exceção é do contrato."""
+        self.assertEqual("clean", sdd_lint.lint(self.kit)["status"])
+        self.assertIn(
+            "session-state.md",
+            (self.kit / "evals" / "sdd-create-spec" / "case-01" / "expected.md").read_text(encoding="utf-8"),
+        )
+
+    def test_ignores_a_gate_claim_quoted_inside_an_adversarial_input(self):
+        """input.md cita o pedido hostil; exigir algo do agente é papel do expected/rubric."""
+        text = (self.kit / "evals" / "sdd-update-documentation" / "case-04" / "input.md").read_text(encoding="utf-8")
+        self.assertIn("aprova o G6", text)
+        self.assertEqual("clean", sdd_lint.lint(self.kit)["status"])
+
+    def test_detects_stack_coupling_inside_an_eval(self):
+        self.patch(
+            "evals/sdd-generate-tests/case-01/input.md",
+            "# Eval Input",
+            "# Projeto Spring Boot com Maven\n# Eval Input",
+        )
+        messages = self.messages()
+        self.assertIn("acoplamento de stack: spring boot", messages)
+        self.assertIn("acoplamento de stack: maven", messages)
+
 
 if __name__ == "__main__":
     unittest.main()

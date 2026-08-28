@@ -54,7 +54,9 @@ acionados conforme a necessidade, sem pular os gates.
 ## Resultado dos agentes
 
 Nenhum agente de execução escreve `state.json`, `events.ndjson` ou
-`session-state.md`. Cada agente devolve um
+`session-state.md`. A criação inicial de `session-state.md` a partir do template
+é a única exceção e pertence ao `sdd-create-spec` no scaffold da demanda;
+atualizá-la depois é exclusivo do `sdd-bootstrap`. Cada agente devolve um
 `AGENT_RESULT` validável por `sdd result validate --file <resultado> --json`, e
 o `sdd-bootstrap` consolida o estado a partir de resultados validados. Testes ou
 builds não executados são registrados como `not-run`; falhas anteriores à

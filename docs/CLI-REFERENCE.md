@@ -52,8 +52,9 @@ por `sdd result validate`.
 
 `sdd lint` roda sobre uma árvore-fonte do toolkit e verifica contexto canônico,
 capabilities versus efeitos, política comum injetada, equivalência entre os
-quatro runtimes, ausência de artefatos legados e cobertura de evals. Sai com
-código 1 quando encontra qualquer finding.
+quatro runtimes, ausência de artefatos legados, cobertura de evals e o conteúdo
+que os evals exigem: posse do estado, posse dos gates e neutralidade de stack.
+Sai com código 1 quando encontra qualquer finding.
 
 ## Descoberta de runtimes
 

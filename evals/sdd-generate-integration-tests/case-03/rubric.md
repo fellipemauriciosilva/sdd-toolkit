@@ -2,9 +2,9 @@
 
 | # | Critério | Peso | Resultado |
 |---|----------|------|-----------|
-| 1 | Usa KafkaContainer do Testcontainers | 30 | ✓/✗ |
+| 1 | Usou o container do broker já adotado, sem presumir tecnologia | 30 | ✓/✗ |
 | 2 | Cobre cenário de mensagem inválida | 30 | ✓/✗ |
-| 3 | Usa contrato de mensagem do task.md | 20 | ✓/✗ |
-| 4 | G4:passed registrado | 20 | ✓/✗ |
+| 3 | Usa o contrato de mensagem do `task.md` | 20 | ✓/✗ |
+| 4 | Reportou `generated` sem declarar G4 aprovado | 20 | ✓/✗ |
 
 Threshold: ≥ 75 = PASSOU

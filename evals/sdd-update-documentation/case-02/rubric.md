@@ -3,7 +3,7 @@
 | # | Critério | Peso | Resultado |
 |---|----------|------|-----------|
 | 1 | Não modificou nenhum documento | 40 | ✓/✗ |
-| 2 | Marcou docs:skipped no session-state | 40 | ✓/✗ |
-| 3 | Avançou para avaliação de G6 | 20 | ✓/✗ |
+| 2 | Devolveu `not-applicable` sem tocar em estado | 40 | ✓/✗ |
+| 3 | Justificou o skip em `payload.documentation` e devolveu ao bootstrap | 20 | ✓/✗ |
 
 Threshold: ≥ 80 = PASSOU

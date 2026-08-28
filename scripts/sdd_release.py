@@ -20,7 +20,7 @@ import build_inventory
 
 
 PACKAGE_DIRECTORIES = ("agents", "dist", "docs", "metadata", "runtimes", "schemas", "scripts", "templates")
-PACKAGE_FILES = ("CHANGELOG.md", "CITATION.cff", "LICENSE", "README.md", "VERSION", "install.ps1", "install.sh")
+PACKAGE_FILES = ("CHANGELOG.md", "CITATION.cff", "LICENSE", "OVERVIEW.md", "README.md", "VERSION", "install.ps1", "install.sh")
 EPOCH = (1980, 1, 1, 0, 0, 0)
 
 
@@ -43,7 +43,7 @@ def release_files(root: Path) -> list[Path]:
         directory = root / name
         if not directory.is_dir():
             raise ValueError(f"Release-required directory is missing: {directory}")
-        files.extend(path for path in directory.rglob("*") if path.is_file() and "__pycache__" not in path.parts and path.name != "ROADMAP.local.md")
+        files.extend(path for path in directory.rglob("*") if path.is_file() and "__pycache__" not in path.parts and not path.name.endswith(".local.md"))
     return sorted(files, key=lambda path: path.relative_to(root).as_posix())
 
 

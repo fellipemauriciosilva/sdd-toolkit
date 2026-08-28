@@ -14,5 +14,6 @@ test-results/
 # Extensões locais de modernização geradas pelo ambiente do mantenedor
 .github/modernize/
 
-# Planejamento local; não faz parte do repositório público nem dos pacotes de release.
-docs/ROADMAP.local.md
+# Documentos locais; não fazem parte do repositório público nem dos pacotes de
+# release. Inclui planejamento e análises que citam material de terceiros.
+docs/*.local.md

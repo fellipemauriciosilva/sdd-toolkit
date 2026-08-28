@@ -1,11 +1,8 @@
 # Eval Input — sdd-generate-integration-tests case-02
-# Cenário: Step tests=disabled → deve ser skipped sem gerar nada
+# Cenário: etapa de testes desabilitada pela política da demanda → skip sem gerar nada
 
-## session-state.md
-```
-tests: disabled
-```
-## Quality Gates
-| Gate | Policy | Status |
-|------|--------|--------|
-| G4 | auto | pending |
+## Context Pack entregue pelo bootstrap
+- `target_agent`: `sdd-generate-integration-tests`
+- `stage`: `tests`
+- `constraints`: `["etapa de testes desabilitada pela política da demanda"]`
+- `state.stage`: `tests`

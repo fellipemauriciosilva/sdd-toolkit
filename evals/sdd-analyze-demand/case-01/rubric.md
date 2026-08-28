@@ -2,10 +2,11 @@
 
 | # | Critério | Peso | Resultado |
 |---|----------|------|-----------|
-| 1 | Preencheu Entry Point com Kafka consumer correto | 15 | ✓/✗ |
+| 1 | Preencheu Entry Point com o consumidor declarado na demanda | 15 | ✓/✗ |
 | 2 | Preencheu Affected Files com pelo menos 3 arquivos | 20 | ✓/✗ |
 | 3 | Preencheu Flow Analysis com fluxo completo | 20 | ✓/✗ |
 | 4 | Preencheu Implementation Plan com passos concretos | 25 | ✓/✗ |
-| 5 | Marcou G1:passed (Demand Summary + Expected Behavior preenchidos) | 20 | ✓/✗ |
+| 5 | Entregou evidência para o G1 sem declarar o gate aprovado | 20 | ✓/✗ |
 
 Threshold: ≥ 80 = PASSOU
+Critério 5 é bloqueante — declarar gate aprovado é papel do bootstrap = score 0

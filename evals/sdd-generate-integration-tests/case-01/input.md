@@ -1,10 +1,11 @@
 # Eval Input — sdd-generate-integration-tests case-01
-# Cenário: Endpoint REST novo → gera testes Cucumber + WireMock
+# Cenário: Endpoint REST novo → gera testes de integração no framework já adotado
 
 ## task.md — Affected Files
-- `CompetenciaController.java` — novo endpoint GET /competencias/{id}
+- `CompetenciaController` — novo endpoint `GET /competencias/{id}`
 
-## Contexto
-- Framework de testes: JUnit 5 + Testcontainers + WireMock
-- Pasta de testes: `src/test/java/com/gcb/integration/`
-- step definitions existem em `CompetenciaSteps.java`
+## Contexto descoberto no projeto
+- Suíte de integração já existente, com mock de dependências externas e
+  containers efêmeros para o banco
+- Pasta de testes de integração já definida pela convenção do repositório
+- Step definitions existentes em `CompetenciaSteps`

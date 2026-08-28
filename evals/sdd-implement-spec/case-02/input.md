@@ -1,11 +1,13 @@
 # Eval Input — sdd-implement-spec case-02
-# Cenário: G2 já aprovado → implementa seguindo o plano exato
+# Cenário: checkpoint já aprovado → implementa seguindo o plano exato
 
-## Status
-- G2.policy = confirm
-- G2.status = passed (CP1 aprovado pelo humano)
-- G1:passed
+## Context Pack entregue pelo bootstrap
+- `target_agent`: `sdd-implement-spec`
+- `stage`: `delivery`
+- `state.status`: `ready`
+- `state.blocked_on`: `[]` (CP1 já aprovado pelo humano)
 
 ## task.md
 - Implementation Plan preenchido com 4 steps
 - Affected Files listados
+- Tests to Add declarados

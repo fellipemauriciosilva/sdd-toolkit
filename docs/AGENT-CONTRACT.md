@@ -37,6 +37,11 @@ escapem desses diretórios bloqueiam a operação.
 saídas completas; `context-summary.md` e `session-state.md` são visões humanas
 geradas. `tasks.md` e `status-task.md` não fazem parte do contrato.
 
+A posse dessas visões é assimétrica e deliberada: `sdd-create-spec` cria
+`session-state.md` a partir do template durante o scaffold, e a partir daí
+somente `sdd-bootstrap` a atualiza. Criar o arquivo é scaffold; alterá-lo depois
+é orquestração, e orquestração tem um único dono.
+
 ## Agentes de demanda e agentes de apoio
 
 Os **agentes de demanda** operam sobre um ticket, resolvem o contexto canônico
@@ -160,3 +165,9 @@ python -m unittest discover -s tests
 O linter semântico cobre contrato de contexto, capabilities versus efeitos,
 política injetada, equivalência entre os quatro runtimes e ausência de
 artefatos legados em agentes, templates e evals.
+
+Ele também verifica o que os evals **exigem**: `expected.md` e `rubric.md` não
+podem premiar escrita de estado nem declaração de gate por um agente que não
+seja o `sdd-bootstrap`, e nenhum arquivo de eval pode acoplar a demanda a uma
+stack. `input.md` fica fora dessas duas regras porque descreve o cenário e, em
+um caso adversarial, cita o próprio pedido hostil que o agente deve recusar.
