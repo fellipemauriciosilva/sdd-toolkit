@@ -3,9 +3,11 @@
 Não publique vulnerabilidades, credenciais, prompts sensíveis ou evidências de
 exploração em issues ou Discussions.
 
-Use o recurso **Private vulnerability reporting** do GitHub quando habilitado
-ou o canal privado indicado pelo mantenedor. Informe versão afetada, impacto,
-passos de reprodução e uma possível mitigação, sem incluir secrets.
+Use o recurso **Private vulnerability reporting** do GitHub como canal
+preferencial. Se ele não estiver habilitado, contate o mantenedor inicial em
+[fellipemauriciosilva@gmail.com](mailto:fellipemauriciosilva@gmail.com). Informe
+versão afetada, impacto, passos de reprodução e uma possível mitigação, sem
+incluir secrets. O LinkedIn não é canal para relatos de segurança.
 
 São relevantes, entre outros: prompt injection, execução inesperada, acesso a
 secrets, path traversal, alteração fora do escopo e falhas de instalação,

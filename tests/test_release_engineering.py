@@ -43,6 +43,8 @@ class ReleaseEngineeringTests(unittest.TestCase):
             self.assertTrue((output / "sbom.cdx.json").is_file())
             provenance = json.loads((output / "provenance.json").read_text(encoding="utf-8"))
             self.assertEqual("Felipe Maurício da Silva", provenance["identity"]["name"])
+            self.assertEqual("fellipemauriciosilva@gmail.com", provenance["identity"]["email"])
+            self.assertEqual("https://www.linkedin.com/in/felipe-mauricio-06685735/", provenance["identity"]["linkedin"])
             for artifact in report["artifacts"]:
                 self.assertTrue((output / artifact["name"]).is_file())
 
@@ -64,6 +66,7 @@ class ReleaseEngineeringTests(unittest.TestCase):
             archive = next(output.glob("*.zip"))
             with zipfile.ZipFile(archive) as package:
                 self.assertNotIn("sdd-toolkit/docs/ROADMAP.local.md", package.namelist())
+                self.assertIn("sdd-toolkit/CITATION.cff", package.namelist())
                 self.assertIn("sdd-toolkit/docs/MAINTAINERS.md", package.namelist())
                 self.assertIn("sdd-toolkit/docs/THIRD_PARTY_NOTICES.md", package.namelist())
                 package.extractall(root / "unpacked")
@@ -78,9 +81,9 @@ class ReleaseEngineeringTests(unittest.TestCase):
 
     def test_root_document_hygiene_keeps_only_public_entry_points(self):
         allowed = {
-            "README.md", "CHANGELOG.md", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
+            "README.md", "CHANGELOG.md", "CITATION.cff", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
             "LICENSE", "SECURITY.md", "SUPPORT.md", "VERSION", "requirements-dev.txt",
-            "install.ps1", "install.sh", ".gitignore",
+            "install.ps1", "install.sh", ".gitattributes", ".gitignore",
         }
         root_files = {path.name for path in ROOT.iterdir() if path.is_file()}
         self.assertEqual(allowed, root_files)

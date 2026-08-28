@@ -24,6 +24,7 @@ Todos os comandos mutáveis usam preview por padrão; `--apply` confirma a açã
 | Objetivo | Comando |
 |---|---|
 | Ver versão | `sdd --version` |
+| Ver identidade e contato público | `sdd about --json` |
 | Ativar projeto atual | `sdd activate` |
 | Pré-visualizar ativação | `sdd activate --dry-run` |
 | Iniciar demanda | `sdd start ABC-123` |

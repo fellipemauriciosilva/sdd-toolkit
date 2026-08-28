@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+message: "If you use SDD Toolkit, please cite it using this metadata."
+title: "SDD Toolkit"
+type: software
+authors:
+  - family-names: "Silva"
+    given-names: "Felipe Maurício"
+    email: "fellipemauriciosilva@gmail.com"
+license: MIT
+repository-code: "https://github.com/fellipemauriciosilva/sdd-toolkit"

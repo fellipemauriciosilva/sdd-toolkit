@@ -10,4 +10,5 @@ privadas, estados locais ou conteúdo de demandas.
 
 O suporte comunitário é best-effort. Consulte primeiro
 [docs/QUICKSTART.md](docs/QUICKSTART.md) e
-[docs/USER-SCOPE.md](docs/USER-SCOPE.md).
+[docs/USER-SCOPE.md](docs/USER-SCOPE.md). Para governança e manutenção inicial,
+consulte [docs/MAINTAINERS.md](docs/MAINTAINERS.md).

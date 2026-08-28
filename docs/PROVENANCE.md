@@ -5,11 +5,13 @@ Ele separa o que já foi verificado do que ainda exige aprovação antes do beta
 
 ## Atribuição do mantenedor inicial
 
-Os agentes fonte usam a identidade pública registrada em
-[MAINTAINERS.md](MAINTAINERS.md). Essa atribuição cobre a manutenção inicial
-dos arquivos autorais do toolkit; cada skill, exemplo, dependência, action ou
-trecho derivado continua exigindo verificação de origem, licença e autorização
-próprias.
+O registro técnico canônico da identidade pública está em
+[`metadata/project-identity.json`](../metadata/project-identity.json), e sua
+apresentação pública está em [MAINTAINERS.md](MAINTAINERS.md). Os agentes fonte,
+artefatos compilados, inventário e proveniência de release usam esse mesmo
+registro. Essa atribuição cobre a manutenção inicial dos arquivos autorais do
+toolkit; cada skill, exemplo, dependência, action ou trecho derivado continua
+exigindo verificação de origem, licença e autorização próprias.
 
 ## Inventário
 

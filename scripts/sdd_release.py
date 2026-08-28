@@ -20,7 +20,7 @@ import build_inventory
 
 
 PACKAGE_DIRECTORIES = ("agents", "dist", "docs", "metadata", "runtimes", "schemas", "scripts", "templates")
-PACKAGE_FILES = ("CHANGELOG.md", "LICENSE", "README.md", "VERSION", "install.ps1", "install.sh")
+PACKAGE_FILES = ("CHANGELOG.md", "CITATION.cff", "LICENSE", "README.md", "VERSION", "install.ps1", "install.sh")
 EPOCH = (1980, 1, 1, 0, 0, 0)
 
 

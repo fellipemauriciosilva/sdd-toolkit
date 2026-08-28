@@ -26,6 +26,17 @@ class CliTests(unittest.TestCase):
         self.assertEqual(0, version.returncode)
         self.assertEqual((ROOT / "VERSION").read_text(encoding="utf-8").strip(), version.stdout.strip())
 
+    def test_about_exposes_the_canonical_public_identity(self):
+        completed = subprocess.run(
+            [sys.executable, str(CLI), "about", "--json"], capture_output=True, text=True, check=False,
+        )
+        self.assertEqual(0, completed.returncode, msg=completed.stderr)
+        report = json.loads(completed.stdout)
+        self.assertEqual("SDD Toolkit", report["project"])
+        self.assertEqual("Felipe Maurício da Silva", report["maintainer"]["name"])
+        self.assertEqual("fellipemauriciosilva@gmail.com", report["maintainer"]["email"])
+        self.assertEqual("https://www.linkedin.com/in/felipe-mauricio-06685735/", report["maintainer"]["linkedin"])
+
     def test_agent_result_validation(self):
         with tempfile.TemporaryDirectory(prefix="sdd-result-") as temporary:
             result_path = Path(temporary) / "result.json"

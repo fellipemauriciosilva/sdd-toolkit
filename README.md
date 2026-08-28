@@ -5,6 +5,7 @@ instaladores que ajudam a conduzir demandas com contexto, decisões técnicas e
 verificações explícitas.
 
 Suporta GitHub Copilot, Claude Code, Codex e Cursor. A licença é [MIT](LICENSE).
+O mantenedor inicial é [Felipe Maurício da Silva](docs/MAINTAINERS.md).
 
 > O toolkit orienta o trabalho dos agentes; ele não substitui a revisão humana,
 > os controles do runtime nem a validação do projeto consumidor.

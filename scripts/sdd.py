@@ -44,6 +44,33 @@ def emit(value: Dict[str, Any], as_json: bool) -> None:
         print(f"{key}: {json.dumps(item, ensure_ascii=False) if isinstance(item, (dict, list)) else item}")
 
 
+def public_identity() -> Dict[str, str]:
+    path = ROOT / "metadata" / "project-identity.json"
+    try:
+        maintainer = json.loads(path.read_text(encoding="utf-8"))["maintainer"]
+        identity = {
+            "name": str(maintainer["name"]),
+            "email": str(maintainer["email"]),
+            "linkedin": str(maintainer["linkedin"]),
+        }
+    except (OSError, KeyError, TypeError, json.JSONDecodeError) as exc:
+        raise STATE.StateError(f"Invalid public project identity: {path}") from exc
+    if not all(identity.values()):
+        raise STATE.StateError(f"Invalid public project identity: {path}")
+    return identity
+
+
+def about(args: argparse.Namespace) -> int:
+    result = {
+        "schema_version": 1,
+        "project": "SDD Toolkit",
+        "toolkit_version": (ROOT / "VERSION").read_text(encoding="utf-8").strip(),
+        "maintainer": public_identity(),
+    }
+    emit(result, args.json)
+    return 0
+
+
 def user_activation_path() -> Path:
     return STATE.state_dir() / "user" / "activations.json"
 
@@ -1845,6 +1872,10 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="sdd", description="SDD Toolkit lifecycle CLI")
     parser.add_argument("--version", action="version", version=(ROOT / "VERSION").read_text(encoding="utf-8").strip())
     sub = parser.add_subparsers(dest="command", required=True)
+
+    about_parser = sub.add_parser("about", help="Show public toolkit identity and version")
+    about_parser.add_argument("--json", action="store_true")
+    about_parser.set_defaults(handler=about)
 
     activate_parser = sub.add_parser("activate", help="Activate the current project for user-scoped SDD work")
     activate_parser.add_argument("--project-path", default=".", help="Override the current project directory")
