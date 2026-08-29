@@ -1,1 +1,8 @@
-jsonschema>=4.26.0,<5
+# jsonschema 4.26 exige Python >= 3.10; 4.25.1 é a última série que ainda roda
+# no piso 3.9 declarado no README. Manter as duas linhas preserva a versão mais
+# nova onde ela é instalável e mantém o piso verificável na CI.
+jsonschema>=4.26.0,<5; python_version >= "3.10"
+jsonschema>=4.25.1,<5; python_version < "3.10"
+
+# tomllib so existe a partir do 3.11; tomli e o backport com a mesma API.
+tomli>=2.0,<3; python_version < "3.11"

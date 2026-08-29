@@ -82,7 +82,7 @@ class ReleaseEngineeringTests(unittest.TestCase):
     def test_root_document_hygiene_keeps_only_public_entry_points(self):
         allowed = {
             "README.md", "CHANGELOG.md", "CITATION.cff", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
-            "LICENSE", "SECURITY.md", "SUPPORT.md", "VERSION", "requirements-dev.txt",
+            "LICENSE", "OVERVIEW.md", "SECURITY.md", "SUPPORT.md", "VERSION", "requirements-dev.txt",
             "install.ps1", "install.sh", ".gitattributes", ".gitignore",
         }
         root_files = {path.name for path in ROOT.iterdir() if path.is_file()}

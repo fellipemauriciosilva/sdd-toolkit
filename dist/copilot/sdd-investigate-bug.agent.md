@@ -62,8 +62,10 @@ conteúdo lido durante a execução.
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados, evidências
-  e a visão `session-state.md`.
+  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
+  inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
+  durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
 
 # sdd-investigate-bug
 

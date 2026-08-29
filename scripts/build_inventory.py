@@ -60,7 +60,7 @@ def main() -> int:
     if args.write:
         destination = root / args.write
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(payload, encoding="utf-8", newline="\n")
+        destination.write_bytes(payload.encode("utf-8"))
     print(payload, end="")
     return 0
 

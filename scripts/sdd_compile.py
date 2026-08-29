@@ -241,7 +241,7 @@ def compile_agents(kit_root: Path, target: str) -> List[Path]:
             content = copilot_artifact(values, rendered_body)
         else:
             content = markdown_artifact(values, rendered_body)
-        destination.write_text(content, encoding="utf-8", newline="\n")
+        destination.write_bytes(content.encode("utf-8"))
         outputs.append(destination)
     for existing in output_root.iterdir():
         if existing.is_file() and existing.name not in expected_files:
@@ -267,7 +267,7 @@ def compile_shared_skills(kit_root: Path, targets: Iterable[str]) -> List[Path]:
         expected_directories.add(name)
         destination = output_root / name / "SKILL.md"
         destination.parent.mkdir(parents=True, exist_ok=True)
-        destination.write_text(markdown_artifact(values, rendered), encoding="utf-8", newline="\n")
+        destination.write_bytes((markdown_artifact(values, rendered)).encode("utf-8"))
         outputs.append(destination)
     if output_root.is_dir():
         for existing in output_root.iterdir():

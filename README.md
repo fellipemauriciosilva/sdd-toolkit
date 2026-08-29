@@ -1,5 +1,7 @@
 # SDD Toolkit
 
+[![verify](https://github.com/fellipemauriciosilva/sdd-toolkit/actions/workflows/verify.yml/badge.svg)](https://github.com/fellipemauriciosilva/sdd-toolkit/actions/workflows/verify.yml)
+
 Toolkit comunitário para Spec-Driven Development: agentes, templates, skills e
 instaladores que ajudam a conduzir demandas com contexto, decisões técnicas e
 verificações explícitas.
@@ -93,6 +95,7 @@ impacto (`low`, `medium` ou `high`); mudanças estruturais usam
 
 | Assunto | Documento |
 |---|---|
+| Visão geral: contexto, arquitetura e funcionamento | [OVERVIEW](OVERVIEW.md) |
 | Começar em cinco minutos | [QUICKSTART](docs/QUICKSTART.md) |
 | Instalação, update, recovery e uninstall | [USER-SCOPE](docs/USER-SCOPE.md) |
 | Arquitetura do toolkit | [ARCHITECTURE](docs/ARCHITECTURE.md) |

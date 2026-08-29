@@ -1,26 +1,25 @@
 # Eval Input — sdd-analyze-demand case-01
-# Cenário: Demanda bem especificada com contexto completo → G1 deve passar
+# Cenário: Demanda bem especificada com contexto completo → análise suficiente para o bootstrap avaliar G1
 
 ## Contexto
-- Projeto: example-api-gestao-meta
-- Ticket: ABC-1234
-- Spec: task.md com Demand Summary e Expected Behavior preenchidos
-- Docs de referência: `.github/docs/migration/STATUS-ONDA-0.md` existe
+- Projeto: `example-api-gestao-meta`
+- Ticket: `ABC-1234`
+- Spec: `task.md` com Demand Summary e Expected Behavior preenchidos
 
 ## task.md atual
 ```markdown
 ## Demand Summary
-Implementar o Use Case `AprovarMetaUseCase` que processa aprovações de metas
-de desempenho via Kafka consumer `AprovacaoMetaConsumer`.
+Implementar o caso de uso `AprovarMetaUseCase`, que processa aprovações de metas
+de desempenho recebidas por um consumidor de eventos.
 
 ## Expected Behavior
-Quando mensagem `meta.aprovada` chega no tópico Kafka, o sistema deve:
-1. Validar UUID da meta
-2. Atualizar status para APROVADA no banco
-3. Publicar evento `MetaAprovadaEvent` no outbox
+Quando a mensagem `meta.aprovada` chega no tópico de eventos, o sistema deve:
+1. Validar o identificador da meta
+2. Atualizar o status para APROVADA no repositório
+3. Publicar o evento `MetaAprovadaEvent` no outbox
 ```
 
 ## Código existente relevante
-- `MetaRepository.java` — método `findById(UUID)` já existe
-- `OutboxEventPublisher.java` — método `publish(String, Object)` existe
-- Nenhum `AprovarMetaUseCase.java` no projeto ainda
+- `MetaRepository` — operação de busca por identificador já existe
+- `OutboxEventPublisher` — operação de publicação já existe
+- Nenhum `AprovarMetaUseCase` no projeto ainda

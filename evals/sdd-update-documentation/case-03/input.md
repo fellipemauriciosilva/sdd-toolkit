@@ -8,6 +8,6 @@
 - `README.md` (se existir seção de status)
 
 ## O que foi implementado
-- 3 Use Cases completados
-- 1 Job Quartz corrigido
-- 2 Kafka consumers adicionados
+- 3 casos de uso completados
+- 1 job agendado corrigido
+- 2 consumidores de eventos adicionados

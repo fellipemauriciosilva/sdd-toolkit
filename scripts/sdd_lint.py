@@ -69,6 +69,28 @@ STACK_TOKENS = (
 )
 STACK_EXEMPT = {"sdd-generate-e2e-tests": ("playwright",)}
 
+# Evals descrevem o comportamento esperado, então precisam obedecer às mesmas
+# regras de posse que os agentes. Uma rubrica que premia escrita de estado ou
+# aprovação de gate transforma um agente correto em um agente reprovado.
+STATE_ARTIFACTS = ("session-state.md", "state.json", "events.ndjson")
+# sdd-create-spec cria a visão session-state.md durante o scaffold; atualizá-la
+# depois continua exclusivo do bootstrap.
+EVAL_STATE_EXCEPTION = {"sdd-create-spec": ("session-state.md",)}
+EVAL_STATE_WRITE = re.compile(
+    r"\b(cria|criar|criou|escreve|escrever|escreveu|atualiza|atualizar|atualizou"
+    r"|registra|registrar|registrou|marca|marcar|marcou|grava|gravar|gravou)\b"
+    r"[^.\n]{0,60}?(" + "|".join(token.replace(".", r"\.") for token in STATE_ARTIFACTS) + r")",
+    re.IGNORECASE,
+)
+EVAL_GATE_CLAIM = re.compile(
+    r"\bG[1-6]\s*:?\s*(passed|failed|skipped)\b"
+    r"|\b(marca|marcar|marcou|registra|registrar|registrou|aprova|aprovar|aprovou"
+    r"|declara|declarar|declarou)\s+(?:o\s+)?G[1-6]\b",
+    re.IGNORECASE,
+)
+# Atribuir a ação ao orquestrador não é reivindicá-la.
+EVAL_DELEGATION = "bootstrap"
+
 WRITE_MARKERS = ("crie ", "criar ", "cria ", "escreva ", "grave ", "atualize ",
                  "edite ", "gere ", "salve ")
 QUESTION_MARKERS = ("pergunte", "aguarde aprovação", "confirmação do usuário",
@@ -314,11 +336,51 @@ def lint_supporting_files(root: Path) -> List[Dict[str, str]]:
     return results
 
 
+def lint_eval_contract(root: Path) -> List[Dict[str, str]]:
+    """Check that the evals score the contract the agents actually follow.
+
+    ``lint_supporting_files`` only checks that the eval files exist. This checks
+    what they expect: an eval that rewards writing state or approving a gate is
+    a contract violation wearing a rubric, and it survives every other check.
+    """
+    results: List[Dict[str, str]] = []
+    for directory in sorted((root / "evals").glob("sdd-*")):
+        if not directory.is_dir():
+            continue
+        agent = directory.name
+        allowed = EVAL_STATE_EXCEPTION.get(agent, ())
+        for path in sorted(directory.rglob("*.md")):
+            relative = path.relative_to(root).as_posix()
+            text = path.read_text(encoding="utf-8")
+            reported: set = set()
+            # Só o que o caso exige do agente é contrato. input.md descreve o
+            # cenário e, num caso adversarial, cita o próprio pedido hostil.
+            if agent != "sdd-bootstrap" and path.name in ("expected.md", "rubric.md"):
+                for line in text.splitlines():
+                    lowered = line.lower()
+                    if EVAL_DELEGATION in lowered or any(negation in lowered for negation in NEGATIONS):
+                        continue
+                    state = EVAL_STATE_WRITE.search(line)
+                    if state and state.group(2).lower() not in allowed and "state" not in reported:
+                        reported.add("state")
+                        results.append(finding("evals", relative, f"espera escrita de estado pelo agente: {state.group(2)}"))
+                    if EVAL_GATE_CLAIM.search(line) and "gate" not in reported:
+                        reported.add("gate")
+                        results.append(finding("evals", relative, "espera que o agente declare gate; o dono é o bootstrap"))
+            lowered_text = text.lower()
+            exempt = STACK_EXEMPT.get(agent, ())
+            for token in STACK_TOKENS:
+                if token in lowered_text and token not in exempt:
+                    results.append(finding("evals", relative, f"acoplamento de stack: {token}"))
+    return results
+
+
 def lint(root: Path) -> Dict[str, object]:
     toolkit_version = (root / "VERSION").read_text(encoding="utf-8").strip()
     findings = lint_agents(root, toolkit_version)
     findings += lint_dist(root)
     findings += lint_supporting_files(root)
+    findings += lint_eval_contract(root)
     return {
         "status": "clean" if not findings else "findings",
         "toolkit_version": toolkit_version,

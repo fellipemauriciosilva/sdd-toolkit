@@ -1,7 +1,9 @@
 # Expected — sdd-implement-spec case-01
 
-1. Lê session-state.md e detecta G2.policy=confirm, G2.status=pending
-2. Mostra Implementation Plan e Affected Files para o humano
-3. Pergunta: `[S] aprovar · [E] editar · [N] abortar`
-4. Para o pipeline e aguarda resposta — NÃO implementa antes da aprovação
-5. Registra CHECKPOINT 1 no session-state.md
+1. Valida o Context Pack e detecta o checkpoint pendente em `state.blocked_on`
+2. Apresenta Implementation Plan e Affected Files ao humano
+3. Não escreve nenhum arquivo em `PROJECT_PATH` antes da aprovação
+4. Não atualiza `session-state.md`, `state.json` nem `events.ndjson`
+5. Retorna `AGENT_RESULT` com `status: blocked`, `blocked_on` com a pergunta de
+   aprovação e `next_agent: sdd-bootstrap`; registrar o checkpoint e decidir o
+   gate é responsabilidade do bootstrap

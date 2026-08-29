@@ -11,6 +11,38 @@ ROOT = Path(__file__).resolve().parents[1]
 CLI = ROOT / "scripts" / "sdd.py"
 
 
+class CliStructureTests(unittest.TestCase):
+    """A CLI é composta em sdd.py; os grupos vivem em sdd_commands."""
+
+    COMMANDS = (
+        "about", "activate", "install", "register-user-cli", "runtime", "delivery",
+        "architecture", "result", "lint", "source", "context", "transaction", "status",
+        "run", "doctor", "update", "uninstall", "start", "resume", "activation",
+    )
+    GROUPS = ("activation", "common", "context", "inspection", "lifecycle", "source")
+
+    def test_entry_point_stays_a_thin_composition_root(self):
+        """O caminho scripts/sdd.py é contratual: o shim e os instaladores o fixam."""
+        self.assertTrue(CLI.is_file())
+        self.assertLess(len(CLI.read_text(encoding="utf-8").splitlines()), 120)
+
+    def test_every_command_group_is_a_module(self):
+        package = ROOT / "scripts" / "sdd_commands"
+        self.assertTrue((package / "__init__.py").is_file())
+        for group in self.GROUPS:
+            self.assertTrue((package / f"{group}.py").is_file(), group)
+
+    def test_public_command_surface_and_order_are_stable(self):
+        sys.path.insert(0, str(ROOT / "scripts"))
+        import sdd
+
+        actions = [
+            action for action in sdd.build_parser()._subparsers._group_actions
+            if hasattr(action, "choices")
+        ]
+        self.assertEqual(list(self.COMMANDS), list(actions[0].choices))
+
+
 class CliTests(unittest.TestCase):
     def test_architecture_cli_proposes_and_validates(self):
         proposed = subprocess.run(

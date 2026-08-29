@@ -1,3 +1,4 @@
+import hashlib
 import json
 import os
 import subprocess
@@ -170,6 +171,7 @@ class TransactionTests(unittest.TestCase):
             self.assertEqual("user change\n", target.read_text(encoding="utf-8"))
 
     def test_cli_recovers_uninstall_after_forced_process_exit(self):
+        """Um uninstall interrompido depois dos assets deve ser revertido, não completado."""
         with tempfile.TemporaryDirectory(prefix="sdd-transaction-uninstall-") as temporary:
             root = Path(temporary)
             profile = root / "profile"
@@ -185,6 +187,48 @@ class TransactionTests(unittest.TestCase):
             manifest = state / "user" / "installation.json"
             self.assertTrue(asset.is_file())
             self.assertTrue(manifest.is_file())
+            digest = hashlib.sha256(asset.read_bytes()).hexdigest()
+
+            fault_env = {
+                **clean_env,
+                "SDD_TOOLKIT_TEST_MODE": "1",
+                "SDD_TOOLKIT_FAULT_AT": "after-assets",
+            }
+            crashed = subprocess.run(
+                [sys.executable, str(CLI), "uninstall", "--scope", "user", "--profile-root", str(profile),
+                 "--apply", "--json"],
+                capture_output=True, text=True, check=False, env=fault_env,
+            )
+            self.assertEqual(97, crashed.returncode, msg=crashed.stderr)
+            # A transação morreu entre remover os assets e apagar o manifesto.
+            self.assertFalse(asset.exists())
+            self.assertTrue(manifest.is_file())
+
+            status = subprocess.run(
+                [sys.executable, str(CLI), "transaction", "status", "--scope", "user", "--active-only", "--json"],
+                capture_output=True, text=True, check=False, env=clean_env,
+            )
+            self.assertEqual(2, status.returncode)
+            self.assertEqual("recovery-required", json.loads(status.stdout)["status"])
+
+            preview = subprocess.run(
+                [sys.executable, str(CLI), "transaction", "recover", "--scope", "user", "--json"],
+                capture_output=True, text=True, check=False, env=clean_env,
+            )
+            self.assertEqual(0, preview.returncode, msg=preview.stderr)
+            self.assertEqual("ready", json.loads(preview.stdout)["status"])
+            self.assertFalse(asset.exists(), "o preview não pode alterar nada")
+
+            recovered = subprocess.run(
+                [sys.executable, str(CLI), "transaction", "recover", "--scope", "user", "--apply", "--json"],
+                capture_output=True, text=True, check=False, env=clean_env,
+            )
+            self.assertEqual(0, recovered.returncode, msg=recovered.stderr)
+            self.assertEqual("recovered", json.loads(recovered.stdout)["status"])
+            self.assertTrue(asset.is_file())
+            self.assertEqual(digest, hashlib.sha256(asset.read_bytes()).hexdigest(),
+                             "o asset restaurado deve ser byte a byte o original")
+            self.assertTrue(manifest.is_file())
 
     @unittest.skipIf(os.name == "nt", "Unix profile transaction")
     def test_cli_recovers_unix_path_block_after_crash(self):
@@ -199,6 +243,10 @@ class TransactionTests(unittest.TestCase):
                 capture_output=True, text=True, check=False, env=environment,
             )
             self.assertEqual(0, installed.returncode, msg=installed.stderr)
+            asset = profile / ".copilot" / "agents" / "sdd-bootstrap.agent.md"
+            manifest = state / "user" / "installation.json"
+            self.assertTrue(asset.is_file())
+            self.assertTrue(manifest.is_file())
             bin_dir = root / "bin"
             shim = bin_dir / "sdd"
             bin_dir.mkdir()
@@ -238,7 +286,7 @@ class TransactionTests(unittest.TestCase):
             self.assertTrue(shim.is_file())
 
             fault_env = {
-                **clean_env,
+                **environment,
                 "SDD_TOOLKIT_TEST_MODE": "1",
                 "SDD_TOOLKIT_FAULT_AT": "after-assets",
             }
@@ -253,7 +301,7 @@ class TransactionTests(unittest.TestCase):
 
             recovered = subprocess.run(
                 [sys.executable, str(CLI), "transaction", "recover", "--scope", "user", "--apply", "--json"],
-                capture_output=True, text=True, check=False, env=clean_env,
+                capture_output=True, text=True, check=False, env=environment,
             )
             self.assertEqual(0, recovered.returncode, msg=recovered.stderr)
             self.assertTrue(asset.is_file())
