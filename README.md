@@ -1,22 +1,65 @@
-# SDD Toolkit
+<div align="center">
+    <h1>🧭 SDD Toolkit</h1>
+    <h3><em>Turn a ticket into a verified delivery — in the AI agent you already use.</em></h3>
+</div>
 
-[![verify](https://github.com/fellipemauriciosilva/sdd-toolkit/actions/workflows/verify.yml/badge.svg)](https://github.com/fellipemauriciosilva/sdd-toolkit/actions/workflows/verify.yml)
+<p align="center">
+    <strong>An open-source Spec-Driven Development toolkit: specialized agents, templates and skills that carry a demand from analysis to documentation, with explicit evidence and human gates at every step.</strong>
+</p>
 
-Toolkit comunitário para Spec-Driven Development: agentes, templates, skills e
-instaladores que ajudam a conduzir demandas com contexto, decisões técnicas e
-verificações explícitas.
+<p align="center">
+    <a href="https://github.com/fellipemauriciosilva/sdd-toolkit/actions/workflows/verify.yml"><img src="https://github.com/fellipemauriciosilva/sdd-toolkit/actions/workflows/verify.yml/badge.svg" alt="verify"/></a>
+    <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License"/></a>
+</p>
 
-Suporta GitHub Copilot, Claude Code, Codex e Cursor. A licença é [MIT](LICENSE).
-O mantenedor inicial é [Felipe Maurício da Silva](docs/MAINTAINERS.md).
+<p align="center">
+    <strong>English</strong> ·
+    <a href="./README.pt-BR.md">Português&nbsp;(BR)</a>
+</p>
 
-> O toolkit orienta o trabalho dos agentes; ele não substitui a revisão humana,
-> os controles do runtime nem a validação do projeto consumidor.
+> [!NOTE]
+> The toolkit guides the agent's work. It does not replace human review, the
+> runtime's own controls, or your project's validation.
 
-## Instalação rápida
+---
 
-Pré-requisitos: Python 3.9+, Git e pelo menos um runtime suportado.
+## Table of Contents
 
-Faça primeiro um preview da instalação global:
+- [🤔 What is the SDD Toolkit?](#-what-is-the-sdd-toolkit)
+- [⚡ Install](#-install)
+- [🚀 Quickstart: work a ticket](#-quickstart-work-a-ticket)
+- [🌱 Quickstart: start a project from scratch](#-quickstart-start-a-project-from-scratch)
+- [🐞 Quickstart: investigate a bug](#-quickstart-investigate-a-bug)
+- [🤖 Supported runtimes](#-supported-runtimes)
+- [📋 Demand types](#-demand-types)
+- [🔧 CLI](#-cli)
+- [🧭 What to read next](#-what-to-read-next)
+- [📦 What the package contains](#-what-the-package-contains)
+- [🔒 Security, contributing and support](#-security-contributing-and-support)
+- [🛠️ Development](#️-development)
+
+## 🤔 What is the SDD Toolkit?
+
+Most AI coding sessions start from a prompt and end with a diff nobody can
+trace. The SDD Toolkit puts a **process** between the two: you give it a
+ticket, and it runs analysis → architecture → delivery → tests → review →
+documentation, stopping at each gate so **you** decide.
+
+Three things make it different:
+
+- **Nothing is written to your repository.** Specs, state and evidence live in
+  your user profile. Your project stays clean.
+- **Evidence, not claims.** A test that did not run is recorded as `not-run`,
+  never as success. Pre-existing failures are separated from what the delivery
+  introduced.
+- **The same agents in four runtimes.** Install once; use it in Claude Code,
+  GitHub Copilot, Cursor or Codex without copying anything per project.
+
+## ⚡ Install
+
+Requires **Python 3.9+**, **Git**, and at least one supported runtime.
+
+First preview what will be installed — this writes nothing:
 
 ```powershell
 .\install.ps1 -DryRun
@@ -26,9 +69,9 @@ Faça primeiro um preview da instalação global:
 bash install.sh --dry-run
 ```
 
-> **Importante:** `-DryRun`/`--dry-run` somente mostra o plano; ele **não
-> instala** o comando `sdd` nem os agentes. Após conferir o preview, execute
-> obrigatoriamente o instalador novamente **sem** essa opção:
+> [!IMPORTANT]
+> `-DryRun` / `--dry-run` only prints the plan. To actually install the `sdd`
+> command and the agents, run the installer **again without that flag**:
 
 ```powershell
 .\install.ps1 -Runtime all
@@ -38,97 +81,215 @@ bash install.sh --dry-run
 bash install.sh --runtime=all
 ```
 
-Em seguida, abra um novo terminal e valide:
+Open a new terminal and check:
 
 ```bash
 sdd --version
 sdd doctor --scope user --json
 ```
 
-O guia completo está em [docs/QUICKSTART.md](docs/QUICKSTART.md) e
-[docs/USER-SCOPE.md](docs/USER-SCOPE.md).
+> [!TIP]
+> To install for a single runtime, use `-Runtime codex` (Windows) or
+> `--runtime=codex` (Unix). See [docs/USER-SCOPE.md](docs/USER-SCOPE.md) for
+> offline installs, custom roots and recovery.
 
-## Primeiro uso
+## 🚀 Quickstart: work a ticket
 
-Ative um projeto sem gravar estado pessoal no repositório:
+Open your project in your AI agent and type, in plain language:
+
+```text
+Use sdd-bootstrap to start ticket PAY-142 in this project.
+The charge endpoint must be idempotent: a repeated request with the same
+key returns the original result instead of charging twice.
+```
+
+That is the whole setup. No command to memorize, no file to copy, no
+configuration committed to your repository.
+
+A typical session:
+
+```text
+You        Use sdd-bootstrap to start ticket PAY-142 in this project.
+
+Bootstrap  This project is not active yet.
+             project:   /path/to/your-project
+             workspace: ~/sdd-history-implementations/your-project-a1b2/.../specs
+             nothing will be written to the repository
+           May I activate it?
+
+You        yes
+
+Bootstrap  Activated. Analyzing the demand...
+           G1 (demand understood): passed
+           Delivery Strategy: application, verification [unit]
+           Next: architecture. Confirm the strategy?
+```
+
+The bootstrap runs the pipeline and **stops at every gate** for your decision.
+It never commits, pushes or publishes on its own.
+
+To pick a demand back up, swap the verb:
+
+```text
+Use sdd-bootstrap to resume ticket PAY-142 in this project.
+```
+
+## 🌱 Quickstart: start a project from scratch
+
+An empty repository has no evidence to discover, so somebody has to *decide*
+the stack. In a `greenfield` demand that decision has an owner and a gate:
+
+```text
+Use sdd-bootstrap to start ticket PAY-001, type greenfield.
+Create a service that receives billing requests and returns processing status.
+Our team runs Linux with containers.
+```
+
+The architect fills in the **Foundation Decision** — language, framework, build
+tool, test framework, layout, and the stack skill that will govern the
+delivery — presenting real alternatives with the criterion that separated the
+chosen one.
+
+> [!IMPORTANT]
+> A foundation is not reverted in practice, so `greenfield` is always classified
+> as high impact: it never gets a short design and **always** requires human
+> approval before any code. If the foundation is still pending, the
+> implementer blocks instead of picking a stack on its own.
+
+## 🐞 Quickstart: investigate a bug
+
+To diagnose before changing anything, call the investigator directly:
+
+```text
+Use sdd-investigate-bug to investigate ticket PAY-207.
+Checkout intermittently returns 500 after the payment provider times out.
+```
+
+It produces hypotheses, evidence, a reproduction and a minimal fix plan —
+**without touching code**. You decide whether to turn it into a delivery.
+
+Every agent can be called this way when you want a single step instead of the
+whole pipeline:
+
+```text
+Use sdd-review-code to review the delivery for ticket PAY-142.
+Use sdd-generate-tests to cover the delivery for ticket PAY-142.
+```
+
+The full catalog is in [docs/AGENTS.md](docs/AGENTS.md).
+
+## 🤖 Supported runtimes
+
+The prompt is identical in all four — the agents live in your user profile, not
+in the project.
+
+| Runtime | Where to type | Assets installed in |
+|---|---|---|
+| **Claude Code** | Claude Code chat, at the project root | `~/.claude/agents`, `~/.claude/skills` |
+| **GitHub Copilot** | Copilot chat in VS Code | `~/.copilot/agents`, `~/.copilot/skills` |
+| **Cursor** | Cursor chat | `~/.cursor/agents`, `~/.agents/skills` |
+| **Codex** | Codex session at the project root | `~/.codex/agents`, `~/.agents/skills` |
+
+> [!NOTE]
+> Some runtimes also let you pick the agent from a menu or with `@`. The exact
+> selection syntax depends on the client version — the plain-language request
+> above works everywhere. See
+> [docs/QUICKSTART.md](docs/QUICKSTART.md#usage-in-each-runtime).
+
+Never copy agents into `.github`, `.claude`, `.codex` or `.cursor` inside your
+project.
+
+## 📋 Demand types
+
+State the type together with the ticket when it is not an ordinary feature:
+
+| Type | When to use it |
+|---|---|
+| `feature` | new behavior in an existing project |
+| `bugfix` | fix a defect |
+| `greenfield` | **create a project from scratch** |
+| `refactor` | change structure, preserve behavior |
+| `migration` | migrate platform, version or technology |
+| `test-e2e` | the E2E suite is the deliverable itself |
+
+The type decides the delivery contract, the delivery agent and the initial
+architectural impact — see [docs/PIPELINE.md](docs/PIPELINE.md).
+
+## 🔧 CLI
+
+The terminal path, useful for automation and CI:
 
 ```bash
-cd /caminho/do-projeto
-sdd activate
-sdd start ABC-123
+cd /path/to/your-project
+sdd activate          # once per project
+sdd start PAY-142     # returns workspace, spec path and handoff
+sdd status            # where the demand stopped
+sdd doctor --scope user --json
 ```
 
-Depois, inicie a demanda no runtime escolhido com o bootstrap. O contexto,
-specs e estado de sessão ficam no workspace do usuário, não no projeto. Veja o
-uso diário e os quatro runtimes em [docs/QUICKSTART.md](docs/QUICKSTART.md).
+Full reference in [docs/CLI-REFERENCE.md](docs/CLI-REFERENCE.md).
 
-```mermaid
-flowchart TB
-    U[Usuário informa ticket] --> B[sdd-bootstrap]
-    B --> P[Context Pack mínimo]
-    P --> A[Agente do estágio]
-    A --> R[AGENT_RESULT]
-    R --> V[validate e result record]
-    V --> S[state.json events results]
-    S --> B
-    B --> G{Gate ou checkpoint}
-    G -->|próximo estágio| P
-    G -->|conclusão| F[Resumo e decisão humana]
-```
+## 🧭 What to read next
 
-Cada etapa possui evidência e gates. A etapa arquitetural é proporcional ao
-impacto (`low`, `medium` ou `high`); mudanças estruturais usam
-`technical-design.md` antes da entrega.
-
-## O que o pacote contém
-
-| Área | Finalidade |
+| I want to… | Read |
 |---|---|
-| `agents/` | Fonte dos agentes especializados. |
-| `templates/` | Templates de spec, sessão, verificadores e skills. |
-| `dist/` | Artefatos compilados para cada runtime. |
-| `scripts/` | CLI, compilador, lifecycle, validação e release. |
-| `schemas/` | Contratos versionados para estado, instalação e entrega. |
-| `evals/` | Casos e rubricas para avaliar o comportamento dos agentes. |
+| Get started in five minutes | [docs/QUICKSTART.md](docs/QUICKSTART.md) |
+| Understand the architecture | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| Understand gates and the pipeline | [docs/PIPELINE.md](docs/PIPELINE.md) |
+| Write or change an agent | [docs/AGENT-CONTRACT.md](docs/AGENT-CONTRACT.md) |
+| Browse the agent catalog | [docs/AGENTS.md](docs/AGENTS.md) |
+| Browse the available skills | [docs/SKILLS.md](docs/SKILLS.md) |
+| Look up a CLI command | [docs/CLI-REFERENCE.md](docs/CLI-REFERENCE.md) |
+| Install, update, recover, uninstall | [docs/USER-SCOPE.md](docs/USER-SCOPE.md) |
+| Find where each file lives | [docs/FILES-AND-LIFECYCLE.md](docs/FILES-AND-LIFECYCLE.md) |
+| Evaluate agent behavior | [docs/EVALUATIONS.md](docs/EVALUATIONS.md) |
+| Review security limits | [docs/THREAT-MODEL.md](docs/THREAT-MODEL.md) |
+| Publish a release | [docs/RELEASE.md](docs/RELEASE.md) |
 
-## Documentação
+> [!NOTE]
+> The reference documentation under `docs/` is currently written in Portuguese,
+> except for this README and the Quickstart. Translations are welcome — see
+> [CONTRIBUTING.md](CONTRIBUTING.md).
 
-| Assunto | Documento |
+## 📦 What the package contains
+
+| Area | Purpose |
 |---|---|
-| Visão geral: contexto, arquitetura e funcionamento | [OVERVIEW](OVERVIEW.md) |
-| Começar em cinco minutos | [QUICKSTART](docs/QUICKSTART.md) |
-| Instalação, update, recovery e uninstall | [USER-SCOPE](docs/USER-SCOPE.md) |
-| Arquitetura do toolkit | [ARCHITECTURE](docs/ARCHITECTURE.md) |
-| Pipeline, gates e E2E | [PIPELINE](docs/PIPELINE.md) |
-| Catálogo de agentes | [AGENTS](docs/AGENTS.md) |
-| Contrato dos agentes | [AGENT-CONTRACT](docs/AGENT-CONTRACT.md) |
-| Skills disponíveis | [SKILLS](docs/SKILLS.md) |
-| Referência da CLI | [CLI-REFERENCE](docs/CLI-REFERENCE.md) |
-| Evals e contratos | [EVALUATIONS](docs/EVALUATIONS.md) |
-| Arquivos e lifecycle | [FILES-AND-LIFECYCLE](docs/FILES-AND-LIFECYCLE.md) |
-| Segurança e threat model | [THREAT-MODEL](docs/THREAT-MODEL.md) |
-| Release | [RELEASE](docs/RELEASE.md) |
+| `agents/` | Source of the specialized agents. |
+| `templates/` | Spec, session, verifier and skill templates. |
+| `dist/` | Compiled artifacts for each runtime. |
+| `scripts/` | CLI, compiler, lifecycle, validation and release. |
+| `schemas/` | Versioned contracts for state, installation and delivery. |
+| `evals/` | Cases and rubrics for evaluating agent behavior. |
 
-## Segurança, contribuição e suporte
+## 🔒 Security, contributing and support
 
-- Vulnerabilidades: [SECURITY.md](SECURITY.md). Não publique secrets, dados de
-  clientes ou detalhes exploráveis em issues.
-- Contribuições: [CONTRIBUTING.md](CONTRIBUTING.md), incluindo DCO.
-- Conduta: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
-- Suporte: [SUPPORT.md](SUPPORT.md).
-- Governança e manutenção: [docs/GOVERNANCE.md](docs/GOVERNANCE.md) e
+- Vulnerabilities: [SECURITY.md](SECURITY.md). Never post secrets, customer
+  data or exploitable detail in an issue.
+- Contributions: [CONTRIBUTING.md](CONTRIBUTING.md), including DCO sign-off.
+- Conduct: [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md).
+- Support: [SUPPORT.md](SUPPORT.md).
+- Governance: [docs/GOVERNANCE.md](docs/GOVERNANCE.md) and
   [docs/MAINTAINERS.md](docs/MAINTAINERS.md).
-- Proveniência e terceiros: [docs/PROVENANCE.md](docs/PROVENANCE.md) e
+- Provenance and third parties: [docs/PROVENANCE.md](docs/PROVENANCE.md) and
   [docs/THIRD_PARTY_NOTICES.md](docs/THIRD_PARTY_NOTICES.md).
 
-## Desenvolvimento
+## 🛠️ Development
 
 ```bash
 python scripts/sdd_compile.py --runtime all
 python scripts/build_inventory.py --write dist/build-manifest.json
-python -m unittest discover -s tests -v
+python scripts/sdd_lint.py --json
+python scripts/public_content_check.py
+python -m unittest discover -s tests
 ```
 
-Antes de uma release, siga [docs/RELEASE.md](docs/RELEASE.md). A publicação só
-deve ocorrer após a revisão de segurança, proveniência e evidências externas
-dos runtimes suportados.
+The compiler does not regenerate `dist/build-manifest.json` — that is a
+separate step, and `tests/test_dist_sync.py` fails when the two drift apart.
+
+Before a release, follow [docs/RELEASE.md](docs/RELEASE.md). Publishing should
+only happen after security review, provenance and external evidence from the
+supported runtimes.
+
+The license is [MIT](LICENSE). The initial maintainer is
+[Felipe Maurício da Silva](docs/MAINTAINERS.md).

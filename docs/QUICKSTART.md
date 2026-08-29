@@ -1,27 +1,29 @@
-# SDD Toolkit — início rápido
+# SDD Toolkit — Quickstart
 
-O SDD Toolkit é instalado uma vez no perfil do usuário. Depois, cada projeto é
-ativado uma única vez e as demandas são iniciadas pelo ticket. O toolkit nunca
-cria agentes, skills ou configurações no repositório consumidor.
+<strong>English</strong> · <a href="./QUICKSTART.pt-BR.md">Português&nbsp;(BR)</a>
+
+The SDD Toolkit is installed once into your user profile. After that, each
+project is activated once and demands are started by ticket. The toolkit never
+creates agents, skills or configuration inside the consumer repository.
 
 ```mermaid
 flowchart LR
-    I[Instalar uma vez] --> B[sdd-bootstrap no runtime]
-    B --> A[Ativa o projeto sob confirmação]
-    A --> P[Context Pack automático]
-    P --> G[Agentes e gates]
-    G --> R[Resultados registrados fora do projeto]
+    I[Install once] --> B[sdd-bootstrap in the runtime]
+    B --> A[Activates the project on confirmation]
+    A --> P[Automatic Context Pack]
+    P --> G[Agents and gates]
+    G --> R[Results recorded outside the project]
 ```
 
-Depois da instalação, o fluxo acontece dentro do runtime: peça a demanda ao
-`sdd-bootstrap` e ele cuida da ativação. Os comandos de terminal das seções 2 e
-3 continuam válidos e são a via preferida para automação e CI.
+Once installed, the flow happens inside the runtime: ask `sdd-bootstrap` for
+the demand and it handles activation. The terminal commands in sections 3 and 4
+remain valid and are the preferred path for automation and CI.
 
-## 1. Instalar no perfil do usuário
+## 1. Install into your user profile
 
-Pré-requisitos: Python 3.9+, Git e pelo menos um dos runtimes suportados.
+Prerequisites: Python 3.9+, Git and at least one supported runtime.
 
-Faça primeiro o preview:
+Preview first:
 
 ```powershell
 .\install.ps1 -DryRun
@@ -31,9 +33,10 @@ Faça primeiro o preview:
 bash install.sh --dry-run
 ```
 
-> **Importante:** o preview não instala nada. Se os destinos e conflitos
-> estiverem corretos, execute obrigatoriamente o instalador sem `-DryRun` ou
-> `--dry-run` para instalar o comando `sdd` e os assets dos runtimes:
+> [!IMPORTANT]
+> The preview installs nothing. If the destinations and conflicts look right,
+> you **must** run the installer again without `-DryRun` / `--dry-run` to
+> install the `sdd` command and the runtime assets:
 
 ```powershell
 .\install.ps1 -Runtime all
@@ -43,10 +46,10 @@ bash install.sh --dry-run
 bash install.sh --runtime=all
 ```
 
-O instalador configura o comando `sdd`, instala os assets nos perfis dos
-runtimes disponíveis e preserva arquivos que não pertençam ao toolkit.
+The installer configures the `sdd` command, installs assets into the profiles
+of the runtimes it finds, and preserves any file it does not own.
 
-Abra um novo terminal e valide:
+Open a new terminal and validate:
 
 ```bash
 sdd --version
@@ -54,110 +57,214 @@ sdd runtime detect --mode quick --redact-paths --json
 sdd doctor --scope user --json
 ```
 
-Para limitar os assets a um runtime, use `-Runtime codex` no Windows ou
-`--runtime=codex` no Unix. `--profile-root`, `--install-root`, `--no-path` e
-instalação por Git são opções de ambiente avançado; veja [USER-SCOPE.md](USER-SCOPE.md).
+To limit assets to one runtime, use `-Runtime codex` on Windows or
+`--runtime=codex` on Unix. `--profile-root`, `--install-root`, `--no-path` and
+Git-based installation are advanced options; see [USER-SCOPE.md](USER-SCOPE.md).
 
-## 2. Iniciar a demanda pelo runtime
+## 2. Start the demand from the runtime
 
-Abra o projeto no runtime e peça a demanda ao `sdd-bootstrap`:
-
-```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
-```
-
-Se o projeto ainda não estiver ativo, o bootstrap mostra o caminho do projeto,
-o workspace que será criado e o fato de que nada é escrito no repositório, pede
-sua confirmação e ativa. Ativação altera estado do perfil, então nunca acontece
-sem aceite explícito. Depois disso ele resolve o contexto, cria o Context Pack
-antes de cada agente e conduz análise, arquitetura, entrega, testes, review e
-documentação conforme os gates.
-
-Para retomar, troque o verbo:
+Open the project in your runtime and ask `sdd-bootstrap` for the demand:
 
 ```text
-Use sdd-bootstrap para retomar a demanda ABC-123 neste projeto.
+Use sdd-bootstrap to start ticket PAY-142 in this project.
 ```
 
-## 3. Ativar pelo terminal (automação e CI)
+If the project is not active yet, the bootstrap shows the project path, the
+workspace it will create and the fact that nothing is written to the
+repository, asks for your confirmation, and activates. Activation changes
+profile state, so it never happens without explicit consent.
 
-O caminho equivalente fora do runtime. Abra a raiz do seu projeto e execute
-somente:
+```text
+You        Use sdd-bootstrap to start ticket PAY-142 in this project.
+
+Bootstrap  This project is not active yet.
+             project:   /path/to/your-project
+             workspace: ~/sdd-history-implementations/your-project-a1b2/.../specs
+             nothing will be written to the repository
+           May I activate it?
+
+You        yes
+
+Bootstrap  Activated. Analyzing the demand...
+           G1 (demand understood): passed
+           Delivery Strategy: application, verification [unit]
+           Next: architecture. Confirm the strategy?
+```
+
+From there it resolves the context, builds a Context Pack before each agent,
+and runs analysis, architecture, delivery, tests, review and documentation
+through the gates — stopping at each checkpoint for your decision. It never
+commits, pushes or publishes on its own.
+
+To resume, swap the verb:
+
+```text
+Use sdd-bootstrap to resume ticket PAY-142 in this project.
+```
+
+## 3. Activate from the terminal (automation and CI)
+
+The equivalent path outside the runtime. From your project root:
 
 ```bash
 sdd activate
 ```
 
-O comando usa a raiz Git quando ela existe, registra o vínculo no perfil do
-usuário e cria o workspace pessoal de specs. Não altera nenhum arquivo do projeto.
+The command uses the Git root when one exists, records the link in your user
+profile and creates your personal spec workspace. It does not change any file
+in the project.
 
-Para revisar antes de gravar o registro, use:
+To review before writing the record:
 
 ```bash
 sdd activate --dry-run
 ```
 
-Confirme o estado a qualquer momento:
+Check the state at any time:
 
 ```bash
 sdd status
 sdd activation list
 ```
 
-## 4. Iniciar ou retomar pelo terminal
+## 4. Start or resume from the terminal
 
-Ainda na raiz do projeto, informe apenas o ticket:
+Still at the project root, pass only the ticket:
 
 ```bash
-sdd start ABC-123
-sdd resume ABC-123
+sdd start PAY-142
+sdd resume PAY-142
 ```
 
-`start` retorna o workspace, a pasta da spec e o handoff para `sdd-bootstrap`.
-Se o projeto ainda não estiver ativo, execute `sdd activate` ou use `--yes` para
-autorizar a ativação local na mesma chamada. `resume` sem ticket só funciona
-quando há uma única demanda retomável.
+`start` returns the workspace, the spec folder and the handoff for
+`sdd-bootstrap`. If the project is not active yet, run `sdd activate` or use
+`--yes` to authorize local activation in the same call. `resume` without a
+ticket only works when there is exactly one resumable demand.
 
-## 5. Rotina diária
+## 5. Daily routine
 
-| Intenção | Comando | Resultado |
+| Intent | Command | Result |
 |---|---|---|
-| Ver o trabalho atual | `sdd status` | ativação, workspace, tickets e próximo passo |
-| Iniciar demanda | `sdd start ABC-123` | handoff para o bootstrap |
-| Retomar demanda | `sdd resume ABC-123` | handoff para a spec existente |
-| Ver contexto técnico | `sdd context resolve --ticket ABC-123 --json` | paths e perfil para automação/agentes |
-| Diagnosticar instalação | `sdd doctor --scope user --json` | assets, versões e capabilities |
-| Atualizar assets | `sdd update --scope user --apply --json` | preview/apply transacional |
-| Recuperar interrupção | `sdd transaction recover --scope user --apply --json` | recovery de assets, shim, PATH e manifest |
+| See current work | `sdd status` | activation, workspace, tickets and next step |
+| Start a demand | `sdd start PAY-142` | handoff to the bootstrap |
+| Resume a demand | `sdd resume PAY-142` | handoff to the existing spec |
+| See technical context | `sdd context resolve --ticket PAY-142 --json` | paths and profile for automation/agents |
+| Diagnose the installation | `sdd doctor --scope user --json` | assets, versions and capabilities |
+| Update assets | `sdd update --scope user --apply --json` | transactional preview/apply |
+| Recover an interruption | `sdd transaction recover --scope user --apply --json` | recovery of assets, shim, PATH and manifest |
 
-## Uso em cada runtime
+## Usage in each runtime
 
-Os assets ficam no perfil do usuário; abra o projeto consumidor normalmente e
-inicie o agente `sdd-bootstrap` com o ticket. Os detalhes e a evidência de
-compatibilidade ficam nos guias abaixo:
+The prompt is the same in all four runtimes, because the agents are installed
+into your user profile. Open the consumer project normally and type in the
+chat. **Never copy agents into `.github`, `.claude`, `.codex` or `.cursor`
+inside the project.**
 
-| Runtime | Guia | Local dos assets |
-|---|---|---|
-| GitHub Copilot | [COPILOT.md](runtimes/COPILOT.md) | `~/.copilot/agents` e `~/.copilot/skills` |
-| Claude Code | [CLAUDE-CODE.md](runtimes/CLAUDE-CODE.md) | `~/.claude/agents` e `~/.claude/skills` |
-| Codex | [CODEX.md](runtimes/CODEX.md) | `~/.codex/agents` e `~/.agents/skills` |
-| Cursor | [CURSOR.md](runtimes/CURSOR.md) | `~/.cursor/agents` e `~/.agents/skills` |
+### Claude Code
 
-Cada guia separa o fluxo comum das particularidades que ainda exigem validação
-com a versão real do harness. Não copie agentes para `.github`, `.claude`,
-`.codex` ou `.cursor` dentro do projeto.
+Open the project and type in the chat:
 
-## Se um runtime não for encontrado
+```text
+Use sdd-bootstrap to start ticket PAY-142 in this project.
+```
 
-Uma extensão, um aplicativo desktop e uma CLI são componentes diferentes. Antes
-de reinstalar qualquer produto, execute:
+Assets in `~/.claude/agents` and `~/.claude/skills`. Because they live in
+`~/.claude/agents`, Claude Code recognizes them as subagents and can dispatch
+tests and review in parallel when the harness version offers it. Guide:
+[CLAUDE-CODE.md](runtimes/CLAUDE-CODE.md).
+
+### GitHub Copilot
+
+In VS Code, open the project and type in the Copilot chat:
+
+```text
+Use sdd-bootstrap to start ticket PAY-142 in this project.
+```
+
+Assets in `~/.copilot/agents` and `~/.copilot/skills`. The chat may also offer
+the SDD agent in a picker. Guide: [COPILOT.md](runtimes/COPILOT.md).
+
+### Cursor
+
+Open the project and type in the Cursor chat:
+
+```text
+Use sdd-bootstrap to start ticket PAY-142 in this project.
+```
+
+Agents in `~/.cursor/agents`; shared skills in `~/.agents/skills`. Guide:
+[CURSOR.md](runtimes/CURSOR.md).
+
+### Codex
+
+Open the Codex session at the project root and ask:
+
+```text
+Use sdd-bootstrap to start ticket PAY-142 in this project.
+```
+
+Agents in `~/.codex/agents` as TOML; skills in `~/.agents/skills`. Guide:
+[CODEX.md](runtimes/CODEX.md).
+
+### About agent selection
+
+> [!NOTE]
+> The exact way to select an agent (menu, `@`, command) varies by client
+> version and still depends on manual validation — see
+> [HARNESS-VALIDATION.md](HARNESS-VALIDATION.md). The plain-language request
+> above works everywhere and does not depend on that validation.
+
+## Example requests
+
+All of these work in any of the four runtimes.
+
+Start an ordinary demand:
+
+```text
+Use sdd-bootstrap to start ticket PAY-142 in this project.
+The charge endpoint must be idempotent: a repeated request with the same
+key returns the original result instead of charging twice.
+```
+
+Create a project from scratch:
+
+```text
+Use sdd-bootstrap to start ticket PAY-001, type greenfield.
+Create a service that receives billing requests and returns processing status.
+Our team runs Linux with containers.
+```
+
+The foundation — language, framework, build tool, test framework and the stack
+skill — is decided during the architecture stage, with compared alternatives,
+and always goes through human approval before any code.
+
+Resume a stalled demand:
+
+```text
+Use sdd-bootstrap to resume ticket PAY-142 in this project.
+```
+
+Call an agent directly, skipping orchestration:
+
+```text
+Use sdd-review-code to review the delivery for ticket PAY-142.
+Use sdd-investigate-bug to investigate the failure in ticket PAY-207.
+Use sdd-generate-tests to cover the delivery for ticket PAY-142.
+```
+
+The full catalog is in [AGENTS.md](AGENTS.md).
+
+## If a runtime is not found
+
+An extension, a desktop app and a CLI are different components. Before
+reinstalling any product, run:
 
 ```bash
 sdd runtime detect --mode full --redact-paths --json
 ```
 
-O relatório mostra se o editor, a extensão, a CLI e o destino de assets foram
-encontrados. `quick` é passivo e seguro para diagnóstico cotidiano; `full` faz
-probes locais limitados para confirmar versões. Consulte a
-[referência da CLI](CLI-REFERENCE.md#descoberta-de-runtimes) para os limites de
-cada modo.
+The report shows whether the editor, the extension, the CLI and the asset
+destination were found. `quick` is passive and safe for everyday diagnosis;
+`full` performs limited local probes to confirm versions. See the
+[CLI reference](CLI-REFERENCE.md#descoberta-de-runtimes) for the limits of each
+mode.

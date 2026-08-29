@@ -39,6 +39,25 @@ Um pull request deve explicar o problema, a solução, os runtimes afetados e co
 
 Commits devem ser pequenos e descritivos. Não faça commit de arquivos gerados ou locais sem confirmar que são parte do contrato do projeto.
 
+## Traduções
+
+O `README.md` e o `docs/QUICKSTART.md` são a entrada pública e ficam em inglês.
+A tradução vive ao lado, com sufixo de locale: `README.pt-BR.md` e
+`docs/QUICKSTART.pt-BR.md`. Uma tradução nova segue o mesmo padrão
+(`README.<locale>.md`) e precisa manter as mesmas seções do original — o
+`tests/test_release_engineering.py` compara a contagem de títulos `##`, porque
+tradução que perde seção deixa de ser tradução e vira fork.
+
+O restante de `docs/` está em português e é traduzido sob demanda. Traduções
+parciais são aceitas desde que o documento diga, no topo, o que ainda falta.
+
+Os agentes em `agents/` **permanecem em português**. As regras semânticas do
+`scripts/sdd_lint.py` — `WRITE_MARKERS`, `QUESTION_MARKERS` e `NEGATIONS` — são
+tokens em português, e a verificação de capability versus efeito é
+unidirecional: com o corpo em inglês ela deixa de disparar em silêncio, e o
+linter continua reportando `clean`. Traduzir agentes exige internacionalizar o
+linter antes e reexecutar os evals.
+
 ## DCO
 
 O projeto adota o Developer Certificate of Origin (DCO). Cada commit enviado em

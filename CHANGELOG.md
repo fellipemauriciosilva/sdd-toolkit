@@ -5,6 +5,68 @@ planejamento e execução local não faz parte da distribuição.
 
 ## [Unreleased]
 
+### Added
+
+- Tipo de demanda `greenfield` para projetos criados do zero, com o template
+  `templates/specs/types/task-greenfield.md` e a tabela Foundation Decision.
+  Mapeia para `delivery_kind: application` e continua roteando para
+  `sdd-implement-spec`; o contrato de delivery não mudou. `new-project` e
+  `novo-projeto` normalizam para `greenfield`.
+- `sdd-architect` passou a ser o dono da decisão de fundação em demandas
+  `greenfield`: linguagem, framework, build, framework de teste, layout e a
+  skill de stack que governa a entrega. Exige alternativas comparadas com
+  critério e proíbe popularidade ou default do agente como justificativa.
+- `tests/test_public_content_check.py` cobre o gate de conteúdo público, que
+  até então não tinha teste algum.
+
+### Changed
+
+- `sdd-bootstrap` ativa o projeto a partir do próprio runtime. Quando
+  `sdd context resolve` devolve `status: unactivated`, ele apresenta o preview,
+  pede confirmação explícita e executa `sdd start <TICKET> --yes`. O terminal
+  deixa de ser obrigatório para iniciar uma demanda nos quatro runtimes;
+  `sdd activate` e `sdd start` seguem válidos para automação e CI.
+- `greenfield` classifica como impacto arquitetural `high` de forma
+  incondicional, então nunca recebe design curto e sempre passa por checkpoint
+  humano antes da entrega.
+- README reorganizado como entrada de produto: cabeçalho, índice, um quickstart
+  por intenção (ticket comum, projeto do zero, investigação de bug), tabela de
+  runtimes com onde escrever em cada um, tabela de tipos de demanda e tabela
+  "quero… / leia". O teto de linhas do README subiu de 220 para 400; o teste
+  continua existindo para impedir que ele vire depósito.
+- `sdd-implement-spec` bloqueia quando a fundação de uma demanda `greenfield`
+  está pendente, em vez de escolher a stack por conta própria. Sem baseline, o
+  alvo passa a ser o menor esqueleto que compila, roda e tem um teste passando.
+
+- Entrada pública em inglês: `README.md` e `docs/QUICKSTART.md` passaram a ser
+  os documentos primários, com a tradução ao lado em `README.pt-BR.md` e
+  `docs/QUICKSTART.pt-BR.md` e seletor de idioma no topo de cada um. O restante
+  de `docs/` permanece em português e é traduzido sob demanda; os agentes
+  permanecem em português por dependência do linter, conforme
+  `CONTRIBUTING.md`.
+- `tests/test_release_engineering.py` passou a comparar o README traduzido com
+  o primário: contagem de títulos, âncoras obrigatórias e presença dos links de
+  referência. Tradução que perde seção deixa de ser tradução e vira fork.
+
+### Removed
+
+- `OVERVIEW.md` da raiz e do pacote de release. O documento misturava
+  documentação de produto com uma avaliação datada do próprio toolkit — número
+  de testes, contagem de arquivos e lista de achados — que envelhecia a cada
+  commit e já estava incorreta. O conteúdo de referência vive em
+  `docs/ARCHITECTURE.md`, `docs/PIPELINE.md` e `docs/AGENTS.md`; a entrada de
+  uso é o `README.md` com `docs/QUICKSTART.md`.
+
+### Fixed
+
+- O gate de conteúdo público não detectava chaves de projeto da OpenAI no
+  formato `sk-proj-*`: o padrão exigia dez ou mais alfanuméricos imediatamente
+  após `sk-`, e a sequência quebra no hífen. Agora cobre chaves segmentadas.
+- O mesmo gate acusava credencial em qualquer palavra hifenizada terminada em
+  `sk` seguida de dez ou mais alfanuméricos: `task-greenfield` termina nessa
+  forma e derrubava a verificação, sem conter credencial alguma. Os prefixos
+  `sk-`, `ghp_` e `github_pat_` agora exigem fronteira de token.
+
 ## [4.0.0] - 2026-08-28
 
 ### BREAKING CHANGES

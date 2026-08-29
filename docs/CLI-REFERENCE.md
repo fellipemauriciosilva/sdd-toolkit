@@ -40,6 +40,7 @@ Todos os comandos mutáveis usam preview por padrão; `--apply` confirma a açã
 | Ver transações | `sdd transaction status --scope user --active-only --json` |
 | Recuperar transação | `sdd transaction recover --scope user --apply --json` |
 | Resolver contexto | `sdd context resolve --ticket ABC-123 --json` |
+| Propor delivery por tipo | `sdd delivery propose --type greenfield --json` |
 | Validar delivery | `sdd delivery validate --task /caminho/task.md --json` |
 | Validar arquitetura | `sdd architecture validate --task /caminho/task.md --json` |
 | Validar resultado de agente | `sdd result validate --file /caminho/result.json --json` |
@@ -49,6 +50,12 @@ Use `sdd <comando> --help` para parâmetros completos. Consulte
 [USER-SCOPE.md](USER-SCOPE.md) para ownership, source, cache offline e conflitos
 e [AGENT-CONTRACT.md](AGENT-CONTRACT.md) para o envelope `AGENT_RESULT` validado
 por `sdd result validate`.
+
+`--type` aceita `feature`, `bugfix`, `greenfield`, `refactor`, `migration` e
+`test-e2e`. `e2e` e `playwright` normalizam para `test-e2e`; `new-project` e
+`novo-projeto` normalizam para `greenfield`. O tipo define o `delivery_kind`, o
+agente de entrega e o impacto arquitetural inicial — veja
+[PIPELINE.md](PIPELINE.md).
 
 `sdd lint` roda sobre uma árvore-fonte do toolkit e verifica contexto canônico,
 capabilities versus efeitos, política comum injetada, equivalência entre os
