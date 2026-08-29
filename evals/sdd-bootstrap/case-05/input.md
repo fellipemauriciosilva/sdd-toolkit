@@ -14,9 +14,9 @@
 {
   "status": "unactivated",
   "project": {"path": "/workspace/exemplo-servico"},
-  "workspace": "/home/dev/sdd-history-implementations/exemplo-servico-ab12cd34/exemplo-servico/specs",
+  "workspace": "/home/<user>/sdd-history-implementations/exemplo-servico-ab12cd34/exemplo-servico/specs",
   "runtime": "auto",
-  "activation_state": "/home/dev/.local/SDD-Toolkit/user/activations.json"
+  "activation_state": "/home/<user>/.local/SDD-Toolkit/user/activations.json"
 }
 ```
 

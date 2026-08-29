@@ -21,8 +21,13 @@ BLOCKED = re.compile(
     r"gcbregistry|grupoexample",
     re.IGNORECASE,
 )
+# O prefixo de chave sempre inicia um token. Sem a fronteira, qualquer palavra
+# hifenizada terminada em "sk" seguida de 10+ alfanumericos vira falso
+# positivo: "task-greenfield" contem "sk-greenfield" e derrubava o check.
 SECRET = re.compile(
-    r"sk-[A-Za-z0-9]{10,}|ghp_[A-Za-z0-9]+|github_pat_[A-Za-z0-9_]+|"
+    r"(?<![A-Za-z0-9-])sk-(?:[A-Za-z0-9]+-)*[A-Za-z0-9]{10,}|"
+    r"(?<![A-Za-z0-9-])ghp_[A-Za-z0-9]+|"
+    r"(?<![A-Za-z0-9-])github_pat_[A-Za-z0-9_]+|"
     r"BEGIN (?:RSA|OPENSSH|EC|DSA) PRIVATE KEY|"
     r"(?:https?|ssh)://[^\s/@:]+:[^\s/@]+@",
 )
@@ -50,7 +55,11 @@ def files_to_scan() -> list[Path]:
         and "node_modules" not in path.parts
         and "test-results" not in path.parts
         and "playwright-report" not in path.parts
-        and path.name not in {"public_content_check.py", "validate-public-content.sh", "validate-public-content.ps1"}
+        # O proprio gate e o teste dele precisam conter os padroes que definem.
+        and path.name not in {
+            "public_content_check.py", "validate-public-content.sh",
+            "validate-public-content.ps1", "test_public_content_check.py",
+        }
     ]
 
 
