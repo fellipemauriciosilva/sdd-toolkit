@@ -8,7 +8,7 @@ Ao reportar um problema, informe versão, sistema operacional, runtime, comando
 executado e saída sanitizada. Não envie credenciais, caminhos pessoais, specs
 privadas, estados locais ou conteúdo de demandas.
 
-O suporte comunitário é best-effort. Consulte primeiro
-[docs/QUICKSTART.md](docs/QUICKSTART.md) e
+O suporte comunitário é best-effort. Consulte primeiro o quickstart
+([inglês](docs/QUICKSTART.md) · [português](docs/QUICKSTART.pt-BR.md)) e
 [docs/USER-SCOPE.md](docs/USER-SCOPE.md). Para governança e manutenção inicial,
 consulte [docs/MAINTAINERS.md](docs/MAINTAINERS.md).

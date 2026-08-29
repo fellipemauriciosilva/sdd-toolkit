@@ -81,22 +81,44 @@ class ReleaseEngineeringTests(unittest.TestCase):
 
     def test_root_document_hygiene_keeps_only_public_entry_points(self):
         allowed = {
-            "README.md", "CHANGELOG.md", "CITATION.cff", "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
-            "LICENSE", "OVERVIEW.md", "SECURITY.md", "SUPPORT.md", "VERSION", "requirements-dev.txt",
+            "README.md", "README.pt-BR.md", "CHANGELOG.md", "CITATION.cff",
+            "CODE_OF_CONDUCT.md", "CONTRIBUTING.md",
+            "LICENSE", "SECURITY.md", "SUPPORT.md", "VERSION", "requirements-dev.txt",
             "install.ps1", "install.sh", ".gitattributes", ".gitignore",
         }
         root_files = {path.name for path in ROOT.iterdir() if path.is_file()}
         self.assertEqual(allowed, root_files)
 
     def test_public_readme_is_a_concise_entry_point_with_reference_docs(self):
+        # O teto existe para impedir que o README vire depósito, não para fixar
+        # um número: subiu de 220 quando o README passou a ter índice, header e
+        # um quickstart por intenção.
         readme = (ROOT / "README.md").read_text(encoding="utf-8")
-        self.assertLessEqual(len(readme.splitlines()), 220)
+        self.assertLessEqual(len(readme.splitlines()), 400)
         for document in (
             "ARCHITECTURE.md", "PIPELINE.md", "AGENTS.md", "SKILLS.md",
             "CLI-REFERENCE.md", "EVALUATIONS.md",
         ):
             self.assertTrue((ROOT / "docs" / document).is_file(), document)
             self.assertIn(f"docs/{document}", readme)
+
+    def test_translated_readme_stays_in_sync_with_the_primary_one(self):
+        """A tradução que perde uma seção deixa de ser tradução e vira fork."""
+        primary = (ROOT / "README.md").read_text(encoding="utf-8")
+        translated = (ROOT / "README.pt-BR.md").read_text(encoding="utf-8")
+        self.assertLessEqual(len(translated.splitlines()), 400)
+        for anchor in ("install.ps1", "install.sh", "sdd-bootstrap", "greenfield"):
+            self.assertIn(anchor, primary, anchor)
+            self.assertIn(anchor, translated, anchor)
+        headings = lambda text: [
+            line.split(" ", 1)[1].strip() for line in text.splitlines() if line.startswith("## ")
+        ]
+        self.assertEqual(len(headings(primary)), len(headings(translated)))
+        # O quickstart tem versão traduzida, então o README traduzido aponta
+        # para ela: o prefixo cobre QUICKSTART.md e QUICKSTART.pt-BR.md.
+        for document in ("QUICKSTART", "CLI-REFERENCE.md"):
+            self.assertIn(f"docs/{document}", translated, document)
+        self.assertTrue((ROOT / "docs" / "QUICKSTART.pt-BR.md").is_file())
 
     def test_dco_checker_accepts_a_signed_commit_body(self):
         sys.path.insert(0, str(ROOT / "scripts"))
