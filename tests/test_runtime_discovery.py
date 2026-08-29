@@ -61,7 +61,11 @@ class RuntimeDiscoveryTests(unittest.TestCase):
                 report = sdd_discovery.discover_runtimes(profile, ROOT, "codex", "full")["runtimes"]["codex"]
             self.assertEqual("detected", report["version_status"])
             self.assertIn("toml-agents", report["capabilities"])
-            self.assertTrue(any(call.args[0][-1] == "--version" and call.args[0][0].endswith("trusted\\codex") for call in run.call_args_list))
+            # O caminho é normalizado pelo SO; comparar componentes evita fixar o separador.
+            self.assertTrue(any(
+                call.args[0][-1] == "--version" and Path(call.args[0][0]).parts[-2:] == ("trusted", "codex")
+                for call in run.call_args_list
+            ))
 
     def test_full_scan_reads_vscode_extension_inventory_with_fixed_arguments(self):
         with tempfile.TemporaryDirectory() as temporary:

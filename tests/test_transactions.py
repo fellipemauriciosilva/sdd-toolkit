@@ -199,6 +199,10 @@ class TransactionTests(unittest.TestCase):
                 capture_output=True, text=True, check=False, env=environment,
             )
             self.assertEqual(0, installed.returncode, msg=installed.stderr)
+            asset = profile / ".copilot" / "agents" / "sdd-bootstrap.agent.md"
+            manifest = state / "user" / "installation.json"
+            self.assertTrue(asset.is_file())
+            self.assertTrue(manifest.is_file())
             bin_dir = root / "bin"
             shim = bin_dir / "sdd"
             bin_dir.mkdir()
@@ -238,7 +242,7 @@ class TransactionTests(unittest.TestCase):
             self.assertTrue(shim.is_file())
 
             fault_env = {
-                **clean_env,
+                **environment,
                 "SDD_TOOLKIT_TEST_MODE": "1",
                 "SDD_TOOLKIT_FAULT_AT": "after-assets",
             }
@@ -253,7 +257,7 @@ class TransactionTests(unittest.TestCase):
 
             recovered = subprocess.run(
                 [sys.executable, str(CLI), "transaction", "recover", "--scope", "user", "--apply", "--json"],
-                capture_output=True, text=True, check=False, env=clean_env,
+                capture_output=True, text=True, check=False, env=environment,
             )
             self.assertEqual(0, recovered.returncode, msg=recovered.stderr)
             self.assertTrue(asset.is_file())

@@ -80,11 +80,23 @@ planejamento e execução local não faz parte da distribuição.
   Pack, não por um recorte de `session-state.md`.
 - `dependabot.yml` passou a acompanhar também as GitHub Actions, cujos usos
   ficam fixados por SHA.
+- `requirements-dev.txt` separa a versão de `jsonschema` por marker: 4.26 exige
+  Python 3.10, e 4.25.1 é a última série que roda no piso 3.9 declarado no
+  README. Sem isso o piso não era instalável e portanto nunca era verificado.
 - `scripts/sdd.py` deixou de concentrar 2.141 linhas e virou composition root:
   ele define o esqueleto do parser e a ordem dos comandos, enquanto handlers e
   subparsers vivem em `scripts/sdd_commands/`. O caminho `scripts/sdd.py`
   permanece contratual — o shim e os instaladores o fixam — e a superfície da
   CLI é byte-idêntica à anterior.
+
+### Fixed
+
+- `tests/test_transactions.py`: o teste de recuperação do bloco de PATH no Unix
+  referenciava `clean_env`, `asset` e `manifest`, que nunca foram definidos nele.
+  Como o caso é `skipIf` no Windows, o erro só aparecia ao rodar em Linux.
+- `tests/test_runtime_discovery.py`: a asserção do probe de versão fixava o
+  separador de caminho do Windows e falhava em qualquer outro sistema. Agora
+  compara componentes do caminho.
 
 ### Removed
 
