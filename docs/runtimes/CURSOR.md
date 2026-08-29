@@ -1,8 +1,9 @@
 # Cursor
 
-Abra o projeto no Cursor, execute `sdd activate` uma vez no terminal e use
-`sdd start TICKET` para preparar cada demanda. Em seguida, solicite o agente
-`sdd-bootstrap` no chat do Cursor com o ticket.
+Abra o projeto no Cursor e solicite o agente `sdd-bootstrap` no chat com o
+ticket da demanda. Se o projeto ainda não estiver ativo, o bootstrap mostra o
+preview da ativação, pede confirmação e ativa a partir do chat. `sdd activate` e
+`sdd start TICKET` no terminal continuam disponíveis para automação e CI.
 
 Os agentes ficam em `~/.cursor/agents` e as skills compartilhadas em
 `~/.agents/skills`. O projeto consumidor não recebe arquivos de instalação.

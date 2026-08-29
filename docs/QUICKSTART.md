@@ -6,13 +6,16 @@ cria agentes, skills ou configurações no repositório consumidor.
 
 ```mermaid
 flowchart LR
-    I[Instalar uma vez] --> A[Em cada projeto: sdd activate]
-    A --> S[Dia a dia: sdd start TICKET]
-    S --> B[sdd-bootstrap no runtime]
-    B --> P[Context Pack automático]
+    I[Instalar uma vez] --> B[sdd-bootstrap no runtime]
+    B --> A[Ativa o projeto sob confirmação]
+    A --> P[Context Pack automático]
     P --> G[Agentes e gates]
     G --> R[Resultados registrados fora do projeto]
 ```
+
+Depois da instalação, o fluxo acontece dentro do runtime: peça a demanda ao
+`sdd-bootstrap` e ele cuida da ativação. Os comandos de terminal das seções 2 e
+3 continuam válidos e são a via preferida para automação e CI.
 
 ## 1. Instalar no perfil do usuário
 
@@ -55,9 +58,31 @@ Para limitar os assets a um runtime, use `-Runtime codex` no Windows ou
 `--runtime=codex` no Unix. `--profile-root`, `--install-root`, `--no-path` e
 instalação por Git são opções de ambiente avançado; veja [USER-SCOPE.md](USER-SCOPE.md).
 
-## 2. Ativar o projeto atual
+## 2. Iniciar a demanda pelo runtime
 
-Abra a raiz do seu projeto e execute somente:
+Abra o projeto no runtime e peça a demanda ao `sdd-bootstrap`:
+
+```text
+Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+```
+
+Se o projeto ainda não estiver ativo, o bootstrap mostra o caminho do projeto,
+o workspace que será criado e o fato de que nada é escrito no repositório, pede
+sua confirmação e ativa. Ativação altera estado do perfil, então nunca acontece
+sem aceite explícito. Depois disso ele resolve o contexto, cria o Context Pack
+antes de cada agente e conduz análise, arquitetura, entrega, testes, review e
+documentação conforme os gates.
+
+Para retomar, troque o verbo:
+
+```text
+Use sdd-bootstrap para retomar a demanda ABC-123 neste projeto.
+```
+
+## 3. Ativar pelo terminal (automação e CI)
+
+O caminho equivalente fora do runtime. Abra a raiz do seu projeto e execute
+somente:
 
 ```bash
 sdd activate
@@ -79,7 +104,7 @@ sdd status
 sdd activation list
 ```
 
-## 3. Iniciar ou retomar uma demanda
+## 4. Iniciar ou retomar pelo terminal
 
 Ainda na raiz do projeto, informe apenas o ticket:
 
@@ -89,20 +114,11 @@ sdd resume ABC-123
 ```
 
 `start` retorna o workspace, a pasta da spec e o handoff para `sdd-bootstrap`.
-Se o projeto ainda não estiver ativo, execute `sdd activate` ou use `--yes` em
-automação para autorizar a ativação local. `resume` sem ticket só funciona quando
-há uma única demanda retomável.
+Se o projeto ainda não estiver ativo, execute `sdd activate` ou use `--yes` para
+autorizar a ativação local na mesma chamada. `resume` sem ticket só funciona
+quando há uma única demanda retomável.
 
-No chat do runtime, selecione ou solicite o agente `sdd-bootstrap` e entregue o
-ticket. O bootstrap resolve o contexto pelo diretório aberto, cria o Context
-Pack automaticamente antes de cada agente e conduz análise, arquitetura,
-entrega, testes, review e documentação conforme os gates.
-
-```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
-```
-
-## 4. Rotina diária
+## 5. Rotina diária
 
 | Intenção | Comando | Resultado |
 |---|---|---|

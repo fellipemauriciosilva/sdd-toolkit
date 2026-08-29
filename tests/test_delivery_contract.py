@@ -26,6 +26,25 @@ class DeliveryContractTests(unittest.TestCase):
         self.assertEqual("application", contract["delivery_kind"])
         self.assertIn("e2e", contract["verification"])
 
+    def test_greenfield_delivers_an_application_through_the_normal_route(self):
+        contract = validate(propose("greenfield", "Criar do zero o serviço de cobranças"))
+        self.assertEqual("application", contract["delivery_kind"])
+        self.assertEqual("sdd-implement-spec", contract["delivery_agent"])
+        self.assertIn("irreversible", contract["rationale"])
+
+    def test_greenfield_aliases_normalize(self):
+        for alias in ("new-project", "novo-projeto", "GREENFIELD"):
+            with self.subTest(alias=alias):
+                self.assertEqual("application", propose(alias)["delivery_kind"])
+
+    def test_greenfield_never_gets_a_short_design(self):
+        """The foundation decision is irreversible, so G2 cannot be waived."""
+        for description in ("", "typo local isolado", "ajuste de validation"):
+            with self.subTest(description=description):
+                contract = propose_architecture("greenfield", description)
+                self.assertEqual("high", contract["architecture_impact"])
+                self.assertTrue(contract["full_design_required"])
+
     def test_invalid_e2e_contract_fails_closed(self):
         contract = propose("test-e2e")
         contract["verification"] = ["unit"]
@@ -46,6 +65,7 @@ class DeliveryContractTests(unittest.TestCase):
         expected = {
             "task-feature.md": "application",
             "task-bugfix.md": "application",
+            "task-greenfield.md": "application",
             "task-refactor.md": "refactor",
             "task-migration.md": "migration",
             "task-test-e2e.md": "e2e-tests",
@@ -74,7 +94,7 @@ class DeliveryContractTests(unittest.TestCase):
         self.assertEqual("medium", task["architecture_impact"])
 
     def test_all_task_templates_expose_architecture_strategy(self):
-        for filename in ("task-feature.md", "task-bugfix.md", "task-refactor.md", "task-migration.md", "task-test-e2e.md"):
+        for filename in ("task-feature.md", "task-bugfix.md", "task-greenfield.md", "task-refactor.md", "task-migration.md", "task-test-e2e.md"):
             with self.subTest(filename=filename):
                 contract = extract_architecture_contract(ROOT / "templates" / "specs" / "types" / filename)
                 self.assertEqual("sdd-architect", contract["architecture_agent"])
