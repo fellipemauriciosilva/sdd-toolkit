@@ -25,10 +25,10 @@
 
 ## Índice
 
-- [🤔 O que é o SDD Toolkit?](#-o-que-é-o-sdd-toolkit)
+- [💡 O que é o SDD Toolkit?](#-o-que-é-o-sdd-toolkit)
 - [⚡ Instalar](#-instalar)
 - [🚀 Início rápido: trabalhar um ticket](#-início-rápido-trabalhar-um-ticket)
-- [🌱 Início rápido: criar um projeto do zero](#-início-rápido-criar-um-projeto-do-zero)
+- [🏗️ Início rápido: criar um projeto do zero](#-início-rápido-criar-um-projeto-do-zero)
 - [🐞 Início rápido: investigar um bug](#-início-rápido-investigar-um-bug)
 - [🤖 Runtimes suportados](#-runtimes-suportados)
 - [📋 Tipos de demanda](#-tipos-de-demanda)
@@ -38,7 +38,7 @@
 - [🔒 Segurança, contribuição e suporte](#-segurança-contribuição-e-suporte)
 - [🛠️ Desenvolvimento](#️-desenvolvimento)
 
-## 🤔 O que é o SDD Toolkit?
+## 💡 O que é o SDD Toolkit?
 
 A maioria das sessões de IA começa num prompt e termina num diff que ninguém
 consegue rastrear. O SDD Toolkit coloca um **processo** entre os dois: você
@@ -134,7 +134,7 @@ Para retomar uma demanda, troque o verbo:
 Use sdd-bootstrap para retomar o ticket PAY-142 neste projeto.
 ```
 
-## 🌱 Início rápido: criar um projeto do zero
+## 🏗️ Início rápido: criar um projeto do zero
 
 Um repositório vazio não tem evidência a descobrir, então alguém precisa
 *decidir* a stack. Numa demanda `greenfield` essa decisão tem dono e gate:
