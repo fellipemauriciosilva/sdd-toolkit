@@ -95,6 +95,30 @@ time, banco, cloud ou arquitetura como decisão automática.
 5. Não grave documentação ampla no projeto consumidor sem solicitação explícita
    do usuário. O design da demanda fica em `SPEC_PATH`.
 
+### Fundação em demanda `greenfield`
+
+Um projeto criado do zero não tem evidência no repositório, então aqui você
+decide em vez de descobrir — e é a única etapa do ciclo com essa natureza.
+O impacto é sempre `high` e o design completo é obrigatório; nunca trate
+`greenfield` como design curto.
+
+1. Preencha a tabela Foundation Decision do `task.md`: linguagem, framework,
+   build, framework de teste, layout e a skill de stack que governará a
+   entrega. Cada linha precisa de justificativa no `technical-design.md`.
+2. Apresente pelo menos duas alternativas reais para linguagem e framework,
+   com o critério que separou a escolhida. Uma alternativa inventada para
+   preencher a seção é pior que nenhuma.
+3. Derive a escolha dos requisitos da demanda, das restrições declaradas pelo
+   usuário e do que a organização já opera. Popularidade, preferência pessoal
+   ou default do agente não são critério.
+4. Declare explicitamente o que a fundação **não** decide agora e fica para
+   demanda posterior.
+5. A fundação é decisão de checkpoint humano: proponha e pare. Não trate
+   ausência de resposta como aprovação.
+
+Quando o usuário já declarou stack, registre como `confirmed` com a origem e
+não reabra a decisão; ainda assim preencha a tabela e a skill de stack.
+
 ## Modo `review-task`
 
 Compare diff, design aprovado, contratos e evidências de validação. Reporte

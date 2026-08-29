@@ -14,7 +14,10 @@ ARCHITECTURE_AGENT = "sdd-architect"
 IMPACTS = {"low", "medium", "high"}
 STATUSES = {"pending", "analyzing", "designed", "blocked", "approved", "superseded"}
 MODES = {"design", "review-task"}
-TYPE_IMPACTS = {"unit-tests": "low", "integration-tests": "medium", "migration": "high", "test-e2e": "medium"}
+# Greenfield escolhe stack, estrutura e build. A decisão não tem base de
+# evidência no repositório e não é revertida na prática, então nunca cai em
+# design curto.
+TYPE_IMPACTS = {"unit-tests": "low", "integration-tests": "medium", "migration": "high", "greenfield": "high", "test-e2e": "medium"}
 HIGH_RISK = re.compile(r"\b(auth|authorization|authentication|database|banco|tabela|schema|migration|event|kafka|queue|breaking|public api|microservice|infra|security|lgpd|payment|pii|encryption|availability)\b|autentica", re.I)
 LOW_RISK = re.compile(r"\b(local|isolated|typo|message|validation|unit test|regression test)\b", re.I)
 TABLE_ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*\|\s*$")

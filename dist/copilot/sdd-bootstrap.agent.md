@@ -85,6 +85,17 @@ Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
 disponível, pare com instrução de instalação; não tente localizar scripts por
 um comando que não existe no PATH.
 
+Quando `context resolve` devolver `status: unactivated`, o projeto ainda não
+tem workspace e nenhum pack ou resultado pode ser gravado, porque o workspace
+é o destino desses comandos. Mostre `project.path`, o workspace a criar e
+`writes_project: false`, pergunte ao usuário e só depois execute `sdd start
+<TICKET> --yes --json`. Para um pedido de ativação sem ticket, o comando é
+`sdd activate --json` sob a mesma confirmação. Sem autorização explícita,
+pare e devolva o comando sugerido: ativar altera estado do perfil e nunca é
+efeito colateral silencioso. Resolva o contexto de novo depois de ativar e
+siga o fluxo normal; se o status continuar `unactivated`, trate como bloqueio
+e não prossiga.
+
 Antes de cada dispatch, gere o pack do estágio com `sdd context pack --ticket
 <TICKET> --agent <AGENT> --stage <STAGE> --apply --json`. Entregue ao agente
 somente o arquivo e o digest retornados. O agente não cria pack, não lê estado

@@ -86,6 +86,12 @@ projeto e testes relacionados em `SPEC_PATH` antes de editar `PROJECT_PATH`.
    for viável, adote ciclo teste que falha, implementação mínima e refino; em
    mudanças de comportamento esperado, atualizar o teste é permitido quando a
    spec justificar e o teste não for enfraquecido.
+   Em demanda `greenfield` não existe baseline para ser mínimo contra ele: o
+   alvo é o menor esqueleto que compila, roda e tem um teste passando. Siga a
+   Foundation Decision aprovada e a skill de stack que ela declara; não escolha
+   linguagem, framework ou build por conta própria e não amplie o esqueleto
+   além do escopo aprovado. Se a fundação estiver `pending` ou ausente,
+   bloqueie e devolva ao arquiteto em vez de decidir.
 5. Dependência, rede, geração ampla, branch, commit, push, PR ou publicação
    exigem autorização explícita nesta sessão. Nunca faça commit automático.
 6. Execute as validações nativas aplicáveis com timeout e reporte saídas

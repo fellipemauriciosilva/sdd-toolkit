@@ -21,11 +21,17 @@ DELIVERY_AGENTS = {
 TYPE_DEFAULTS = {
     "feature": ("application", ["unit"]),
     "bugfix": ("application", ["unit"]),
+    "greenfield": ("application", ["unit"]),
     "refactor": ("refactor", ["unit"]),
     "migration": ("migration", ["integration"]),
     "test-e2e": ("e2e-tests", ["e2e"]),
 }
-TYPE_ALIASES = {"e2e": "test-e2e", "playwright": "test-e2e"}
+TYPE_ALIASES = {
+    "e2e": "test-e2e",
+    "playwright": "test-e2e",
+    "new-project": "greenfield",
+    "novo-projeto": "greenfield",
+}
 SAFE_TEXT = re.compile(r"[\x00-\x08\x0b\x0c\x0e-\x1f]")
 TABLE_ROW = re.compile(r"^\|\s*([^|]+?)\s*\|\s*([^|]*?)\s*\|\s*$")
 
@@ -43,7 +49,9 @@ def propose(type_name: str, description: str = "") -> Dict[str, Any]:
     delivery_kind, verification = TYPE_DEFAULTS[demand_type]
     text = SAFE_TEXT.sub(" ", description or "").strip()
     rationale = f"Default for demand type '{demand_type}'."
-    if demand_type in {"feature", "bugfix"} and re.search(r"\b(browser|web|ui|frontend|jornada|tela)\b", text, re.I):
+    if demand_type == "greenfield":
+        rationale = "The demand creates a project from scratch; the foundation decision is irreversible in practice, so the architecture stage owns stack, structure and build before any delivery."
+    if demand_type in {"feature", "bugfix", "greenfield"} and re.search(r"\b(browser|web|ui|frontend|jornada|tela)\b", text, re.I):
         verification = ["unit", "e2e"]
         rationale = "Application delivery with E2E verification because the description indicates a user-facing web journey."
     if demand_type == "test-e2e":

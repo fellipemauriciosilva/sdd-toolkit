@@ -81,7 +81,10 @@ ampliar o escopo.
 ## Procedimento
 
 1. Pergunte o tipo apenas se ele não foi informado: `feature`, `bugfix`,
-   `refactor`, `migration` ou `test-e2e`. Normalize `e2e` para `test-e2e`.
+   `greenfield`, `refactor`, `migration` ou `test-e2e`. Normalize `e2e` para
+   `test-e2e`, e `new-project` ou `novo-projeto` para `greenfield`. Use
+   `greenfield` quando o alvo é um projeto criado do zero, não uma mudança em
+   projeto existente.
 2. Se `SPEC_PATH` já existir, liste os arquivos existentes e pare. Nunca
    sobrescreva uma demanda sem autorização explícita e uma intenção de migração
    claramente declarada.
