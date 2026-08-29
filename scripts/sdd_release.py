@@ -90,23 +90,23 @@ def main() -> int:
 
     # Rebuild the inventory in the source tree before packaging it.
     manifest = build_inventory.inventory(root)
-    (root / "dist" / "build-manifest.json").write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+    (root / "dist" / "build-manifest.json").write_bytes((json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     files = release_files(root)
     zip_path = output / f"sdd-toolkit-{version}.zip"
     tar_path = output / f"sdd-toolkit-{version}.tar.gz"
     write_zip(root, zip_path, files)
     write_tar(root, tar_path, files)
     artifacts = [{"name": path.name, "sha256": sha256(path), "bytes": path.stat().st_size} for path in (zip_path, tar_path)]
-    (output / "SHA256SUMS").write_text("".join(f"{item['sha256']}  {item['name']}\n" for item in artifacts), encoding="utf-8", newline="\n")
+    (output / "SHA256SUMS").write_bytes(("".join(f"{item['sha256']}  {item['name']}\n" for item in artifacts)).encode("utf-8"))
     identity = json.loads((root / "metadata" / "project-identity.json").read_text(encoding="utf-8"))
     sbom = {
         "bomFormat": "CycloneDX", "specVersion": "1.5", "serialNumber": f"urn:uuid:{uuid.uuid5(uuid.NAMESPACE_URL, 'https://sdd-toolkit.dev/releases/' + version)}", "version": 1,
         "metadata": {"timestamp": timestamp(), "component": {"type": "application", "name": "sdd-toolkit", "version": version, "licenses": [{"license": {"id": "MIT"}}]}},
         "components": [{"type": "library", "name": "jsonschema", "version": "requirements-dev", "scope": "optional", "licenses": [{"license": {"id": "MIT"}}]}],
     }
-    (output / "sbom.cdx.json").write_text(json.dumps(sbom, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+    (output / "sbom.cdx.json").write_bytes((json.dumps(sbom, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     provenance = {"schema_version": 1, "generated_at": timestamp(), "toolkit_version": version, "identity": identity["maintainer"], "build_manifest": manifest, "artifacts": artifacts, "attestation": "unsigned-local; sign the release tag and attach provider attestation in CI"}
-    (output / "provenance.json").write_text(json.dumps(provenance, ensure_ascii=False, indent=2) + "\n", encoding="utf-8", newline="\n")
+    (output / "provenance.json").write_bytes((json.dumps(provenance, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
     print(json.dumps({"status": "ready", "version": version, "out_dir": str(output), "artifacts": artifacts}, ensure_ascii=False, indent=2))
     return 0
 

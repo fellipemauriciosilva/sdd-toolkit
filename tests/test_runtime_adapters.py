@@ -1,4 +1,7 @@
-import tomllib
+try:  # tomllib entrou na stdlib no 3.11; tomli tem a mesma API no piso 3.9.
+    import tomllib
+except ModuleNotFoundError:  # pragma: no cover - depende da versao do runner
+    import tomli as tomllib
 import unittest
 import json
 import shutil

@@ -91,6 +91,15 @@ planejamento e execução local não faz parte da distribuição.
 
 ### Fixed
 
+- `Path.write_text(..., newline=...)` exige Python 3.10 e era usado em nove
+  pontos, incluindo o compilador e o gerador de release. Substituído por
+  `write_bytes(...encode("utf-8"))`, que é equivalente — `newline="
+"` já
+  significava "sem tradução" — e preserva a garantia de LF nos artefatos
+  gerados. `dist/` continua byte a byte idêntico após a mudança.
+- `tests/test_runtime_adapters.py` importava `tomllib`, que só entrou na
+  stdlib no 3.11. Passa a cair para o backport `tomli` no piso 3.9.
+
 - `tests/test_transactions.py`: o teste de recuperação do bloco de PATH no Unix
   referenciava `clean_env`, `asset` e `manifest`, que nunca foram definidos nele.
   Como o caso é `skipIf` no Windows, o erro só aparecia ao rodar em Linux.

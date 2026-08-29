@@ -450,7 +450,7 @@ def record_result(spec_path: Path, ticket: str, project_id: str, context: Dict[s
             "status": stored_result["status"],
         })
         STATE.atomic_write(paths["state"], state)
-        paths["summary"].write_text(_summary(state, stored_result), encoding="utf-8", newline="\n")
+        paths["summary"].write_bytes((_summary(state, stored_result)).encode("utf-8"))
     return {
         "status": "recorded",
         "result_id": result_id,

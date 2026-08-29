@@ -53,7 +53,7 @@ class LintRegressionTests(unittest.TestCase):
         path = self.kit / relative
         text = path.read_text(encoding="utf-8")
         self.assertIn(old, text, relative)
-        path.write_text(text.replace(old, new, count), encoding="utf-8", newline="\n")
+        path.write_bytes((text.replace(old, new, count)).encode("utf-8"))
 
     def test_detects_a_legacy_demand_file(self):
         self.patch("agents/sdd-create-spec.md", "Crie `SPEC_PATH`", "Crie `tasks.md` e `SPEC_PATH`")
@@ -110,9 +110,8 @@ class LintRegressionTests(unittest.TestCase):
 
     def test_detects_a_stale_dist_artifact(self):
         path = self.kit / "dist" / "cursor" / "sdd-review-code.md"
-        path.write_text(
-            path.read_text(encoding="utf-8").replace("## Política comum SDD", "## Notas"),
-            encoding="utf-8", newline="\n",
+        path.write_bytes(
+            path.read_text(encoding="utf-8").replace("## Política comum SDD", "## Notas").encode("utf-8")
         )
         messages = self.messages()
         self.assertTrue(any("política não injetada" in message for message in messages))
