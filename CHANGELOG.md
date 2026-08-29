@@ -97,6 +97,11 @@ planejamento e execução local não faz parte da distribuição.
 - `tests/test_runtime_discovery.py`: a asserção do probe de versão fixava o
   separador de caminho do Windows e falhava em qualquer outro sistema. Agora
   compara componentes do caminho.
+- `tests/test_transactions.py`: `test_cli_recovers_uninstall_after_forced_process_exit`
+  não fazia o que o nome diz — apenas instalava e verificava que os arquivos
+  existiam, sem interromper nada nem recuperar. Passa a interromper o uninstall
+  em `after-assets`, exigir `recovery-required`, confirmar que o preview não
+  altera nada e verificar que o recovery restaura o asset byte a byte.
 
 ### Removed
 
