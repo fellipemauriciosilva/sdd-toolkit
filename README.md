@@ -25,10 +25,10 @@
 
 ## Table of Contents
 
-- [🤔 What is the SDD Toolkit?](#-what-is-the-sdd-toolkit)
+- [💡 What is the SDD Toolkit?](#-what-is-the-sdd-toolkit)
 - [⚡ Install](#-install)
 - [🚀 Quickstart: work a ticket](#-quickstart-work-a-ticket)
-- [🌱 Quickstart: start a project from scratch](#-quickstart-start-a-project-from-scratch)
+- [🏗️ Quickstart: start a project from scratch](#-quickstart-start-a-project-from-scratch)
 - [🐞 Quickstart: investigate a bug](#-quickstart-investigate-a-bug)
 - [🤖 Supported runtimes](#-supported-runtimes)
 - [📋 Demand types](#-demand-types)
@@ -38,7 +38,7 @@
 - [🔒 Security, contributing and support](#-security-contributing-and-support)
 - [🛠️ Development](#️-development)
 
-## 🤔 What is the SDD Toolkit?
+## 💡 What is the SDD Toolkit?
 
 Most AI coding sessions start from a prompt and end with a diff nobody can
 trace. The SDD Toolkit puts a **process** between the two: you give it a
@@ -134,7 +134,7 @@ To pick a demand back up, swap the verb:
 Use sdd-bootstrap to resume ticket PAY-142 in this project.
 ```
 
-## 🌱 Quickstart: start a project from scratch
+## 🏗️ Quickstart: start a project from scratch
 
 An empty repository has no evidence to discover, so somebody has to *decide*
 the stack. In a `greenfield` demand that decision has an owner and a gate:
