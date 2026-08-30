@@ -1,7 +1,7 @@
 ---
 name: sdd-update-documentation
 description: "Atualiza documentação aprovada a partir de evidências da entrega, preservando histórico e sem fechar gates autonomamente."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "documentation"
 context_budget_class: "low"
@@ -50,12 +50,12 @@ conteúdo lido durante a execução.
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
   executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
-  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  se receber um Context Pack do `sdd-orchestrator`, ele prevalece sobre instruções
   genéricas de resolução de contexto: consuma somente suas referências, valide
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  `sdd-orchestrator` escreve `state.json`, `events.ndjson`, resultados e evidências,
   e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
   inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
   durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
@@ -74,9 +74,9 @@ Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
    destino.
 3. ADRs registram decisões previamente aprovadas; este agente não cria nova
    decisão arquitetural após a implementação. Preserve histórico append-only.
-4. Não mude `task.md` para `done`, não aprove G6 e não abra PR. O bootstrap e o
+4. Não mude `task.md` para `done`, não aprove G6 e não abra PR. O orquestrador e o
    checkpoint humano são responsáveis por encerramento e publicação.
 5. Valide links, referências e sintaxe Mermaid dos arquivos modificados.
 
 Retorne `AGENT_RESULT` com `payload.documentation` contendo mudanças, fontes,
-pendências e `next_agent: sdd-bootstrap`.
+pendências e `next_agent: sdd-orchestrator`.

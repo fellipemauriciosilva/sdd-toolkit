@@ -1,5 +1,5 @@
 # Eval Input — sdd-analyze-demand case-01
-# Cenário: Demanda bem especificada com contexto completo → análise suficiente para o bootstrap avaliar G1
+# Cenário: Demanda bem especificada com contexto completo → análise suficiente para o orquestrador avaliar G1
 
 ## Contexto
 - Projeto: `example-api-gestao-meta`

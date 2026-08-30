@@ -1,7 +1,7 @@
 ---
 name: sdd-create-spec
 description: "Cria uma demanda SDD canônica no workspace pessoal do usuário, sem analisar nem alterar o projeto consumidor."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "scaffold"
 context_budget_class: "low"

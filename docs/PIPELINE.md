@@ -4,7 +4,7 @@
 
 ```mermaid
 flowchart LR
-    U[Ticket] --> B[sdd-bootstrap]
+    U[Ticket] --> B[sdd-orchestrator]
     B --> P[Context Pack]
     P --> A[Agente do estágio]
     A --> R[AGENT_RESULT]
@@ -39,7 +39,7 @@ flowchart TB
     G5 --> D[documentation]
     D --> G6{G6 e CP3}
 
-    B[sdd-bootstrap] -. cria pack .-> A
+    B[sdd-orchestrator] -. cria pack .-> A
     B -. cria pack .-> AR
     B -. cria pack .-> I
     B -. cria pack .-> E
@@ -62,13 +62,13 @@ produz. O agente não pode converter uma etapa ignorada em sucesso declarado.
 | G5 | review arquitetural e de código sem achado crítico aberto |
 | G6 | resumo e decisão humana sobre publicação/PR |
 
-As políticas `auto`, `confirm` e `skip` são resolvidas pelo bootstrap a partir
+As políticas `auto`, `confirm` e `skip` são resolvidas pelo orquestrador a partir
 das flags, do estado da demanda e do perfil padrão. Um gate automático precisa
 de evidência do runtime atual; estado herdado não é aceito como sucesso
 automático.
 
-A evidência de cada gate chega ao bootstrap como um `AGENT_RESULT`, descrito em
-[AGENT-CONTRACT.md](AGENT-CONTRACT.md). O bootstrap valida cada resultado com
+A evidência de cada gate chega ao orquestrador como um `AGENT_RESULT`, descrito em
+[AGENT-CONTRACT.md](AGENT-CONTRACT.md). O orquestrador valida cada resultado com
 `sdd result validate --file <resultado> --json` antes de persistir o estado.
 Evidência `not-run`, `failed`, `flaky` ou `blocked` não aprova gate, e nenhum
 perfil — incluindo `permissive` — autoriza rede, instalação, commit, push, PR ou
@@ -80,7 +80,7 @@ flowchart LR
     A -->|resultado completo| V[Validação]
     V -->|válido| R[Result record]
     R --> S[state.json e events.ndjson]
-    A -->|context_request| X{Bootstrap autoriza}
+    A -->|context_request| X{Orquestrador autoriza}
     X -->|sim| C[Pack filho]
     C --> A
     X -->|não| B[blocked e checkpoint]
@@ -136,7 +136,7 @@ Depois do primeiro scaffold o projeto passa a ser existente, e o
 
 ## E2E como entrega
 
-`test-e2e` significa que a suíte é a entrega principal: o bootstrap usa
+`test-e2e` significa que a suíte é a entrega principal: o orquestrador usa
 `sdd-generate-e2e-tests --generate`, não `sdd-implement-spec`. A geração e a
 execução são evidências distintas; somente a execução aprovada pode satisfazer
 o G4 quando E2E é obrigatório.

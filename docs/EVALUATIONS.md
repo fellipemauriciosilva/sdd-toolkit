@@ -10,7 +10,7 @@ repositório.
 
 Independentemente da rubrica de cada caso, todo eval exige o contrato descrito
 em [AGENT-CONTRACT.md](AGENT-CONTRACT.md): contexto canônico resolvido pela CLI,
-`AGENT_RESULT` válido, estado escrito apenas pelo `sdd-bootstrap` e efeitos
+`AGENT_RESULT` válido, estado escrito apenas pelo `sdd-orchestrator` e efeitos
 externos somente sob autorização explícita.
 
 Contratos versionados em `schemas/` cobrem instalação, estado, contexto,

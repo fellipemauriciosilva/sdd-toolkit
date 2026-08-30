@@ -5,4 +5,4 @@
 3. Cria testes apenas no diretório de testes do projeto, com as convenções existentes
 4. Executa o menor comando de teste aplicável e reporta o resultado real
 5. Separa falhas preexistentes das introduzidas
-6. Retorna `AGENT_RESULT` com `payload.unit` e `next_agent: sdd-bootstrap`
+6. Retorna `AGENT_RESULT` com `payload.unit` e `next_agent: sdd-orchestrator`

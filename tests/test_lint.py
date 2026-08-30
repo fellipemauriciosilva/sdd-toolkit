@@ -67,7 +67,7 @@ class LintRegressionTests(unittest.TestCase):
         self.patch("agents/sdd-review-code.md", 'capabilities: "read,terminal"', 'capabilities: "read"')
         self.assertIn("instrui executar comando sem declarar terminal", self.messages())
 
-    def test_detects_state_ownership_leaking_out_of_the_bootstrap(self):
+    def test_detects_state_ownership_leaking_out_of_the_orchestrator(self):
         self.patch(
             "agents/sdd-implement-spec.md",
             "Não atualize `session-state.md`.",
@@ -105,7 +105,7 @@ class LintRegressionTests(unittest.TestCase):
         self.assertTrue(any("operação destrutiva" in message for message in self.messages()))
 
     def test_detects_a_version_drift_between_agent_and_toolkit(self):
-        self.patch("agents/sdd-architect.md", 'version: "4.0.0"', 'version: "3.9.0"')
+        self.patch("agents/sdd-architect.md", 'version: "5.0.0"', 'version: "4.9.0"')
         self.assertTrue(any("difere do VERSION" in message for message in self.messages()))
 
     def test_detects_a_stale_dist_artifact(self):
@@ -135,7 +135,7 @@ class LintRegressionTests(unittest.TestCase):
             "| 3 | Devolveu `payload.review` sem declarar G5 aprovado | 25 | ✓/✗ |",
             "| 3 | Marcou G5:passed | 25 | ✓/✗ |",
         )
-        self.assertIn("espera que o agente declare gate; o dono é o bootstrap", self.messages())
+        self.assertIn("espera que o agente declare gate; o dono é o orquestrador", self.messages())
 
     def test_detects_an_eval_that_rewards_writing_orchestration_state(self):
         self.patch(

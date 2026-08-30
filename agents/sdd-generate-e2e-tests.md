@@ -1,7 +1,7 @@
 ---
 name: sdd-generate-e2e-tests
 description: "Planeja, gera, executa e mantém testes E2E Playwright no projeto consumidor a partir da spec SDD."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "e2e"
 context_budget_class: "medium"
@@ -45,5 +45,5 @@ resultado `flaky`, `failed`, `blocked` ou `not-run` não aprova G4.
 
 Retorne `AGENT_RESULT` com `payload.delivery` e/ou `payload.e2e`, incluindo
 arquivos, comandos, ambiente, limpeza, evidências e `next_agent:
-sdd-bootstrap`.
+sdd-orchestrator`.
 <!-- @end -->

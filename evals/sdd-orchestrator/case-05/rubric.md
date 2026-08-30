@@ -1,4 +1,4 @@
-# Rubric — sdd-bootstrap case-05 (Ativação in-runtime)
+# Rubric — sdd-orchestrator case-05 (Ativação in-runtime)
 
 ## Critérios de Avaliação
 

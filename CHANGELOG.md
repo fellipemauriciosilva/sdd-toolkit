@@ -5,6 +5,29 @@ planejamento e execução local não faz parte da distribuição.
 
 ## [Unreleased]
 
+### BREAKING CHANGES
+
+- O agente orquestrador foi renomeado de `sdd-bootstrap` para
+  `sdd-orchestrator`. "Bootstrap" descrevia só o primeiro passo — inicializar
+  uma demanda —, não o papel que o agente cumpre no resto do ciclo: resolver
+  contexto, montar o Context Pack antes de cada agente, despachar estágios,
+  avaliar gates e ser o único dono do estado. Ver
+  `docs/ROADMAP.local.md` #34 para o mapeamento completo.
+  - `sdd start --json` e `sdd resume --json` devolvem `"agent":
+    "sdd-orchestrator"` em vez de `"sdd-bootstrap"`. Qualquer automação que lê
+    esse campo precisa ser atualizada.
+  - O arquivo do agente é `agents/sdd-orchestrator.md`; os artefatos
+    compilados mudam de nome nos quatro runtimes (`sdd-orchestrator.md`,
+    `.toml`, `.agent.md`) e a skill compartilhada passa a viver em
+    `dist/shared/skills/sdd-orchestrator/`.
+  - `sdd update` remove automaticamente o `sdd-bootstrap.*` órfão do perfil
+    de quem atualiza a partir de uma instalação 4.x — não é necessário
+    desinstalar e reinstalar. Ver a entrada de `Fixed` abaixo.
+  - Não há alias de transição: haver dois orquestradores instalados
+    simultaneamente violaria o contrato de posse única de `session-state.md`
+    e `state.json`. Quem integrou pelo nome do agente deve atualizar a
+    referência.
+
 ### Added
 
 - Tipo de demanda `greenfield` para projetos criados do zero, com o template
@@ -21,7 +44,7 @@ planejamento e execução local não faz parte da distribuição.
 
 ### Changed
 
-- `sdd-bootstrap` ativa o projeto a partir do próprio runtime. Quando
+- `sdd-orchestrator` ativa o projeto a partir do próprio runtime. Quando
   `sdd context resolve` devolve `status: unactivated`, ele apresenta o preview,
   pede confirmação explícita e executa `sdd start <TICKET> --yes`. O terminal
   deixa de ser obrigatório para iniciar uma demanda nos quatro runtimes;
@@ -66,6 +89,14 @@ planejamento e execução local não faz parte da distribuição.
   `sk` seguida de dez ou mais alfanuméricos: `task-greenfield` termina nessa
   forma e derrubava a verificação, sem conter credencial alguma. Os prefixos
   `sk-`, `ghp_` e `github_pat_` agora exigem fronteira de token.
+- `sdd update` retinha silenciosamente qualquer asset cuja fonte deixasse de
+  existir — um agente renomeado ou removido do kit continuava instalado e
+  funcional no perfil de quem atualizasse, sem aviso. `install_user` agora
+  remove um asset obsoleto sempre que seu hash em disco ainda bate com o que
+  foi instalado; se o arquivo foi modificado por fora, o update bloqueia como
+  qualquer outro conflito de asset, em vez de apagar uma alteração do usuário.
+  O preview de `update` ganhou a chave `obsolete` para mostrar o que será
+  removido antes do `--apply`.
 
 ## [4.0.0] - 2026-08-28
 

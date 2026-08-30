@@ -59,7 +59,7 @@ class GlobalInstallerTests(unittest.TestCase):
                 capture_output=True, text=True, check=False, env=env,
             )
             self.assertEqual(0, applied.returncode, msg=applied.stderr or applied.stdout)
-            self.assertTrue((profile_root / ".copilot" / "agents" / "sdd-bootstrap.agent.md").is_file())
+            self.assertTrue((profile_root / ".copilot" / "agents" / "sdd-orchestrator.agent.md").is_file())
             self.assertTrue((profile_root / ".copilot" / "agents" / "sdd-generate-e2e-tests.agent.md").is_file())
             self.assertTrue((profile_root / ".copilot" / "skills" / "playwright-e2e-testing" / "SKILL.md").is_file())
             self.assertTrue((profile_root / ".copilot" / "skills").is_dir())

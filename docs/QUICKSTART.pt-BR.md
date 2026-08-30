@@ -8,7 +8,7 @@ cria agentes, skills ou configurações no repositório consumidor.
 
 ```mermaid
 flowchart LR
-    I[Instalar uma vez] --> B[sdd-bootstrap no runtime]
+    I[Instalar uma vez] --> B[sdd-orchestrator no runtime]
     B --> A[Ativa o projeto sob confirmação]
     A --> P[Context Pack automático]
     P --> G[Agentes e gates]
@@ -16,7 +16,7 @@ flowchart LR
 ```
 
 Depois da instalação, o fluxo acontece dentro do runtime: peça a demanda ao
-`sdd-bootstrap` e ele cuida da ativação. Os comandos de terminal das seções 2 e
+`sdd-orchestrator` e ele cuida da ativação. Os comandos de terminal das seções 2 e
 3 continuam válidos e são a via preferida para automação e CI.
 
 ## 1. Instalar no perfil do usuário
@@ -62,32 +62,32 @@ instalação por Git são opções de ambiente avançado; veja [USER-SCOPE.md](U
 
 ## 2. Iniciar a demanda pelo runtime
 
-Abra o projeto no runtime e peça a demanda ao `sdd-bootstrap`:
+Abra o projeto no runtime e peça a demanda ao `sdd-orchestrator`:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 ```
 
-Se o projeto ainda não estiver ativo, o bootstrap mostra o caminho do projeto,
+Se o projeto ainda não estiver ativo, o orquestrador mostra o caminho do projeto,
 o workspace que será criado e o fato de que nada é escrito no repositório, pede
 sua confirmação e ativa. Ativação altera estado do perfil, então nunca acontece
 sem aceite explícito.
 
 ```text
-Você      Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Você         Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 
-Bootstrap Este projeto ainda não está ativo.
-            projeto:   /caminho/do-projeto
-            workspace: ~/sdd-history-implementations/meu-projeto-a1b2/.../specs
-            nada será escrito no repositório
-          Posso ativar?
+Orquestrador Este projeto ainda não está ativo.
+               projeto:   /caminho/do-projeto
+               workspace: ~/sdd-history-implementations/meu-projeto-a1b2/.../specs
+               nada será escrito no repositório
+             Posso ativar?
 
-Você      sim
+Você         sim
 
-Bootstrap Ativado. Analisando a demanda...
-          G1 (demanda compreendida): passou
-          Delivery Strategy: application, verificação [unit]
-          Próximo: arquitetura. Confirma a estratégia?
+Orquestrador Ativado. Analisando a demanda...
+             G1 (demanda compreendida): passou
+             Delivery Strategy: application, verificação [unit]
+             Próximo: arquitetura. Confirma a estratégia?
 ```
 
 Depois disso ele resolve o contexto, cria o Context Pack antes de cada agente e
@@ -98,7 +98,7 @@ push ou publicação sozinho.
 Para retomar, troque o verbo:
 
 ```text
-Use sdd-bootstrap para retomar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para retomar a demanda ABC-123 neste projeto.
 ```
 
 ## 3. Ativar pelo terminal (automação e CI)
@@ -135,7 +135,7 @@ sdd start ABC-123
 sdd resume ABC-123
 ```
 
-`start` retorna o workspace, a pasta da spec e o handoff para `sdd-bootstrap`.
+`start` retorna o workspace, a pasta da spec e o handoff para `sdd-orchestrator`.
 Se o projeto ainda não estiver ativo, execute `sdd activate` ou use `--yes` para
 autorizar a ativação local na mesma chamada. `resume` sem ticket só funciona
 quando há uma única demanda retomável.
@@ -145,7 +145,7 @@ quando há uma única demanda retomável.
 | Intenção | Comando | Resultado |
 |---|---|---|
 | Ver o trabalho atual | `sdd status` | ativação, workspace, tickets e próximo passo |
-| Iniciar demanda | `sdd start ABC-123` | handoff para o bootstrap |
+| Iniciar demanda | `sdd start ABC-123` | handoff para o orquestrador |
 | Retomar demanda | `sdd resume ABC-123` | handoff para a spec existente |
 | Ver contexto técnico | `sdd context resolve --ticket ABC-123 --json` | paths e perfil para automação/agentes |
 | Diagnosticar instalação | `sdd doctor --scope user --json` | assets, versões e capabilities |
@@ -164,7 +164,7 @@ projeto.**
 Abra o projeto e escreva no chat:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 ```
 
 Assets em `~/.claude/agents` e `~/.claude/skills`. Como ficam em
@@ -177,7 +177,7 @@ recurso. Guia: [CLAUDE-CODE.md](runtimes/CLAUDE-CODE.md).
 No VS Code, abra o projeto e escreva no chat do Copilot:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 ```
 
 Assets em `~/.copilot/agents` e `~/.copilot/skills`. O chat também pode
@@ -189,7 +189,7 @@ oferecer o agente SDD numa lista de seleção. Guia:
 Abra o projeto e escreva no chat do Cursor:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 ```
 
 Assets em `~/.cursor/agents`; skills compartilhadas em `~/.agents/skills`.
@@ -200,7 +200,7 @@ Guia: [CURSOR.md](runtimes/CURSOR.md).
 Abra a sessão do Codex na raiz do projeto e peça:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 ```
 
 Agentes em `~/.codex/agents` no formato TOML; skills em `~/.agents/skills`.
@@ -220,13 +220,13 @@ Todos valem em qualquer um dos quatro runtimes.
 Iniciar uma demanda comum:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para iniciar a demanda ABC-123 neste projeto.
 ```
 
 Criar um projeto do zero:
 
 ```text
-Use sdd-bootstrap para iniciar a demanda ABC-123, tipo greenfield.
+Use sdd-orchestrator para iniciar a demanda ABC-123, tipo greenfield.
 ```
 
 A fundação — linguagem, framework, build, framework de teste e a skill de
@@ -236,7 +236,7 @@ sempre passa por aprovação humana antes de qualquer código.
 Retomar uma demanda parada:
 
 ```text
-Use sdd-bootstrap para retomar a demanda ABC-123 neste projeto.
+Use sdd-orchestrator para retomar a demanda ABC-123 neste projeto.
 ```
 
 Chamar um agente direto, pulando a orquestração:

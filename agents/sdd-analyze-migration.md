@@ -1,7 +1,7 @@
 ---
 name: sdd-analyze-migration
 description: "Analisa uma migração por evidências, registra lacunas e propõe ondas verificáveis sem manipular segredos nem executar migração externa."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "analysis"
 context_budget_class: "high"

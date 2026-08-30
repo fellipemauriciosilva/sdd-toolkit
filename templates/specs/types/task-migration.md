@@ -98,7 +98,7 @@ TODO — how to roll back if the migration fails in production.
 
 | Gate | Criterion | Responsible |
 |------|-----------|-------------|
-| Build passes | Command declared by the project is green | sdd-bootstrap G3 |
+| Build passes | Command declared by the project is green | sdd-orchestrator G3 |
 | Data integrity | TODO | manual check |
 | Integration smoke | TODO | team |
 

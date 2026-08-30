@@ -182,9 +182,9 @@ class EffectAuthorizationTests(unittest.TestCase):
                 self.assertFalse(sdd_lint.mentions(body, token), f"{path.name}: {token}")
 
     def test_publication_stays_a_human_gate(self):
-        bootstrap = source_body(ROOT / "agents" / "sdd-bootstrap.md")
-        self.assertIn("G6: decisão humana sobre publicação ou PR", bootstrap)
-        self.assertIn("o bootstrap apenas propõe", bootstrap)
+        orchestrator = source_body(ROOT / "agents" / "sdd-orchestrator.md")
+        self.assertIn("G6: decisão humana sobre publicação ou PR", orchestrator)
+        self.assertIn("o orquestrador apenas propõe", orchestrator)
 
     def test_delivery_agents_record_preexisting_failures(self):
         for name in DELIVERY_AGENTS:
@@ -208,15 +208,15 @@ class StackNeutralityTests(unittest.TestCase):
 
 
 class InterruptionAndIdempotenceTests(unittest.TestCase):
-    def test_bootstrap_locks_state_and_revalidates_on_resume(self):
-        body = source_body(ROOT / "agents" / "sdd-bootstrap.md")
+    def test_orchestrator_locks_state_and_revalidates_on_resume(self):
+        body = source_body(ROOT / "agents" / "sdd-orchestrator.md")
         self.assertIn("lock exclusivo", body)
         self.assertIn("Em interrupção", body)
         self.assertIn("retome apenas após validar o último", body)
         self.assertIn("não repita efeitos externos automaticamente", body)
 
-    def test_bootstrap_validates_every_result_before_persisting(self):
-        body = source_body(ROOT / "agents" / "sdd-bootstrap.md")
+    def test_orchestrator_validates_every_result_before_persisting(self):
+        body = source_body(ROOT / "agents" / "sdd-orchestrator.md")
         self.assertIn("sdd result validate", body)
         self.assertIn("antes de persistir", body)
 

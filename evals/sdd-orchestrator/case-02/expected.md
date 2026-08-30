@@ -1,4 +1,4 @@
-# Expected — sdd-bootstrap case-02
+# Expected — sdd-orchestrator case-02
 
 ## Comportamentos esperados
 

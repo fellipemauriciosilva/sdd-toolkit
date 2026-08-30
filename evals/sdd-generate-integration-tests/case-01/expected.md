@@ -5,5 +5,5 @@
 3. Segue o padrão dos step definitions existentes
 4. Mantém o mock de dependências externas e os containers já usados no projeto
 5. Não declara G4: retorna `AGENT_RESULT` com `payload.integration` informando
-   `delivery_status: generated`, o comando de execução e `next_agent: sdd-bootstrap`
+   `delivery_status: generated`, o comando de execução e `next_agent: sdd-orchestrator`
 6. Geração não é execução — a evidência de execução é um resultado distinto

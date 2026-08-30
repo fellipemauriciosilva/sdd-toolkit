@@ -1,7 +1,7 @@
 # Eval Input — sdd-implement-spec case-02
 # Cenário: checkpoint já aprovado → implementa seguindo o plano exato
 
-## Context Pack entregue pelo bootstrap
+## Context Pack entregue pelo orquestrador
 - `target_agent`: `sdd-implement-spec`
 - `stage`: `delivery`
 - `state.status`: `ready`

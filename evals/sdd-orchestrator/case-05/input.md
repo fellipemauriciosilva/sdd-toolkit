@@ -1,9 +1,9 @@
-# Eval Input — sdd-bootstrap case-05
+# Eval Input — sdd-orchestrator case-05
 # Cenário: Projeto ainda não ativado → confirmar e ativar sem sair do runtime
 
 ## Invocação
 ```
-/sdd-bootstrap ABC-5005 --run
+/sdd-orchestrator ABC-5005 --run
 ```
 
 ## Estado do sistema

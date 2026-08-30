@@ -1,4 +1,4 @@
-# Rubric — sdd-bootstrap case-01 (Anti-reconcile)
+# Rubric — sdd-orchestrator case-01 (Anti-reconcile)
 
 ## Critérios de Avaliação
 

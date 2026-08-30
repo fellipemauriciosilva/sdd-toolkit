@@ -1,9 +1,9 @@
-# Eval Input — sdd-bootstrap case-02
+# Eval Input — sdd-orchestrator case-02
 # Cenário: G3 failed 3x consecutivas → deve escalar ao humano
 
 ## Invocação
 ```
-/sdd-bootstrap example-project ABC-1234 --run
+/sdd-orchestrator example-project ABC-1234 --run
 ```
 
 ## Estado do session-state.md

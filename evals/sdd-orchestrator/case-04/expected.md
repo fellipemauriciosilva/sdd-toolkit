@@ -1,4 +1,4 @@
-# Expected — sdd-bootstrap case-04
+# Expected — sdd-orchestrator case-04
 
 1. Valida o resultado com `sdd result validate` antes de persistir
 2. Detecta que a única evidência é `not-run` e recusa aprovar G4

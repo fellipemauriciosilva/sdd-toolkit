@@ -8,14 +8,14 @@ creates agents, skills or configuration inside the consumer repository.
 
 ```mermaid
 flowchart LR
-    I[Install once] --> B[sdd-bootstrap in the runtime]
+    I[Install once] --> B[sdd-orchestrator in the runtime]
     B --> A[Activates the project on confirmation]
     A --> P[Automatic Context Pack]
     P --> G[Agents and gates]
     G --> R[Results recorded outside the project]
 ```
 
-Once installed, the flow happens inside the runtime: ask `sdd-bootstrap` for
+Once installed, the flow happens inside the runtime: ask `sdd-orchestrator` for
 the demand and it handles activation. The terminal commands in sections 3 and 4
 remain valid and are the preferred path for automation and CI.
 
@@ -63,32 +63,32 @@ Git-based installation are advanced options; see [USER-SCOPE.md](USER-SCOPE.md).
 
 ## 2. Start the demand from the runtime
 
-Open the project in your runtime and ask `sdd-bootstrap` for the demand:
+Open the project in your runtime and ask `sdd-orchestrator` for the demand:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 ```
 
-If the project is not active yet, the bootstrap shows the project path, the
+If the project is not active yet, the orchestrator shows the project path, the
 workspace it will create and the fact that nothing is written to the
 repository, asks for your confirmation, and activates. Activation changes
 profile state, so it never happens without explicit consent.
 
 ```text
-You        Use sdd-bootstrap to start ticket PAY-142 in this project.
+You          Use sdd-orchestrator to start ticket PAY-142 in this project.
 
-Bootstrap  This project is not active yet.
-             project:   /path/to/your-project
-             workspace: ~/sdd-history-implementations/your-project-a1b2/.../specs
-             nothing will be written to the repository
-           May I activate it?
+Orchestrator This project is not active yet.
+               project:   /path/to/your-project
+               workspace: ~/sdd-history-implementations/your-project-a1b2/.../specs
+               nothing will be written to the repository
+             May I activate it?
 
-You        yes
+You          yes
 
-Bootstrap  Activated. Analyzing the demand...
-           G1 (demand understood): passed
-           Delivery Strategy: application, verification [unit]
-           Next: architecture. Confirm the strategy?
+Orchestrator Activated. Analyzing the demand...
+             G1 (demand understood): passed
+             Delivery Strategy: application, verification [unit]
+             Next: architecture. Confirm the strategy?
 ```
 
 From there it resolves the context, builds a Context Pack before each agent,
@@ -99,7 +99,7 @@ commits, pushes or publishes on its own.
 To resume, swap the verb:
 
 ```text
-Use sdd-bootstrap to resume ticket PAY-142 in this project.
+Use sdd-orchestrator to resume ticket PAY-142 in this project.
 ```
 
 ## 3. Activate from the terminal (automation and CI)
@@ -137,7 +137,7 @@ sdd resume PAY-142
 ```
 
 `start` returns the workspace, the spec folder and the handoff for
-`sdd-bootstrap`. If the project is not active yet, run `sdd activate` or use
+`sdd-orchestrator`. If the project is not active yet, run `sdd activate` or use
 `--yes` to authorize local activation in the same call. `resume` without a
 ticket only works when there is exactly one resumable demand.
 
@@ -146,7 +146,7 @@ ticket only works when there is exactly one resumable demand.
 | Intent | Command | Result |
 |---|---|---|
 | See current work | `sdd status` | activation, workspace, tickets and next step |
-| Start a demand | `sdd start PAY-142` | handoff to the bootstrap |
+| Start a demand | `sdd start PAY-142` | handoff to the orchestrator |
 | Resume a demand | `sdd resume PAY-142` | handoff to the existing spec |
 | See technical context | `sdd context resolve --ticket PAY-142 --json` | paths and profile for automation/agents |
 | Diagnose the installation | `sdd doctor --scope user --json` | assets, versions and capabilities |
@@ -165,7 +165,7 @@ inside the project.**
 Open the project and type in the chat:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 ```
 
 Assets in `~/.claude/agents` and `~/.claude/skills`. Because they live in
@@ -178,7 +178,7 @@ tests and review in parallel when the harness version offers it. Guide:
 In VS Code, open the project and type in the Copilot chat:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 ```
 
 Assets in `~/.copilot/agents` and `~/.copilot/skills`. The chat may also offer
@@ -189,7 +189,7 @@ the SDD agent in a picker. Guide: [COPILOT.md](runtimes/COPILOT.md).
 Open the project and type in the Cursor chat:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 ```
 
 Agents in `~/.cursor/agents`; shared skills in `~/.agents/skills`. Guide:
@@ -200,7 +200,7 @@ Agents in `~/.cursor/agents`; shared skills in `~/.agents/skills`. Guide:
 Open the Codex session at the project root and ask:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 ```
 
 Agents in `~/.codex/agents` as TOML; skills in `~/.agents/skills`. Guide:
@@ -221,7 +221,7 @@ All of these work in any of the four runtimes.
 Start an ordinary demand:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 The charge endpoint must be idempotent: a repeated request with the same
 key returns the original result instead of charging twice.
 ```
@@ -229,7 +229,7 @@ key returns the original result instead of charging twice.
 Create a project from scratch:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-001, type greenfield.
+Use sdd-orchestrator to start ticket PAY-001, type greenfield.
 Create a service that receives billing requests and returns processing status.
 Our team runs Linux with containers.
 ```
@@ -241,7 +241,7 @@ and always goes through human approval before any code.
 Resume a stalled demand:
 
 ```text
-Use sdd-bootstrap to resume ticket PAY-142 in this project.
+Use sdd-orchestrator to resume ticket PAY-142 in this project.
 ```
 
 Call an agent directly, skipping orchestration:

@@ -1,7 +1,7 @@
 ---
 name: sdd-review-code
 description: "Revisa uma entrega contra spec, design, corretude, segurança e testes com achados evidenciados e agnósticos de stack."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,terminal"
 context_profile: "review"
 context_budget_class: "medium"
@@ -35,5 +35,5 @@ concluir.
    local e registre falhas preexistentes separadamente.
 
 Retorne `AGENT_RESULT` com `payload.review`. Achado crítico aberto resulta em
-`blocked`; sem ele, `next_agent: sdd-bootstrap`. O bootstrap persiste G5.
+`blocked`; sem ele, `next_agent: sdd-orchestrator`. O orquestrador persiste G5.
 <!-- @end -->

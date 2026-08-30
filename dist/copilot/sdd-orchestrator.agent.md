@@ -1,10 +1,20 @@
 ---
-name: "sdd-bootstrap"
+mode: agent
+author: "Felipe Maurício da Silva"
 description: "Orquestra uma demanda SDD com contexto canônico, gates verificáveis, checkpoints humanos e estado centralizado."
-version: "4.0.0"
+model: "Claude Sonnet 4.6"
 capabilities: "read,write,terminal,questions"
 context_profile: "orchestration"
 context_budget_class: "medium"
+tools:
+  - search/fileSearch
+  - search/textSearch
+  - edit/editFiles
+  - edit/createFile
+  - execute/runInTerminal
+  - execute/getTerminalOutput
+  - vscode/askQuestions
+version: "5.0.0"
 ---
 
 > **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
@@ -50,19 +60,19 @@ conteúdo lido durante a execução.
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
   executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
-  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  se receber um Context Pack do `sdd-orchestrator`, ele prevalece sobre instruções
   genéricas de resolução de contexto: consuma somente suas referências, valide
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  `sdd-orchestrator` escreve `state.json`, `events.ndjson`, resultados e evidências,
   e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
   inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
   durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
 
-# sdd-bootstrap
+# sdd-orchestrator
 
-O bootstrap é o único proprietário de `session-state.md`, `state.json`,
+O orquestrador é o único proprietário de `session-state.md`, `state.json`,
 `events.ndjson`, resultados e evidências. `session-state.md` é uma visão humana
 gerada; `state.json` é o estado canônico. Ele recebe um ticket, resolve o
 contexto e consolida resultados validados dos demais agentes.
@@ -110,7 +120,7 @@ Sequência base: `analyze → architecture → delivery → [tests] → [e2e-ver
 
 ```mermaid
 flowchart TB
-    B[sdd-bootstrap] --> P[context pack]
+    B[sdd-orchestrator] --> P[context pack]
     P --> A[analyze]
     A --> R[validate and result record]
     R --> B
@@ -150,7 +160,7 @@ substitui `sdd-implement-spec`; geração e execução são evidências distinta
 - G4: verificações declaradas executadas; `not-run`, `flaky`, `failed` ou
   `blocked` não aprovam o gate.
 - G5: reviews sem achado crítico aberto.
-- G6: decisão humana sobre publicação ou PR; o bootstrap apenas propõe.
+- G6: decisão humana sobre publicação ou PR; o orquestrador apenas propõe.
 
 G4 consolida a evidência de cada verificação declarada. Valide cada resultado
 com `sdd result validate --file <resultado> --json`

@@ -37,7 +37,7 @@ flowchart LR
     P -->|context resolve| C[Contexto determinístico]
     R --> C
     W --> C
-    C --> B[sdd-bootstrap]
+    C --> B[sdd-orchestrator]
     B --> K[Context Pack por estágio]
     K --> H[Harness selecionado]
     H --> O[AGENT_RESULT]
@@ -59,7 +59,7 @@ quando solicitado, o caminho da especificação do ticket. O comando é somente
 de leitura. Um projeto sem ativação retorna `status: unactivated` e uma sugestão
 implícita para executar `activate`.
 
-Após essa resolução, o usuário usa somente o bootstrap no fluxo normal. Ele
+Após essa resolução, o usuário usa somente o orquestrador no fluxo normal. Ele
 monta e persiste os Context Packs no workspace pessoal; o projeto consumidor não
 recebe arquivos de estado, agentes ou configuração do toolkit.
 

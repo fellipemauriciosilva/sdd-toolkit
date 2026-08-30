@@ -1,4 +1,4 @@
-# Rubric — sdd-bootstrap case-04
+# Rubric — sdd-orchestrator case-04
 
 | # | Critério | Peso | Resultado |
 |---|----------|------|-----------|

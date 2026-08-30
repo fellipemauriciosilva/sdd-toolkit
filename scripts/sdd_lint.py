@@ -22,7 +22,7 @@ BUDGET_CLASSES = {"low", "medium", "high"}
 
 DEMAND_AGENTS = {
     "sdd-analyze-demand", "sdd-analyze-migration", "sdd-architect",
-    "sdd-bootstrap", "sdd-create-spec", "sdd-generate-e2e-tests",
+    "sdd-orchestrator", "sdd-create-spec", "sdd-generate-e2e-tests",
     "sdd-generate-integration-tests", "sdd-generate-tests",
     "sdd-implement-spec", "sdd-investigate-bug", "sdd-refactor-code",
     "sdd-review-code", "sdd-update-documentation",
@@ -35,7 +35,7 @@ PAYLOAD_BY_AGENT = {
     "sdd-analyze-demand": {"analysis"},
     "sdd-analyze-migration": {"migration_analysis"},
     "sdd-architect": {"architecture"},
-    "sdd-bootstrap": {"orchestration", "e2e"},
+    "sdd-orchestrator": {"orchestration", "e2e"},
     "sdd-create-spec": {"scaffold"},
     "sdd-generate-e2e-tests": {"delivery", "e2e"},
     "sdd-generate-integration-tests": {"integration"},
@@ -74,7 +74,7 @@ STACK_EXEMPT = {"sdd-generate-e2e-tests": ("playwright",)}
 # aprovação de gate transforma um agente correto em um agente reprovado.
 STATE_ARTIFACTS = ("session-state.md", "state.json", "events.ndjson")
 # sdd-create-spec cria a visão session-state.md durante o scaffold; atualizá-la
-# depois continua exclusivo do bootstrap.
+# depois continua exclusivo do orquestrador.
 EVAL_STATE_EXCEPTION = {"sdd-create-spec": ("session-state.md",)}
 EVAL_STATE_WRITE = re.compile(
     r"\b(cria|criar|criou|escreve|escrever|escreveu|atualiza|atualizar|atualizou"
@@ -89,7 +89,7 @@ EVAL_GATE_CLAIM = re.compile(
     re.IGNORECASE,
 )
 # Atribuir a ação ao orquestrador não é reivindicá-la.
-EVAL_DELEGATION = "bootstrap"
+EVAL_DELEGATION = "orquestrador"
 
 WRITE_MARKERS = ("crie ", "criar ", "cria ", "escreva ", "grave ", "atualize ",
                  "edite ", "gere ", "salve ")
@@ -215,12 +215,12 @@ def lint_agents(root: Path, toolkit_version: str) -> List[Dict[str, str]]:
             results.append(finding("agents", stem, "resolve contexto mas não usa SPEC_PATH"))
 
         # orchestration state ownership
-        if stem == "sdd-bootstrap":
+        if stem == "sdd-orchestrator":
             if "proprietário de `session-state.md`" not in body:
-                results.append(finding("agents", stem, "bootstrap deve declarar posse de session-state.md"))
+                results.append(finding("agents", stem, "orquestrador deve declarar posse de session-state.md"))
         else:
             if "proprietário de `session-state.md`" in body:
-                results.append(finding("agents", stem, "somente o bootstrap é proprietário do estado"))
+                results.append(finding("agents", stem, "somente o orquestrador é proprietário do estado"))
             for match in re.finditer(r"[Aa]tualiz\w* .{0,20}session-state\.md", body):
                 line_start = body.rfind(chr(10), 0, match.start()) + 1
                 if not negated(body[line_start:match.end()], match.start() - line_start):
@@ -355,7 +355,7 @@ def lint_eval_contract(root: Path) -> List[Dict[str, str]]:
             reported: set = set()
             # Só o que o caso exige do agente é contrato. input.md descreve o
             # cenário e, num caso adversarial, cita o próprio pedido hostil.
-            if agent != "sdd-bootstrap" and path.name in ("expected.md", "rubric.md"):
+            if agent != "sdd-orchestrator" and path.name in ("expected.md", "rubric.md"):
                 for line in text.splitlines():
                     lowered = line.lower()
                     if EVAL_DELEGATION in lowered or any(negation in lowered for negation in NEGATIONS):
@@ -366,7 +366,7 @@ def lint_eval_contract(root: Path) -> List[Dict[str, str]]:
                         results.append(finding("evals", relative, f"espera escrita de estado pelo agente: {state.group(2)}"))
                     if EVAL_GATE_CLAIM.search(line) and "gate" not in reported:
                         reported.add("gate")
-                        results.append(finding("evals", relative, "espera que o agente declare gate; o dono é o bootstrap"))
+                        results.append(finding("evals", relative, "espera que o agente declare gate; o dono é o orquestrador"))
             lowered_text = text.lower()
             exempt = STACK_EXEMPT.get(agent, ())
             for token in STACK_TOKENS:

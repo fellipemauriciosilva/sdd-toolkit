@@ -1,7 +1,7 @@
 ---
 name: sdd-read-document
 description: "Extrai e resume documentos autorizados com limites de privacidade, origem e segurança de instruções."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,questions"
 context_profile: "support"
 context_budget_class: "low"

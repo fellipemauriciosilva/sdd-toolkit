@@ -97,5 +97,5 @@ _Nenhum agente executado ainda. Ponto de partida: `sdd-analyze-demand`._
 
 > **Regra:** Todo agente SDD deve atualizar este arquivo ao finalizar.
 > Campos obrigatórios: `last_agent`, `last_runtime`, `last_run`, `next_agent`, `next_instruction` e o bloco `Checkpoint`.
-> As tabelas `Pipeline Steps` e `Quality Gates` são gerenciadas pelo `sdd-bootstrap`.
+> As tabelas `Pipeline Steps` e `Quality Gates` são gerenciadas pelo `sdd-orchestrator`.
 > O `Agent History` é append-only — nunca remover linhas anteriores.

@@ -8,4 +8,4 @@
 6. Preenche "Implementation Plan" com passos concretos
 7. Atualiza somente `task.md`; não toca em `session-state.md`
 8. Não declara G1 aprovado: retorna `AGENT_RESULT` com `payload.analysis`,
-   evidências e `next_agent: sdd-architect`, e o bootstrap avalia o gate
+   evidências e `next_agent: sdd-architect`, e o orquestrador avalia o gate

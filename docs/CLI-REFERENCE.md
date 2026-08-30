@@ -2,7 +2,7 @@
 
 ## Contexto incremental de agentes
 
-No uso diário, `sdd-bootstrap` executa estes comandos automaticamente. Eles
+No uso diário, `sdd-orchestrator` executa estes comandos automaticamente. Eles
 existem também para diagnóstico e para `sdd run` avulso:
 
 ```bash

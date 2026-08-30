@@ -1,7 +1,7 @@
 ---
 name: sdd-implement-spec
 description: "Implementa uma entrega de aplicação aprovada com mudanças mínimas, validação real e efeitos externos sob autorização explícita."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "implementation"
 context_budget_class: "high"
@@ -40,5 +40,5 @@ projeto e testes relacionados em `SPEC_PATH` antes de editar `PROJECT_PATH`.
 
 Não atualize `session-state.md`. Retorne `AGENT_RESULT` com
 `payload.delivery` contendo arquivos, critérios cobertos, comandos, falhas
-preexistentes, riscos e `next_agent: sdd-bootstrap`.
+preexistentes, riscos e `next_agent: sdd-orchestrator`.
 <!-- @end -->

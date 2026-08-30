@@ -7,5 +7,5 @@
 5. Adiciona testes unitários conforme "Tests to Add"
 6. Não modifica APIs, contratos ou migrações sem necessidade declarada
 7. Registra baseline e separa falhas preexistentes das introduzidas
-8. Retorna `payload.delivery` com arquivos, comandos e `next_agent: sdd-bootstrap`,
+8. Retorna `payload.delivery` com arquivos, comandos e `next_agent: sdd-orchestrator`,
    sem atualizar estado nem declarar gate

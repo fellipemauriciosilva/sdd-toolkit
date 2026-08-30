@@ -98,7 +98,7 @@ sdd doctor --scope user --json
 Open your project in your AI agent and type, in plain language:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-142 in this project.
+Use sdd-orchestrator to start ticket PAY-142 in this project.
 The charge endpoint must be idempotent: a repeated request with the same
 key returns the original result instead of charging twice.
 ```
@@ -109,29 +109,29 @@ configuration committed to your repository.
 A typical session:
 
 ```text
-You        Use sdd-bootstrap to start ticket PAY-142 in this project.
+You          Use sdd-orchestrator to start ticket PAY-142 in this project.
 
-Bootstrap  This project is not active yet.
-             project:   /path/to/your-project
-             workspace: ~/sdd-history-implementations/your-project-a1b2/.../specs
-             nothing will be written to the repository
-           May I activate it?
+Orchestrator This project is not active yet.
+               project:   /path/to/your-project
+               workspace: ~/sdd-history-implementations/your-project-a1b2/.../specs
+               nothing will be written to the repository
+             May I activate it?
 
-You        yes
+You          yes
 
-Bootstrap  Activated. Analyzing the demand...
-           G1 (demand understood): passed
-           Delivery Strategy: application, verification [unit]
-           Next: architecture. Confirm the strategy?
+Orchestrator Activated. Analyzing the demand...
+             G1 (demand understood): passed
+             Delivery Strategy: application, verification [unit]
+             Next: architecture. Confirm the strategy?
 ```
 
-The bootstrap runs the pipeline and **stops at every gate** for your decision.
+The orchestrator runs the pipeline and **stops at every gate** for your decision.
 It never commits, pushes or publishes on its own.
 
 To pick a demand back up, swap the verb:
 
 ```text
-Use sdd-bootstrap to resume ticket PAY-142 in this project.
+Use sdd-orchestrator to resume ticket PAY-142 in this project.
 ```
 
 ## 🏗️ Quickstart: start a project from scratch
@@ -140,7 +140,7 @@ An empty repository has no evidence to discover, so somebody has to *decide*
 the stack. In a `greenfield` demand that decision has an owner and a gate:
 
 ```text
-Use sdd-bootstrap to start ticket PAY-001, type greenfield.
+Use sdd-orchestrator to start ticket PAY-001, type greenfield.
 Create a service that receives billing requests and returns processing status.
 Our team runs Linux with containers.
 ```

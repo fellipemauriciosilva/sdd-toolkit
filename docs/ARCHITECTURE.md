@@ -47,7 +47,7 @@ o probe de versão exige modo explícito e usa somente argumentos fixos.
 ```mermaid
 sequenceDiagram
     participant U as Usuário
-    participant B as sdd-bootstrap
+    participant B as sdd-orchestrator
     participant C as Context Builder
     participant A as Agente do estágio
     participant R as Result Recorder
@@ -69,7 +69,7 @@ sequenceDiagram
     end
 ```
 
-O bootstrap é o único componente que cria packs, aprova expansões e muda o
+O orquestrador é o único componente que cria packs, aprova expansões e muda o
 estado. Um agente não transfere contexto diretamente a outro agente: ele
 produz um resultado validável e o próximo pack seleciona somente o delta útil.
 

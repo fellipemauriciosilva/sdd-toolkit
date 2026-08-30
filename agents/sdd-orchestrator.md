@@ -1,7 +1,7 @@
 ---
-name: sdd-bootstrap
+name: sdd-orchestrator
 description: "Orquestra uma demanda SDD com contexto canônico, gates verificáveis, checkpoints humanos e estado centralizado."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "orchestration"
 context_budget_class: "medium"
@@ -11,9 +11,9 @@ author_linkedin: "https://www.linkedin.com/in/felipe-mauricio-06685735/"
 ---
 
 <!-- @all -->
-# sdd-bootstrap
+# sdd-orchestrator
 
-O bootstrap é o único proprietário de `session-state.md`, `state.json`,
+O orquestrador é o único proprietário de `session-state.md`, `state.json`,
 `events.ndjson`, resultados e evidências. `session-state.md` é uma visão humana
 gerada; `state.json` é o estado canônico. Ele recebe um ticket, resolve o
 contexto e consolida resultados validados dos demais agentes.
@@ -61,7 +61,7 @@ Sequência base: `analyze → architecture → delivery → [tests] → [e2e-ver
 
 ```mermaid
 flowchart TB
-    B[sdd-bootstrap] --> P[context pack]
+    B[sdd-orchestrator] --> P[context pack]
     P --> A[analyze]
     A --> R[validate and result record]
     R --> B
@@ -101,7 +101,7 @@ substitui `sdd-implement-spec`; geração e execução são evidências distinta
 - G4: verificações declaradas executadas; `not-run`, `flaky`, `failed` ou
   `blocked` não aprovam o gate.
 - G5: reviews sem achado crítico aberto.
-- G6: decisão humana sobre publicação ou PR; o bootstrap apenas propõe.
+- G6: decisão humana sobre publicação ou PR; o orquestrador apenas propõe.
 
 G4 consolida a evidência de cada verificação declarada. Valide cada resultado
 com `sdd result validate --file <resultado> --json`

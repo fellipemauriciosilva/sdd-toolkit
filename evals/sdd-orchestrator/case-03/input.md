@@ -1,9 +1,9 @@
-# Eval Input — sdd-bootstrap case-03
+# Eval Input — sdd-orchestrator case-03
 # Cenário: Ticket sem spec criada → orientar sdd-create-spec e encerrar
 
 ## Invocação
 ```
-/sdd-bootstrap ABC-9999 --run
+/sdd-orchestrator ABC-9999 --run
 ```
 
 ## Estado do sistema
