@@ -1,7 +1,7 @@
 ---
 name: sdd-analyze-demand
 description: "Analisa documentos de uma demanda sem modificar código e consolida uma estratégia de entrega verificável."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "analysis"
 context_budget_class: "medium"

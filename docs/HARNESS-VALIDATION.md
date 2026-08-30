@@ -17,7 +17,7 @@ e, em alguns casos, conta/autorização do usuário.
 | L0 | inventário passivo: PATH, editor, extensão, package e app | sim |
 | L1 | versão/capability por probe local limitado | sim, quando a CLI existir |
 | L2 | install, doctor, ownership e uninstall em perfil isolado | sim |
-| L3 | o harness descobre e invoca `sdd-bootstrap` em uma demanda inofensiva | não |
+| L3 | o harness descobre e invoca `sdd-orchestrator` em uma demanda inofensiva | não |
 | L4 | lifecycle real completo: start, resume, gates e rollback | não |
 
 Registre L0/L1 antes de preparar o perfil isolado e execute L2 para assets do

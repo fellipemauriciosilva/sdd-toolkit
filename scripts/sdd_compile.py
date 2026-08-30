@@ -250,7 +250,7 @@ def compile_agents(kit_root: Path, target: str) -> List[Path]:
 
 
 def compile_shared_skills(kit_root: Path, targets: Iterable[str]) -> List[Path]:
-    sources = [kit_root / "agents" / "sdd-bootstrap.md"]
+    sources = [kit_root / "agents" / "sdd-orchestrator.md"]
     sources.extend(sorted((kit_root / "templates" / "skills").glob("*/SKILL.md")))
     outputs: List[Path] = []
     output_root = kit_root / "dist" / "shared" / "skills"

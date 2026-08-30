@@ -1,7 +1,7 @@
 # Codex
 
-Abra o Codex na raiz do projeto e solicite o agente `sdd-bootstrap` com o
-ticket da demanda. Se o projeto ainda não estiver ativo, o bootstrap apresenta
+Abra o Codex na raiz do projeto e solicite o agente `sdd-orchestrator` com o
+ticket da demanda. Se o projeto ainda não estiver ativo, o orquestrador apresenta
 o preview da ativação, pede confirmação e ativa sem terminal externo.
 
 Os agentes são instalados em `~/.codex/agents`; as skills compartilhadas ficam

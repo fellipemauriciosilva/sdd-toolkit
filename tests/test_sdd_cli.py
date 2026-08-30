@@ -85,7 +85,7 @@ class CliTests(unittest.TestCase):
                 "preexisting_failures": [],
                 "residual_risks": [],
                 "blocked_on": [],
-                "next_agent": "sdd-bootstrap",
+                "next_agent": "sdd-orchestrator",
             }), encoding="utf-8")
             validated = subprocess.run(
                 [sys.executable, str(CLI), "result", "validate", "--file", str(result_path), "--json"],
@@ -162,7 +162,7 @@ class CliTests(unittest.TestCase):
                 capture_output=True, text=True, check=False, cwd=nested, env=env,
             )
             self.assertEqual(0, started.returncode, msg=started.stderr)
-            self.assertEqual("sdd-bootstrap", json.loads(started.stdout)["agent"])
+            self.assertEqual("sdd-orchestrator", json.loads(started.stdout)["agent"])
 
             status = subprocess.run(
                 [sys.executable, str(CLI), "status", "--json"],
@@ -193,7 +193,7 @@ class CliTests(unittest.TestCase):
             report = json.loads(applied.stdout)
             self.assertEqual("installed", report["status"])
             self.assertFalse((root / "project" / ".github").exists())
-            self.assertTrue((profile / ".copilot" / "agents" / "sdd-bootstrap.agent.md").is_file())
+            self.assertTrue((profile / ".copilot" / "agents" / "sdd-orchestrator.agent.md").is_file())
             self.assertTrue((profile / ".copilot" / "agents" / "sdd-generate-e2e-tests.agent.md").is_file())
             self.assertTrue((profile / ".copilot" / "skills" / "playwright-e2e-testing" / "SKILL.md").is_file())
             self.assertTrue((profile / ".copilot" / "skills").is_dir())
@@ -242,7 +242,7 @@ class CliTests(unittest.TestCase):
             )
             self.assertEqual(0, uninstall_preview.returncode, msg=uninstall_preview.stderr)
             self.assertEqual("preview", json.loads(uninstall_preview.stdout)["mode"])
-            self.assertTrue((profile / ".copilot" / "agents" / "sdd-bootstrap.agent.md").exists())
+            self.assertTrue((profile / ".copilot" / "agents" / "sdd-orchestrator.agent.md").exists())
 
             uninstall = subprocess.run(
                 [sys.executable, str(CLI), "uninstall", "--scope", "user", "--profile-root", str(profile), "--apply", "--json"],
@@ -250,7 +250,7 @@ class CliTests(unittest.TestCase):
             )
             self.assertEqual(0, uninstall.returncode, msg=uninstall.stderr)
             self.assertEqual("uninstalled", json.loads(uninstall.stdout)["status"])
-            self.assertFalse((profile / ".copilot" / "agents" / "sdd-bootstrap.agent.md").exists())
+            self.assertFalse((profile / ".copilot" / "agents" / "sdd-orchestrator.agent.md").exists())
             self.assertTrue(custom.exists())
 
 

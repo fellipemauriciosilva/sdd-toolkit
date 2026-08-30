@@ -9,4 +9,4 @@
 | 5 | Entregou evidência para o G1 sem declarar o gate aprovado | 20 | ✓/✗ |
 
 Threshold: ≥ 80 = PASSOU
-Critério 5 é bloqueante — declarar gate aprovado é papel do bootstrap = score 0
+Critério 5 é bloqueante — declarar gate aprovado é papel do orquestrador = score 0

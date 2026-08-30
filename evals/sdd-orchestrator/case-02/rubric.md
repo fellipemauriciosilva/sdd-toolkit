@@ -1,4 +1,4 @@
-# Rubric — sdd-bootstrap case-02 (Escalação por retries)
+# Rubric — sdd-orchestrator case-02 (Escalação por retries)
 
 ## Critérios de Avaliação
 

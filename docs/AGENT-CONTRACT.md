@@ -11,14 +11,14 @@ agentes alinhados. `python scripts/sdd_lint.py` verifica essa injeção.
 
 ## Contexto canônico
 
-O bootstrap resolve o ticket e cria um Context Pack imutável antes de cada
+O orquestrador resolve o ticket e cria um Context Pack imutável antes de cada
 agente. O pack é a entrada preferencial do agente: contém somente referências,
 seções, decisões e resultados anteriores selecionados para o seu papel. O
 agente valida `context_id`, digest, ticket, projeto, destino e orçamento; não
 faz busca ampla nem cria contexto adicional.
 
 `sdd context resolve --ticket <TICKET> --runtime auto --json` permanece o
-contrato para o bootstrap e para `sdd run` avulso. Do JSON, devem ser derivadas
+contrato para o orquestrador e para `sdd run` avulso. Do JSON, devem ser derivadas
 exatamente:
 
 | Variável | Origem | Uso permitido |
@@ -39,7 +39,7 @@ geradas. `tasks.md` e `status-task.md` não fazem parte do contrato.
 
 A posse dessas visões é assimétrica e deliberada: `sdd-create-spec` cria
 `session-state.md` a partir do template durante o scaffold, e a partir daí
-somente `sdd-bootstrap` a atualiza. Criar o arquivo é scaffold; alterá-lo depois
+somente `sdd-orchestrator` a atualiza. Criar o arquivo é scaffold; alterá-lo depois
 é orquestração, e orquestração tem um único dono.
 
 ## Agentes de demanda e agentes de apoio
@@ -48,7 +48,7 @@ Os **agentes de demanda** operam sobre um ticket, resolvem o contexto canônico
 e derivam as quatro variáveis:
 
 `sdd-analyze-demand`, `sdd-analyze-migration`, `sdd-architect`,
-`sdd-bootstrap`, `sdd-create-spec`, `sdd-generate-e2e-tests`,
+`sdd-orchestrator`, `sdd-create-spec`, `sdd-generate-e2e-tests`,
 `sdd-generate-integration-tests`, `sdd-generate-tests`, `sdd-implement-spec`,
 `sdd-investigate-bug`, `sdd-refactor-code`, `sdd-review-code`,
 `sdd-update-documentation`.
@@ -110,7 +110,7 @@ saídas integrais de logs. Redigir valores sensíveis nas evidências.
 
 Cada agente devolve um bloco `AGENT_RESULT` validável pelo schema
 [`schemas/agent-result.schema.json`](../schemas/agent-result.schema.json) e pelo
-comando `sdd result validate --file <resultado> --json`. O `sdd-bootstrap` é o
+comando `sdd result validate --file <resultado> --json`. O `sdd-orchestrator` é o
 proprietário do estado de orquestração: ele valida o resultado e usa
 `sdd result record --apply` para vinculá-lo ao pack, gravar resultado, evento,
 evidências e estado atomicamente. Em execução avulsa, `sdd run` prepara o mesmo
@@ -124,7 +124,7 @@ separa o que já estava quebrado do que a entrega introduziu. Um resultado
 
 Quando o pack for insuficiente, o agente devolve
 `payload.context_request` com `resource`, `reason`, `acceptance_criterion` e
-`requested_tokens`. Somente o bootstrap pode aprovar o pedido por
+`requested_tokens`. Somente o orquestrador pode aprovar o pedido por
 `sdd context expand`; a resposta é um pack filho ligado ao `parent_context_id`.
 
 O campo `payload` carrega o resultado específico de cada agente sob uma chave
@@ -135,7 +135,7 @@ fixa:
 | `sdd-analyze-demand` | `analysis` |
 | `sdd-analyze-migration` | `migration_analysis` |
 | `sdd-architect` | `architecture` |
-| `sdd-bootstrap` | `orchestration` |
+| `sdd-orchestrator` | `orchestration` |
 | `sdd-create-spec` | `scaffold` |
 | `sdd-generate-e2e-tests` | `delivery`, `e2e` |
 | `sdd-generate-integration-tests` | `integration` |
@@ -168,6 +168,6 @@ artefatos legados em agentes, templates e evals.
 
 Ele também verifica o que os evals **exigem**: `expected.md` e `rubric.md` não
 podem premiar escrita de estado nem declaração de gate por um agente que não
-seja o `sdd-bootstrap`, e nenhum arquivo de eval pode acoplar a demanda a uma
+seja o `sdd-orchestrator`, e nenhum arquivo de eval pode acoplar a demanda a uma
 stack. `input.md` fica fora dessas duas regras porque descreve o cenário e, em
 um caso adversarial, cita o próprio pedido hostil que o agente deve recusar.

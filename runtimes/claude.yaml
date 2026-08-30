@@ -40,5 +40,5 @@ exclude_sections:
 # Notas de comportamento para este runtime
 notes:
   - "Claude Code tem Agent tool — tests + review podem rodar como subagents paralelos"
-  - "Bootstrap global em ~/.claude/agents/sdd-bootstrap.md (não precisa ser copiado por projeto)"
+  - "Orquestrador global em ~/.claude/agents/sdd-orchestrator.md (não precisa ser copiado por projeto)"
   - "Bash tool disponível para execução de terminal — G3 sempre validado com build real"

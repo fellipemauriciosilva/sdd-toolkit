@@ -116,7 +116,7 @@ class ContextPackCliTests(unittest.TestCase):
                 "SDD_TOOLKIT_HISTORY_DIR": str(root / "history"),
             }
             self.assertEqual(0, self.run_cli(env, "activate", "--project-path", str(project), "--json").returncode)
-            emitted = self.run_cli(env, "context", "pack", "--project-path", str(project), "--ticket", "ABC-2", "--agent", "sdd-bootstrap", "--json")
+            emitted = self.run_cli(env, "context", "pack", "--project-path", str(project), "--ticket", "ABC-2", "--agent", "sdd-orchestrator", "--json")
             self.assertEqual(0, emitted.returncode, emitted.stderr)
             Draft202012Validator(schema).validate(json.loads(emitted.stdout)["context"])
 

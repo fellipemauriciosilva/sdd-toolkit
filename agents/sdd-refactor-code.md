@@ -1,7 +1,7 @@
 ---
 name: sdd-refactor-code
 description: "Refatora uma entrega aprovada preservando comportamento, contratos e evidências de validação."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "implementation"
 context_budget_class: "medium"
@@ -29,6 +29,6 @@ Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
    final. Não faça commit, push, rede ou alteração fora do projeto.
 
 Retorne `AGENT_RESULT` com `payload.delivery` contendo diff resumido,
-validações, contratos preservados, riscos e `next_agent: sdd-bootstrap`. Não altere
+validações, contratos preservados, riscos e `next_agent: sdd-orchestrator`. Não altere
 `session-state.md` nem exponha raciocínio privado.
 <!-- @end -->

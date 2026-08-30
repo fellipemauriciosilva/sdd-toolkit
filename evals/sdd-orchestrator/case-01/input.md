@@ -1,9 +1,9 @@
-# Eval Input — sdd-bootstrap case-01
+# Eval Input — sdd-orchestrator case-01
 # Cenário: Estado herdado de Copilot com G3:passed — deve rebaixar e revalidar
 
 ## Invocação
 ```
-/sdd-bootstrap example-api-gestao-meta MIGRACAO-ONDA-0 --run --disable=tests
+/sdd-orchestrator example-api-gestao-meta MIGRACAO-ONDA-0 --run --disable=tests
 ```
 
 ## Estado do session-state.md (pré-existente)

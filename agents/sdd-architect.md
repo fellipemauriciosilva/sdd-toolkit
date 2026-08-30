@@ -1,7 +1,7 @@
 ---
 name: sdd-architect
 description: "Produz design técnico proporcional e revisa aderência arquitetural com evidências, sem implementar código de produção."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "architecture"
 context_budget_class: "medium"
@@ -79,7 +79,7 @@ evidência e correção sugerida. Um desvio `critical` bloqueia G5.
 ## Resultado
 
 Retorne `AGENT_RESULT` com `payload.architecture`, sem alterar
-`session-state.md`. Em `design`, o próximo agente é `sdd-bootstrap`; em
-`review-task`, o bootstrap decide o próximo passo. Não exponha raciocínio
+`session-state.md`. Em `design`, o próximo agente é `sdd-orchestrator`; em
+`review-task`, o orquestrador decide o próximo passo. Não exponha raciocínio
 privado: mostre somente fatos, decisão resumida, incertezas e riscos.
 <!-- @end -->

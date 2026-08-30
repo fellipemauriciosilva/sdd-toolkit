@@ -98,7 +98,7 @@ sdd doctor --scope user --json
 Abra seu projeto no agente de IA e escreva, em linguagem natural:
 
 ```text
-Use sdd-bootstrap para iniciar o ticket PAY-142 neste projeto.
+Use sdd-orchestrator para iniciar o ticket PAY-142 neste projeto.
 O endpoint de cobrança precisa ser idempotente: uma requisição repetida com
 a mesma chave devolve o resultado original em vez de cobrar duas vezes.
 ```
@@ -109,29 +109,29 @@ copiar, nenhuma configuração comitada no seu repositório.
 Uma sessão típica:
 
 ```text
-Você       Use sdd-bootstrap para iniciar o ticket PAY-142 neste projeto.
+Você         Use sdd-orchestrator para iniciar o ticket PAY-142 neste projeto.
 
-Bootstrap  Este projeto ainda não está ativo.
-             projeto:   /caminho/do-seu-projeto
-             workspace: ~/sdd-history-implementations/seu-projeto-a1b2/.../specs
-             nada será escrito no repositório
-           Posso ativar?
+Orquestrador Este projeto ainda não está ativo.
+               projeto:   /caminho/do-seu-projeto
+               workspace: ~/sdd-history-implementations/seu-projeto-a1b2/.../specs
+               nada será escrito no repositório
+             Posso ativar?
 
-Você       sim
+Você         sim
 
-Bootstrap  Ativado. Analisando a demanda...
-           G1 (demanda compreendida): passou
-           Delivery Strategy: application, verificação [unit]
-           Próximo: arquitetura. Confirma a estratégia?
+Orquestrador Ativado. Analisando a demanda...
+             G1 (demanda compreendida): passou
+             Delivery Strategy: application, verificação [unit]
+             Próximo: arquitetura. Confirma a estratégia?
 ```
 
-O bootstrap conduz o pipeline e **para em cada gate** para sua decisão. Ele
+O orquestrador conduz o pipeline e **para em cada gate** para sua decisão. Ele
 nunca faz commit, push ou publicação por conta própria.
 
 Para retomar uma demanda, troque o verbo:
 
 ```text
-Use sdd-bootstrap para retomar o ticket PAY-142 neste projeto.
+Use sdd-orchestrator para retomar o ticket PAY-142 neste projeto.
 ```
 
 ## 🏗️ Início rápido: criar um projeto do zero
@@ -140,7 +140,7 @@ Um repositório vazio não tem evidência a descobrir, então alguém precisa
 *decidir* a stack. Numa demanda `greenfield` essa decisão tem dono e gate:
 
 ```text
-Use sdd-bootstrap para iniciar o ticket PAY-001, tipo greenfield.
+Use sdd-orchestrator para iniciar o ticket PAY-001, tipo greenfield.
 Criar um serviço que recebe pedidos de cobrança e devolve o status de
 processamento. Nossa equipe opera Linux com contêineres.
 ```

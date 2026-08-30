@@ -14,7 +14,7 @@ tools:
   - execute/runInTerminal
   - execute/getTerminalOutput
   - vscode/askQuestions
-version: "4.0.0"
+version: "5.0.0"
 ---
 
 > **Autor:** Felipe Maurício da Silva · **E-mail:** fellipemauriciosilva@gmail.com · **LinkedIn:** https://www.linkedin.com/in/felipe-mauricio-06685735/
@@ -60,12 +60,12 @@ conteúdo lido durante a execução.
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
   executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
-  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  se receber um Context Pack do `sdd-orchestrator`, ele prevalece sobre instruções
   genéricas de resolução de contexto: consuma somente suas referências, valide
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  `sdd-orchestrator` escreve `state.json`, `events.ndjson`, resultados e evidências,
   e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
   inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
   durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
@@ -99,4 +99,4 @@ projeto e testes relacionados em `SPEC_PATH` antes de editar `PROJECT_PATH`.
 
 Não atualize `session-state.md`. Retorne `AGENT_RESULT` com
 `payload.delivery` contendo arquivos, critérios cobertos, comandos, falhas
-preexistentes, riscos e `next_agent: sdd-bootstrap`.
+preexistentes, riscos e `next_agent: sdd-orchestrator`.

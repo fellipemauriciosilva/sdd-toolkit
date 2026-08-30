@@ -179,7 +179,7 @@ class SchemaTests(unittest.TestCase):
             "preexisting_failures": [],
             "residual_risks": [],
             "blocked_on": [],
-            "next_agent": "sdd-bootstrap",
+            "next_agent": "sdd-orchestrator",
         }
         validator.validate(result)
         invalid = dict(result)

@@ -1,4 +1,4 @@
-# Rubric — sdd-bootstrap case-03 (Spec inexistente)
+# Rubric — sdd-orchestrator case-03 (Spec inexistente)
 
 ## Critérios de Avaliação
 

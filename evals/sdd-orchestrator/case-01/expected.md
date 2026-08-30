@@ -1,8 +1,8 @@
-# Expected — sdd-bootstrap case-01
+# Expected — sdd-orchestrator case-01
 
 ## Comportamentos esperados
 
-1. **Detecta divergência de runtime** — bootstrap lê `last_runtime: copilot` e runtime atual = `claude`
+1. **Detecta divergência de runtime** — orquestrador lê `last_runtime: copilot` e runtime atual = `claude`
 2. **Rebaixa G3 para pending** — não aceita `G3:passed[auto]` herdado; registra no Agent History que G3 foi revogado
 3. **Executa build real** — roda o comando nativo do projeto, como `./mvnw clean test`, no terminal
 4. **Detecta JAVA_HOME errado** — identifica que Java 17 ≠ Java 21 exigido pelo pom.xml

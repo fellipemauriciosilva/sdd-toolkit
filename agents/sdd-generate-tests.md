@@ -1,7 +1,7 @@
 ---
 name: sdd-generate-tests
 description: "Gera ou atualiza testes unitários a partir de uma spec aprovada, preservando padrões e comportamento existentes."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "tests"
 context_budget_class: "medium"
@@ -31,5 +31,5 @@ públicos, dependências ou configuração sem autorização explícita.
 
 Não instale pacotes, use rede, faça commit ou atualize `session-state.md`.
 Retorne `AGENT_RESULT` com `payload.unit`, incluindo arquivos, comando,
-resultado, cobertura de critérios, lacunas e `next_agent: sdd-bootstrap`.
+resultado, cobertura de critérios, lacunas e `next_agent: sdd-orchestrator`.
 <!-- @end -->

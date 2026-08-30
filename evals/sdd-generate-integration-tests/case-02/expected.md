@@ -4,5 +4,5 @@
 2. Não gera nenhum arquivo de teste
 3. Não atualiza `session-state.md` nem qualquer arquivo de estado
 4. Retorna `AGENT_RESULT` com `status: not-applicable` e `payload.integration`
-   registrando o motivo do skip e `next_agent: sdd-bootstrap`
-5. Registrar a etapa como pulada e avaliar G4 é responsabilidade do bootstrap
+   registrando o motivo do skip e `next_agent: sdd-orchestrator`
+5. Registrar a etapa como pulada e avaliar G4 é responsabilidade do orquestrador

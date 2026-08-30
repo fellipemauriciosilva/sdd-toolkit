@@ -249,8 +249,8 @@ def daily_handoff(args: argparse.Namespace, action: str) -> int:
         "workspace": str(workspace),
         "spec_path": str(workspace / ticket),
         "runtime": getattr(args, "runtime", "auto"),
-        "agent": "sdd-bootstrap",
-        "handoff": f"Use sdd-bootstrap to {action} ticket {ticket} in the current project.",
+        "agent": "sdd-orchestrator",
+        "handoff": f"Use sdd-orchestrator to {action} ticket {ticket} in the current project.",
         "writes_project": False,
     }
     emit(result, args.json)
@@ -300,7 +300,7 @@ def register_status(sub) -> None:
 
 
 def register_daily(sub) -> None:
-    for daily_name, daily_help in (("start", "Prepare a ticket for the SDD bootstrap"), ("resume", "Prepare a ticket to resume with the SDD bootstrap")):
+    for daily_name, daily_help in (("start", "Prepare a ticket for the SDD orchestrator"), ("resume", "Prepare a ticket to resume with the SDD orchestrator")):
         daily_parser = sub.add_parser(daily_name, help=daily_help)
         daily_parser.add_argument("ticket", nargs="?", default="")
         daily_parser.add_argument("--project-path", default=".")

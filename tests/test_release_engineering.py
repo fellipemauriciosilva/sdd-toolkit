@@ -77,7 +77,7 @@ class ReleaseEngineeringTests(unittest.TestCase):
                 check=False, capture_output=True, text=True, env=environment,
             )
             self.assertEqual(0, installed.returncode, installed.stderr)
-            self.assertTrue((root / "profile" / ".codex" / "agents" / "sdd-bootstrap.toml").is_file())
+            self.assertTrue((root / "profile" / ".codex" / "agents" / "sdd-orchestrator.toml").is_file())
 
     def test_root_document_hygiene_keeps_only_public_entry_points(self):
         allowed = {
@@ -107,7 +107,7 @@ class ReleaseEngineeringTests(unittest.TestCase):
         primary = (ROOT / "README.md").read_text(encoding="utf-8")
         translated = (ROOT / "README.pt-BR.md").read_text(encoding="utf-8")
         self.assertLessEqual(len(translated.splitlines()), 400)
-        for anchor in ("install.ps1", "install.sh", "sdd-bootstrap", "greenfield"):
+        for anchor in ("install.ps1", "install.sh", "sdd-orchestrator", "greenfield"):
             self.assertIn(anchor, primary, anchor)
             self.assertIn(anchor, translated, anchor)
         headings = lambda text: [

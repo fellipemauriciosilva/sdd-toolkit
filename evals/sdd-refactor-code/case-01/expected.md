@@ -5,4 +5,4 @@
 3. Faz alterações pequenas e reversíveis, restritas aos arquivos aprovados
 4. Executa os testes relevantes após cada bloco coerente
 5. Não altera API, schema, eventos, dependências nem regra de negócio
-6. Retorna `AGENT_RESULT` com `payload.delivery` e `next_agent: sdd-bootstrap`
+6. Retorna `AGENT_RESULT` com `payload.delivery` e `next_agent: sdd-orchestrator`

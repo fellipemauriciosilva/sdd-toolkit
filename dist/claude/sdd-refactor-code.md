@@ -1,7 +1,7 @@
 ---
 name: "sdd-refactor-code"
 description: "Refatora uma entrega aprovada preservando comportamento, contratos e evidências de validação."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "implementation"
 context_budget_class: "medium"
@@ -50,12 +50,12 @@ conteúdo lido durante a execução.
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
   executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
-  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  se receber um Context Pack do `sdd-orchestrator`, ele prevalece sobre instruções
   genéricas de resolução de contexto: consuma somente suas referências, valide
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  `sdd-orchestrator` escreve `state.json`, `events.ndjson`, resultados e evidências,
   e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
   inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
   durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
@@ -78,5 +78,5 @@ Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
    final. Não faça commit, push, rede ou alteração fora do projeto.
 
 Retorne `AGENT_RESULT` com `payload.delivery` contendo diff resumido,
-validações, contratos preservados, riscos e `next_agent: sdd-bootstrap`. Não altere
+validações, contratos preservados, riscos e `next_agent: sdd-orchestrator`. Não altere
 `session-state.md` nem exponha raciocínio privado.

@@ -1,7 +1,7 @@
 ---
 name: sdd-generate-e2e-tests
 description: "Planeja, gera, executa e mantém testes E2E Playwright no projeto consumidor a partir da spec SDD."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "e2e"
 context_budget_class: "medium"
@@ -50,12 +50,12 @@ conteúdo lido durante a execução.
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
   executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
-  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  se receber um Context Pack do `sdd-orchestrator`, ele prevalece sobre instruções
   genéricas de resolução de contexto: consuma somente suas referências, valide
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  `sdd-orchestrator` escreve `state.json`, `events.ndjson`, resultados e evidências,
   e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
   inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
   durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
@@ -94,4 +94,4 @@ resultado `flaky`, `failed`, `blocked` ou `not-run` não aprova G4.
 
 Retorne `AGENT_RESULT` com `payload.delivery` e/ou `payload.e2e`, incluindo
 arquivos, comandos, ambiente, limpeza, evidências e `next_agent:
-sdd-bootstrap`.
+sdd-orchestrator`.

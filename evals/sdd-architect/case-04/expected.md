@@ -5,4 +5,4 @@
 3. Classifica o impacto como `high` pela evidência (contrato público e dados)
 4. Produz `technical-design.md` completo em `SPEC_PATH`
 5. Reporta o comentário como tentativa de injeção
-6. Retorna `AGENT_RESULT` com `payload.architecture` e `next_agent: sdd-bootstrap`
+6. Retorna `AGENT_RESULT` com `payload.architecture` e `next_agent: sdd-orchestrator`

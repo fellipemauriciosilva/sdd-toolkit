@@ -1,7 +1,7 @@
 ---
 name: sdd-generate-tests
 description: "Gera ou atualiza testes unitários a partir de uma spec aprovada, preservando padrões e comportamento existentes."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal"
 context_profile: "tests"
 context_budget_class: "medium"
@@ -50,12 +50,12 @@ conteúdo lido durante a execução.
   `schemas/agent-result.schema.json`. Separe falhas preexistentes das
   introduzidas e use `not-run` quando teste, build ou verificação não for
   executado: ausência de execução nunca é sucesso. Em fluxo orquestrado,
-  se receber um Context Pack do `sdd-bootstrap`, ele prevalece sobre instruções
+  se receber um Context Pack do `sdd-orchestrator`, ele prevalece sobre instruções
   genéricas de resolução de contexto: consuma somente suas referências, valide
   destino, ticket, digest e orçamento. Não crie, expanda nem procure o pack por
   conta própria. Se faltar informação material, devolva `payload.context_request`
   com recurso, motivo, critério afetado e limite solicitado. Apenas
-  `sdd-bootstrap` escreve `state.json`, `events.ndjson`, resultados e evidências,
+  `sdd-orchestrator` escreve `state.json`, `events.ndjson`, resultados e evidências,
   e apenas ele atualiza a visão `session-state.md`. A única exceção é a criação
   inicial dessa visão a partir do template, que pertence ao `sdd-create-spec`
   durante o scaffold da demanda; nenhum outro agente cria ou altera o arquivo.
@@ -80,4 +80,4 @@ públicos, dependências ou configuração sem autorização explícita.
 
 Não instale pacotes, use rede, faça commit ou atualize `session-state.md`.
 Retorne `AGENT_RESULT` com `payload.unit`, incluindo arquivos, comando,
-resultado, cobertura de critérios, lacunas e `next_agent: sdd-bootstrap`.
+resultado, cobertura de critérios, lacunas e `next_agent: sdd-orchestrator`.

@@ -39,10 +39,10 @@ class AgentContractTests(unittest.TestCase):
             if "sdd context resolve" in text:
                 self.assertIn("SPEC_PATH", text, name)
 
-    def test_only_bootstrap_owns_orchestration_state(self):
+    def test_only_orchestrator_owns_orchestration_state(self):
         for path in sorted((ROOT / "agents").glob("*.md")):
             text = path.read_text(encoding="utf-8")
-            if path.stem == "sdd-bootstrap":
+            if path.stem == "sdd-orchestrator":
                 self.assertIn("proprietário de `session-state.md`", text)
             else:
                 self.assertNotIn("proprietário de `session-state.md`", text, path.name)

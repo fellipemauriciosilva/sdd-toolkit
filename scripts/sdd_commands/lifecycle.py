@@ -111,10 +111,41 @@ def install_user(args: argparse.Namespace) -> int:
         if item["action"] == "preserve"
     ]
     current_paths = {item["path"] for item in files}
-    retained_previous = [
-        item for item in previous.get("managed_files", [])
-        if isinstance(item, dict) and item.get("path") not in current_paths
-    ]
+    # A source that disappears (agent renamed or removed) leaves its old asset
+    # behind unless we schedule it for removal here. We only ever remove an
+    # asset whose on-disk hash still matches what we recorded — if it drifted,
+    # someone else touched it, and we treat that the same as any other asset
+    # conflict: block and let the user resolve it, never delete silently.
+    obsolete: List[tuple[Path, Dict[str, Any]]] = []
+    retained_previous: List[Dict[str, Any]] = []
+    for item in previous.get("managed_files", []):
+        if not isinstance(item, dict):
+            continue
+        previous_path = item.get("path")
+        if not isinstance(previous_path, str):
+            retained_previous.append(item)
+            continue
+        if previous_path in current_paths:
+            # Still produced today: `managed`/`preserved` below already carry
+            # a fresh record for this path. Keeping it here too would double
+            # every current asset in the manifest on every install/update.
+            continue
+        if item.get("owner") != "sdd-toolkit":
+            retained_previous.append(item)
+            continue
+        try:
+            obsolete_target = STATE.safe_lexical_path(profile, previous_path, "User installation target")
+        except STATE.StateError:
+            conflicts.append(previous_path)
+            retained_previous.append(item)
+            continue
+        if not obsolete_target.exists() and not obsolete_target.is_symlink():
+            continue  # already gone; drop it from the manifest without a conflict
+        if obsolete_target.is_symlink() or not obsolete_target.is_file() or STATE.sha256_file(obsolete_target) != item.get("sha256"):
+            conflicts.append(previous_path)
+            retained_previous.append(item)
+            continue
+        obsolete.append((obsolete_target, item))
     source_metadata = local_source_metadata(kit)
     source_record_path = source_state_path()
     if source_record_path.is_file():
@@ -252,6 +283,19 @@ def install_user(args: argparse.Namespace) -> int:
             "after_sha256": item["sha256"],
             "owner": "sdd-toolkit",
         })
+    obsolete_ids: Dict[str, str] = {}
+    for index, (obsolete_target, item) in enumerate(obsolete):
+        action_id = f"obsolete-{index:04d}"
+        obsolete_ids[str(obsolete_target)] = action_id
+        transaction_actions.append({
+            "id": action_id,
+            "kind": "asset",
+            "operation": "remove",
+            "target": str(obsolete_target),
+            "before_sha256": item.get("sha256"),
+            "after_sha256": None,
+            "owner": "sdd-toolkit",
+        })
     transaction_actions.append({
         "id": "manifest",
         "kind": "manifest",
@@ -268,12 +312,18 @@ def install_user(args: argparse.Namespace) -> int:
         allowed_cli_root = None
     if path_install is not None:
         transaction_actions.append(path_install["action"])
+    obsolete_runtimes = {
+        runtime
+        for _, item in obsolete
+        for runtime in (item.get("runtimes") or ([item["runtime"]] if item.get("runtime") else []))
+    }
     allowed_roots = [state_path.parent]
-    for runtime in {runtime for item in files for runtime in item["runtimes"]}:
+    for runtime in {runtime for item in files for runtime in item["runtimes"]} | obsolete_runtimes:
         adapter = RUNTIME.load_adapters(kit).get(runtime)
         if adapter is not None:
             allowed_roots.append(profile / adapter.user_profile)
             allowed_roots.append(profile / adapter.skill_dir)
+    allowed_roots.extend(obsolete_target.parent for obsolete_target, _ in obsolete)
     if allowed_cli_root is not None:
         allowed_roots.append(allowed_cli_root)
     if path_install is not None and path_install["action"].get("strategy") == "unix-profile-block":
@@ -302,6 +352,11 @@ def install_user(args: argparse.Namespace) -> int:
         "profile_root": str(profile),
         "state_path": str(user_installation_path()),
         "files": files,
+        # Assets a previous install created that no current source produces
+        # anymore (an agent renamed or removed). Reported separately from
+        # `files` because they have no source to diff against — they only
+        # ever go away.
+        "obsolete": [{"path": item.get("path"), "action": "remove"} for _, item in obsolete],
         "conflicts": conflicts,
         "writes_project": False,
         "plan_id": plan["plan_id"],
@@ -322,6 +377,9 @@ def install_user(args: argparse.Namespace) -> int:
                     transaction.track_file(action_ids[item["path"]])
                     target.parent.mkdir(parents=True, exist_ok=True)
                     shutil.copy2(source, target)
+                for obsolete_target, _ in obsolete:
+                    transaction.track_file(obsolete_ids[str(obsolete_target)])
+                    obsolete_target.unlink()
                 transaction.phase("assets")
                 TXN.fault("after-assets")
                 if cli_install is not None:
@@ -353,9 +411,11 @@ def install_user(args: argparse.Namespace) -> int:
                         if TXN.windows_path_entry_present(item["entry"]) != item["after_present"]:
                             raise TXN.TransactionError("Windows PATH smoke check failed")
                         continue
-                    if item["after_sha256"] is None:
-                        continue
                     target = Path(item["target"])
+                    if item["after_sha256"] is None:
+                        if target.exists() or target.is_symlink():
+                            raise TXN.TransactionError(f"Transaction removal smoke check failed: {target}")
+                        continue
                     if not target.is_file() or target.is_symlink() or STATE.sha256_file(target) != item["after_sha256"]:
                         raise TXN.TransactionError(f"Transaction smoke check failed: {target}")
                 transaction.phase("verified")
@@ -363,6 +423,11 @@ def install_user(args: argparse.Namespace) -> int:
                 transaction.commit()
                 report["status"] = "installed"
                 report["transaction_status"] = "committed"
+                for directory in sorted({obsolete_target.parent for obsolete_target, _ in obsolete}, key=lambda item: len(item.parts), reverse=True):
+                    try:
+                        directory.rmdir()
+                    except OSError:
+                        pass
             except (OSError, STATE.StateError, TXN.TransactionError) as exc:
                 recovery = transaction.rollback()
                 report["status"] = "rolled_back" if recovery["status"] == "rolled_back" else "rollback-blocked"

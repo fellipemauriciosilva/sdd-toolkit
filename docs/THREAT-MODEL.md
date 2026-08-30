@@ -4,7 +4,7 @@
 
 O toolkit escreve somente nos destinos exibidos no plano de instalação: arquivos
 do projeto, workspace pessoal autorizado e, quando o runtime Claude for
-solicitado, o bootstrap global. Ancestrais com symlink ou junction são
+solicitado, o orquestrador global. Ancestrais com symlink ou junction são
 rejeitados antes da primeira cópia.
 
 ## Conteúdo não confiável

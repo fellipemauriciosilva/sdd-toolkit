@@ -1,7 +1,7 @@
 # Catálogo de agentes
 
 Os 17 agentes são escritos em `agents/` e compilados para todos os runtimes.
-O bootstrap resolve o ticket, entrega Context Packs por estágio, respeita as
+O orquestrador resolve o ticket, entrega Context Packs por estágio, respeita as
 capabilities declaradas e preserva a revisão humana nos gates.
 
 O contrato comum está em [AGENT-CONTRACT.md](AGENT-CONTRACT.md): contexto
@@ -14,7 +14,7 @@ prefixo estável de todo agente compilado, nos quatro runtimes.
 
 ```mermaid
 flowchart TB
-    B[sdd-bootstrap] --> P[Context Pack]
+    B[sdd-orchestrator] --> P[Context Pack]
     P --> A[sdd-analyze-demand]
     A --> R[AGENT_RESULT]
     R --> B
@@ -38,14 +38,14 @@ flowchart TB
 ```
 
 `sdd-architect` é o ponto de aprofundamento técnico: ele define impacto,
-trade-offs, arquivos afetados, riscos e evidências antes de o bootstrap escolher
+trade-offs, arquivos afetados, riscos e evidências antes de o orquestrador escolher
 o agente que produz a entrega. `sdd-read-document`, `sdd-setup-project`,
 `sdd-install-sdd-kit` e `sdd-workspace-sync` são agentes de apoio e podem ser
 acionados conforme a necessidade, sem pular os gates.
 
 | Grupo | Agentes |
 |---|---|
-| Orquestração | `sdd-bootstrap`, `sdd-architect`, `sdd-create-spec`, `sdd-analyze-demand` |
+| Orquestração | `sdd-orchestrator`, `sdd-architect`, `sdd-create-spec`, `sdd-analyze-demand` |
 | Entrega | `sdd-implement-spec`, `sdd-refactor-code`, `sdd-investigate-bug`, `sdd-analyze-migration` |
 | Testes | `sdd-generate-tests`, `sdd-generate-integration-tests`, `sdd-generate-e2e-tests` |
 | Revisão e documentação | `sdd-review-code`, `sdd-update-documentation`, `sdd-read-document` |
@@ -56,9 +56,9 @@ acionados conforme a necessidade, sem pular os gates.
 Nenhum agente de execução escreve `state.json`, `events.ndjson` ou
 `session-state.md`. A criação inicial de `session-state.md` a partir do template
 é a única exceção e pertence ao `sdd-create-spec` no scaffold da demanda;
-atualizá-la depois é exclusivo do `sdd-bootstrap`. Cada agente devolve um
+atualizá-la depois é exclusivo do `sdd-orchestrator`. Cada agente devolve um
 `AGENT_RESULT` validável por `sdd result validate --file <resultado> --json`, e
-o `sdd-bootstrap` consolida o estado a partir de resultados validados. Testes ou
+o `sdd-orchestrator` consolida o estado a partir de resultados validados. Testes ou
 builds não executados são registrados como `not-run`; falhas anteriores à
 demanda vão em `preexisting_failures`.
 

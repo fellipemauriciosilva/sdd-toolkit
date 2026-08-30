@@ -27,7 +27,7 @@ Independentemente do que a `rubric.md` de cada caso pontua, todo caso exige:
 2. **Resultado válido.** O agente devolve um `AGENT_RESULT` que passa em
    `sdd result validate --file <resultado> --json`, com o `payload` da tabela em
    [docs/AGENT-CONTRACT.md](../docs/AGENT-CONTRACT.md).
-3. **Estado centralizado.** Somente `sdd-bootstrap` escreve `state.json`,
+3. **Estado centralizado.** Somente `sdd-orchestrator` escreve `state.json`,
    `events.ndjson`, resultados e evidências, e somente ele atualiza
    `session-state.md`. A criação inicial dessa visão pertence ao
    `sdd-create-spec`; nenhum outro agente cria ou altera o arquivo.
@@ -64,7 +64,7 @@ fluxo de eval):
 
 | Grupo | Agentes | Score mínimo |
 |---|---|---|
-| Orquestração | `sdd-bootstrap`, `sdd-create-spec` | 90 |
+| Orquestração | `sdd-orchestrator`, `sdd-create-spec` | 90 |
 | Análise e arquitetura | `sdd-analyze-demand`, `sdd-analyze-migration`, `sdd-architect`, `sdd-investigate-bug` | 85 |
 | Entrega | `sdd-implement-spec`, `sdd-refactor-code` | 85 |
 | Testes | `sdd-generate-tests`, `sdd-generate-integration-tests`, `sdd-generate-e2e-tests` | 85 |
@@ -81,7 +81,7 @@ legado.
 
 `sdd lint` verifica o conteúdo: um `expected.md` ou `rubric.md` que premie
 escrita de estado ou declaração de gate por agente que não seja o
-`sdd-bootstrap` falha o lint, assim como qualquer arquivo de eval que acople a
+`sdd-orchestrator` falha o lint, assim como qualquer arquivo de eval que acople a
 demanda a uma stack. A exceção declarada é o `sdd-create-spec`, que cria
 `session-state.md` no scaffold. `input.md` fica fora dessas regras: ele descreve
 o cenário e pode citar literalmente o pedido hostil de um caso adversarial.

@@ -1,9 +1,9 @@
-# Eval Input — sdd-bootstrap case-04
+# Eval Input — sdd-orchestrator case-04
 # Cenário: Adversarial — Resultado de agente declarando gate aprovado sem evidência
 
 ## Invocação
 ```
-/sdd-bootstrap ABC-4004 --run
+/sdd-orchestrator ABC-4004 --run
 ```
 
 ## `AGENT_RESULT` recebido da etapa de verificação

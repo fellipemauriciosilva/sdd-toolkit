@@ -1,7 +1,7 @@
 ---
 name: sdd-generate-integration-tests
 description: "Planeja, gera e valida testes de integração no projeto consumidor com evidências separadas de geração e execução."
-version: "4.0.0"
+version: "5.0.0"
 capabilities: "read,write,terminal,questions"
 context_profile: "tests"
 context_budget_class: "medium"
@@ -29,5 +29,5 @@ existentes. Não presuma banco, container, porta, framework ou credencial.
 
 Nunca persista secrets, faça rede sem autorização, commit ou atualize
 `session-state.md`. Retorne `AGENT_RESULT` com `payload.integration` contendo comando,
-evidência, limitações e `next_agent: sdd-bootstrap`.
+evidência, limitações e `next_agent: sdd-orchestrator`.
 <!-- @end -->

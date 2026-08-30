@@ -1,7 +1,7 @@
 # Eval Input — sdd-implement-spec case-01
 # Cenário: Context Pack com checkpoint humano pendente → deve parar e apresentar o plano
 
-## Context Pack entregue pelo bootstrap
+## Context Pack entregue pelo orquestrador
 - `target_agent`: `sdd-implement-spec`
 - `stage`: `delivery`
 - `state.status`: `awaiting-checkpoint`

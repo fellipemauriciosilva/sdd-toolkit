@@ -7,4 +7,4 @@
 5. Preenche Affected Files com os arquivos correspondentes
 6. Referencia os ADRs relevantes no Flow Analysis
 7. Não declara G1 aprovado: entrega `payload.analysis` com as evidências
-   documentais e deixa a decisão do gate para o bootstrap
+   documentais e deixa a decisão do gate para o orquestrador

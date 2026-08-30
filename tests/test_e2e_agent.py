@@ -39,14 +39,14 @@ class E2EAgentContractTests(unittest.TestCase):
         for artifact in expected:
             self.assertTrue(artifact.is_file(), artifact)
 
-    def test_bootstrap_routes_e2e_before_review_and_aggregates_g4(self):
-        bootstrap = (ROOT / "agents" / "sdd-bootstrap.md").read_text(encoding="utf-8")
-        self.assertIn("analyze → architecture → delivery → [tests] → [e2e-verification] → [review] → [docs] → done", bootstrap)
-        self.assertIn("delivery_kind: e2e-tests", bootstrap)
-        self.assertIn("sdd-generate-e2e-tests --generate", bootstrap)
-        self.assertIn("delivery_status: generated", bootstrap)
-        self.assertIn("sdd-generate-e2e-tests", bootstrap)
-        self.assertIn("G4 consolida", bootstrap)
+    def test_orchestrator_routes_e2e_before_review_and_aggregates_g4(self):
+        orchestrator = (ROOT / "agents" / "sdd-orchestrator.md").read_text(encoding="utf-8")
+        self.assertIn("analyze → architecture → delivery → [tests] → [e2e-verification] → [review] → [docs] → done", orchestrator)
+        self.assertIn("delivery_kind: e2e-tests", orchestrator)
+        self.assertIn("sdd-generate-e2e-tests --generate", orchestrator)
+        self.assertIn("delivery_status: generated", orchestrator)
+        self.assertIn("sdd-generate-e2e-tests", orchestrator)
+        self.assertIn("G4 consolida", orchestrator)
 
 
 if __name__ == "__main__":

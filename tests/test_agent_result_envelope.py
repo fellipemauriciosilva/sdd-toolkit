@@ -29,7 +29,7 @@ VALID = {
     "preexisting_failures": ["suite legada: 2 falhas anteriores à demanda"],
     "residual_risks": [],
     "blocked_on": [],
-    "next_agent": "sdd-bootstrap",
+    "next_agent": "sdd-orchestrator",
     "payload": {"delivery": {"files": 1}},
 }
 

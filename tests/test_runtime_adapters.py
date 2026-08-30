@@ -75,8 +75,8 @@ class RuntimeAdapterTests(unittest.TestCase):
             shutil.copytree(ROOT / "metadata", kit_root / "metadata")
             (kit_root / "agents").mkdir()
             shutil.copy2(
-                ROOT / "agents" / "sdd-bootstrap.md",
-                kit_root / "agents" / "sdd-bootstrap.md",
+                ROOT / "agents" / "sdd-orchestrator.md",
+                kit_root / "agents" / "sdd-orchestrator.md",
             )
             skill_source = kit_root / "templates" / "skills" / "playwright-e2e-testing"
             skill_source.mkdir(parents=True)
@@ -97,7 +97,7 @@ class RuntimeAdapterTests(unittest.TestCase):
 
             self.assertFalse(stale_agent.exists())
             self.assertFalse(stale_skill.parent.exists())
-            self.assertTrue((kit_root / "dist" / "cursor" / "sdd-bootstrap.md").is_file())
+            self.assertTrue((kit_root / "dist" / "cursor" / "sdd-orchestrator.md").is_file())
             self.assertTrue(
                 (kit_root / "dist" / "shared" / "skills" / "playwright-e2e-testing" / "SKILL.md").is_file()
             )

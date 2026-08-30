@@ -1,7 +1,7 @@
 # Cursor
 
-Abra o projeto no Cursor e solicite o agente `sdd-bootstrap` no chat com o
-ticket da demanda. Se o projeto ainda não estiver ativo, o bootstrap mostra o
+Abra o projeto no Cursor e solicite o agente `sdd-orchestrator` no chat com o
+ticket da demanda. Se o projeto ainda não estiver ativo, o orquestrador mostra o
 preview da ativação, pede confirmação e ativa a partir do chat. `sdd activate` e
 `sdd start TICKET` no terminal continuam disponíveis para automação e CI.
 
