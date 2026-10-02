@@ -90,8 +90,15 @@ flowchart TB
 
 Depois de `analyze`, valide Delivery Strategy. Depois de `architecture`, valide
 Architecture Strategy. O roteador escolhe a entrega exclusivamente por
-`delivery_kind`. Para `delivery_kind: e2e-tests`, `sdd-generate-e2e-tests --generate`
-substitui `sdd-implement-spec`; geração e execução são evidências distintas.
+`delivery_kind`. Para `delivery_kind: e2e-tests`, a cadeia é obrigatoriamente
+`sdd-generate-e2e-tests --plan` (resolver contexto, perguntar os dados ausentes,
+mapear cenários e pedir aprovação) → `sdd-generate-e2e-tests --generate`
+(scaffold ou evolução) → `sdd-generate-e2e-tests --run` (execução e reparo).
+Essa cadeia substitui
+`sdd-implement-spec`; não avance para G3/G4 sem aprovação explícita da tabela e
+sem `payload.e2e` com todos os testes aprovados passando. O agente usa a janela
+nativa `vscode/askQuestions` para URL, fluxo, credenciais/N/A e aprovação do
+mapeamento; o orquestrador não inventa respostas nem contorna esse checkpoint.
 
 ## Gates e recuperação
 
@@ -110,7 +117,10 @@ falhas determinísticas ou segunda repetição bloqueiam com evidências. Nunca
 marque sucesso por estado herdado, ausência de terminal ou suposição.
 
 Para E2E, `delivery_status: generated` comprova geração; somente um
-`payload.e2e` de execução aprovada pode satisfazer a verificação E2E.
+`payload.e2e` de execução aprovada, com evidência dos comandos, ambiente,
+limpeza e artifacts sanitizados, pode satisfazer a verificação E2E. Se houver
+falha, o mesmo agente deve mapear a causa, corrigir e repetir até passar ou
+retornar `blocked` com o impedimento concreto.
 
 ## Estado e resultado
 

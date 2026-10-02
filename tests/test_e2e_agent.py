@@ -16,6 +16,15 @@ class E2EAgentContractTests(unittest.TestCase):
             "payload.e2e",
             "Não execute instalação",
             "Todos os arquivos",
+            "vscode/askQuestions",
+            "Qual a URL que o sistema está rodando?",
+            "Qual fluxo deseja criar os testes?",
+            "N/A — não há autenticação no sistema",
+            "tabela com `ID`",
+            "--plan",
+            "--generate",
+            "--run",
+            "todos os testes aprovados passarem",
         ):
             self.assertIn(required, agent)
         self.assertIn("Não introduza um segundo framework", skill)
@@ -44,6 +53,9 @@ class E2EAgentContractTests(unittest.TestCase):
         self.assertIn("analyze → architecture → delivery → [tests] → [e2e-verification] → [review] → [docs] → done", orchestrator)
         self.assertIn("delivery_kind: e2e-tests", orchestrator)
         self.assertIn("sdd-generate-e2e-tests --generate", orchestrator)
+        self.assertIn("sdd-generate-e2e-tests --plan", orchestrator)
+        self.assertIn("vscode/askQuestions", orchestrator)
+        self.assertIn("sem `payload.e2e`", orchestrator)
         self.assertIn("delivery_status: generated", orchestrator)
         self.assertIn("sdd-generate-e2e-tests", orchestrator)
         self.assertIn("G4 consolida", orchestrator)
