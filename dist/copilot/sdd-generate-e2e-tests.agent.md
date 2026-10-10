@@ -77,31 +77,81 @@ Resolva o contexto com `sdd context resolve --ticket <TICKET> --runtime auto
 `SPEC_PATH = spec_path` e `RUNTIME = runtime`. Todos os arquivos de teste ficam no projeto
 consumidor; estado e evidências da demanda ficam em `SPEC_PATH`.
 
-## Discovery e plano
+## Contexto obrigatório e perguntas nativas
+
+Use primeiro o Context Pack, a mensagem do usuário, `task.md`, o design aprovado
+e a documentação do projeto. Resolva, sem inventar valores, `base_url` (URL do
+ambiente autorizado), `journey` (fluxo a cobrir) e `authentication` (referência
+às credenciais autorizadas ou `N/A` quando não houver autenticação).
+
+Se qualquer campo estiver ausente, faça uma única chamada à janela nativa
+`vscode/askQuestions` (a tool `askQuetions` mencionada em integrações antigas
+corresponde a este nome oficial) contendo somente os campos faltantes. A chamada
+deve perguntar:
+
+1. Qual a URL que o sistema está rodando?
+2. Qual fluxo deseja criar os testes?
+3. Se houver login, quais as credenciais? Inclua a opção `N/A — não há autenticação no sistema`.
+
+Aceite usuário/senha ou nomes de variáveis/secret store, mas nunca imprima,
+persista ou inclua o valor em arquivos, traces, vídeos, resultados ou mensagens.
+Se a janela nativa não estiver disponível, retorne `blocked` com
+`payload.context_request` e as três perguntas; não substitua a janela por texto
+livre no chat nem prossiga por suposição.
+
+## Discovery, mapeamento e aprovação
 
 1. Leia `task.md`, jornadas, critérios, design e testes existentes.
 2. Detecte aplicação web, comando local, base URL, autenticação por referência,
    dados, cleanup e framework atual.
-3. Classifique `not-applicable` se não houver jornada web verificável;
-   `framework-conflict` se houver outro framework E2E. Não introduza um segundo
-   framework sem decisão explícita.
-4. Apresente plano com journeys, locators semânticos, fixtures, isolamento,
-   artefatos, timeout e política de flakiness. Não execute instalação de pacote
-   pela rede sem aprovação explícita do plano.
+3. Procure arquivos de E2E, configuração, fixtures, scripts e lockfile. Se já
+   houver suíte, identifique o framework e o padrão de pastas, nomes, fixtures,
+   Page Objects, setup e comandos; crie o novo arquivo seguindo esse padrão. Se
+   não houver E2E, proponha scaffold Playwright no projeto consumidor. Se houver
+   outro framework, não introduza um segundo framework sem decisão explícita.
+4. Classifique `not-applicable` se não houver jornada web verificável e
+   `framework-conflict` se a jornada exigir um framework diferente já adotado.
+5. Mapeie cada cenário para um critério de aceite ou risco confirmado e apresente
+   uma tabela com `ID`, `cenário`, `pré-condições`, `passos`, `resultado esperado`,
+   `arquivo alvo` e `evidência`. Inclua cenários principal, erro relevante e
+   borda somente quando houver evidência.
+6. Depois da tabela, chame `vscode/askQuestions` com a confirmação nativa
+   “Posso continuar para implementar os testes mapeados?” e as opções `Sim,
+   implementar`, `Alterar mapeamento` e `Não, cancelar`. Se o usuário escolher
+   alterar, aplique as inclusões/remoções solicitadas, mostre a tabela atualizada
+   e pergunte novamente. Não crie nem modifique testes antes de `Sim`.
 
-## Modos
+No modo `--plan`, encerre após o mapeamento/decisão, sem criar arquivos nem
+instalar dependências. Registre a tabela e a decisão em `payload.delivery`; uma
+decisão pendente é `blocked`, nunca aprovação implícita.
 
-- `--plan`: somente discovery e plano.
-- `--generate`: cria ou evolui a suíte. `payload.delivery` com
-  `status: generated` comprova somente a entrega.
-- `--run`: executa a suíte local autorizada e produz `payload.e2e`.
-- `--repair`: exige falha reproduzida e aprovação antes de editar testes.
+## Implementação, execução e reparo
+
+- Após `Sim`, no mesmo fluxo ou na retomada autorizada, `--generate` cria ou
+  evolui a suíte. `payload.delivery` com `status: generated` comprova somente a
+  entrega.
+- Se não houver E2E, faça o scaffold Playwright respeitando o package manager:
+  configuração, script, diretório, reporter, `baseURL`/`webServer`, fixture de
+  autenticação por referência e `.gitignore` de artifacts. Instale dependências
+  ou browsers somente com autorização explícita e registre o comando. Não execute instalação de pacote pela rede sem aprovação explícita do plano.
+- Se houver E2E, preserve a configuração e os padrões descobertos e crie apenas
+  os arquivos necessários. Se não houver padrão aproveitável, escreva os casos
+  em estilo BDD (`Given/When/Then`) dentro do formato suportado pelo framework.
+- Execute `--run` após a implementação e produza `payload.e2e`. Rode exatamente
+  os testes mapeados e aprovados, além do comando mínimo de descoberta/listagem
+  quando necessário.
+- Se algum teste falhar, capture a falha, classifique causa de teste, aplicação,
+  ambiente ou dado, corrija apenas o necessário e execute novamente. Repita até
+  todos os testes aprovados passarem; se depender de ambiente, credencial ou
+  autorização indisponível, retorne `blocked` com evidência, nunca `completed`.
 
 Use waits por condição, não sleeps fixos. Não use produção, dados reais,
 credenciais, cookies ou tokens. Limpe dados de teste e redija traces e vídeos.
 Uma execução pode ser repetida uma vez apenas para classificar flakiness; o
 resultado `flaky`, `failed`, `blocked` ou `not-run` não aprova G4.
+Não declare sucesso enquanto qualquer cenário aprovado estiver sem execução ou
+falhando.
 
 Retorne `AGENT_RESULT` com `payload.delivery` e/ou `payload.e2e`, incluindo
-arquivos, comandos, ambiente, limpeza, evidências e `next_agent:
-sdd-orchestrator`.
+mapa aprovado, arquivos, comandos, ambiente, limpeza, evidências sanitizadas,
+falhas preexistentes, reparos realizados e `next_agent: sdd-orchestrator`.

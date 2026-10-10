@@ -23,6 +23,13 @@ Confirme antes de gerar:
 Se um dado essencial estiver ausente, planeje e reporte o bloqueio em vez de
 inventá-lo.
 
+Quando base URL, jornada ou autenticação não estiverem no contexto, use a janela
+nativa `vscode/askQuestions` para perguntar: (1) qual a URL em execução, (2) qual
+fluxo deve ser testado e (3) quais credenciais usar, com a opção `N/A` para
+sistema sem autenticação. Nunca substitua essa janela por uma pergunta textual ou
+invente valores. Segredos podem ser fornecidos por variáveis/secret store e não
+podem aparecer em arquivos, logs ou artifacts.
+
 ## Discovery e coexistência
 
 - Preserve o lockfile e o package manager do projeto.
@@ -31,6 +38,16 @@ inventá-lo.
   Não introduza um segundo framework sem decisão explícita.
 - Em monorepos, altere somente o package/workspace dono da aplicação.
 - Mostre preview de dependências e arquivos antes de instalar ou sobrescrever.
+
+Antes de implementar, mapeie os cenários em uma tabela com cenário, pré-condições,
+passos, resultado esperado e arquivo alvo. Mostre a tabela e obtenha confirmação
+nativa por `vscode/askQuestions`; aceite alterações no escopo e repita a tabela
+até o usuário aprovar. Mapeamento sem aprovação não autoriza escrita.
+
+Se não houver E2E no projeto, o scaffold deve ser Playwright e respeitar o
+package manager existente. Se houver E2E, preserve o framework e a organização
+encontrados. Sem padrão aproveitável, use casos em comportamento BDD dentro do
+formato aceito pelo framework.
 
 ## Configuração recomendada
 
@@ -93,3 +110,7 @@ Registre no G4:
 - gaps, mocks e bloqueios.
 
 “Testes criados” sem execução não equivale a gate aprovado.
+Depois da aprovação, execute todos os cenários mapeados. Corrija falhas
+reproduzíveis e repita a execução até todos passarem; falha de ambiente,
+credencial, instalação ou autorização deve ser reportada como bloqueio, sem
+declarar sucesso.

@@ -34,7 +34,7 @@
         },
         {
           "path": "dist/claude/sdd-generate-e2e-tests.md",
-          "sha256": "4d3c260b020c51689e846110dd9b11c8dadc8a05832f640de17d9dfdbd5aa6ca"
+          "sha256": "174ab5c76b5a91d062e446f12c9f0d7d0f62fdf4e26c6e050d8a20c695c149fa"
         },
         {
           "path": "dist/claude/sdd-generate-integration-tests.md",
@@ -58,7 +58,7 @@
         },
         {
           "path": "dist/claude/sdd-orchestrator.md",
-          "sha256": "24d0781bd1d9520e6e3b47e281e4be0f66742f3dffad80357811b6ad9036952d"
+          "sha256": "e8c933d371c83181c104a42a7dbee871dda5e3f26bfe5c315f80c5fd7eb4ef4a"
         },
         {
           "path": "dist/claude/sdd-read-document.md",
@@ -108,7 +108,7 @@
         },
         {
           "path": "dist/codex/sdd-generate-e2e-tests.toml",
-          "sha256": "935f1cec21000690ca916a8be468fcb589451d739345ad3361e3f3e588962da6"
+          "sha256": "d5f61eb377c89cfb8b0b4d60d33d4bacbbaf0d9474bf7a0be1e8a61e4ea0339c"
         },
         {
           "path": "dist/codex/sdd-generate-integration-tests.toml",
@@ -132,7 +132,7 @@
         },
         {
           "path": "dist/codex/sdd-orchestrator.toml",
-          "sha256": "f2f5f3e87fa66babb4bbcc2b182465483cbbcfcdbf6719ef6646413d407884ad"
+          "sha256": "b6231df7d3ceb48d08920a164e9fb5ecf75ee9e119cc901a7eb2d0d6f7ac8b88"
         },
         {
           "path": "dist/codex/sdd-read-document.toml",
@@ -182,7 +182,7 @@
         },
         {
           "path": "dist/copilot/sdd-generate-e2e-tests.agent.md",
-          "sha256": "e87a9f3caed4ef34c31777f705c9a07d40f1ce49d68097e96da8e510d88691b6"
+          "sha256": "99b36b4690b20fa39c34e3a7e14c1a7e3c459be147987ab3b73019b13cf8ecc2"
         },
         {
           "path": "dist/copilot/sdd-generate-integration-tests.agent.md",
@@ -206,7 +206,7 @@
         },
         {
           "path": "dist/copilot/sdd-orchestrator.agent.md",
-          "sha256": "7a1adb9a35e0af9a3ca15ff8c2c59485c114942e465c0211f2684b451b25850d"
+          "sha256": "1de006f1cdef7c5076dae8b99fc2e6cdd3398b6316c91c274736bed34acaa350"
         },
         {
           "path": "dist/copilot/sdd-read-document.agent.md",
@@ -256,7 +256,7 @@
         },
         {
           "path": "dist/cursor/sdd-generate-e2e-tests.md",
-          "sha256": "371bddee1c415076eb941181c5b41ccdf10d2614bc48fe833eeb7555f56c0c48"
+          "sha256": "4e24d0536a7da6b40e9c0f2ce9a6bf524af27e3223b3a23b0c0baadfa9d2dcfb"
         },
         {
           "path": "dist/cursor/sdd-generate-integration-tests.md",
@@ -280,7 +280,7 @@
         },
         {
           "path": "dist/cursor/sdd-orchestrator.md",
-          "sha256": "10def2ac9d273cf7cf78a99ed0e9b5be7735e7d76c0057d4dea81a178bf6780d"
+          "sha256": "4f08cb830713cda4e6ca7888a1fd686ec3a3fbd8272d12b16ea9f04474b7b190"
         },
         {
           "path": "dist/cursor/sdd-read-document.md",
@@ -394,7 +394,7 @@
       },
       {
         "path": "dist/shared/skills/playwright-e2e-testing/SKILL.md",
-        "sha256": "fe9b18982046648c648c0486ef6a7c43eb208488bac6751b7746b7327ea2e653"
+        "sha256": "c6c56e904e2d5a4cb085805e2460c0e37efd10e4cc9a870e1b89404ec41b9b87"
       },
       {
         "path": "dist/shared/skills/pydantic/SKILL.md",
@@ -402,7 +402,7 @@
       },
       {
         "path": "dist/shared/skills/sdd-orchestrator/SKILL.md",
-        "sha256": "10def2ac9d273cf7cf78a99ed0e9b5be7735e7d76c0057d4dea81a178bf6780d"
+        "sha256": "4f08cb830713cda4e6ca7888a1fd686ec3a3fbd8272d12b16ea9f04474b7b190"
       },
       {
         "path": "dist/shared/skills/visualage-mainframe/SKILL.md",

@@ -137,9 +137,12 @@ Depois do primeiro scaffold o projeto passa a ser existente, e o
 ## E2E como entrega
 
 `test-e2e` significa que a suíte é a entrega principal: o orquestrador usa
-`sdd-generate-e2e-tests --generate`, não `sdd-implement-spec`. A geração e a
-execução são evidências distintas; somente a execução aprovada pode satisfazer
-o G4 quando E2E é obrigatório.
+`sdd-generate-e2e-tests`, não `sdd-implement-spec`. A cadeia é
+`--plan` → tabela de cenários e aprovação nativa → `--generate` → `--run`.
+Se faltar URL, fluxo ou autenticação, o agente pergunta pela janela nativa
+`vscode/askQuestions`, incluindo `N/A` para ausência de login. A geração e a
+execução são evidências distintas; somente a execução aprovada, com todos os
+cenários mapeados passando, pode satisfazer o G4 quando E2E é obrigatório.
 
 Os testes Playwright ou Cypress são criados no projeto consumidor. O toolkit não
 instala browsers, `package.json` ou um projeto E2E em sua própria raiz.

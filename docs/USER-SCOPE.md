@@ -163,8 +163,9 @@ sdd delivery validate --task "$HOME/sdd-history-implementations/<projeto>-<id>/<
 
 O contrato distingue o agente que produz a entrega da etapa que apenas a
 verifica. Para `delivery_kind: e2e-tests`, `sdd-generate-e2e-tests --generate`
-produz os arquivos da suíte; `--run` é uma operação posterior e independente
-que gera a evidência `payload.e2e`.
+produz os arquivos da suíte depois do plano aprovado; `--run` gera a evidência
+`payload.e2e` e não pode ser considerado concluído se houver falha ou cenário
+aprovado sem execução.
 
 ```mermaid
 flowchart LR
